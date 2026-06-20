@@ -15,7 +15,29 @@ const config: Config = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+  		fontFamily: {
+  			display: ['var(--font-display)', 'serif'],
+  			sans: ['var(--font-sans)', 'sans-serif']
+  		},
+  		spacing: {
+  			'4': '4px',
+  			'8': '8px',
+  			'16': '16px',
+  			'24': '24px',
+  			'32': '32px',
+  			'48': '48px',
+  			'64': '64px',
+  			'96': '96px',
+  			'128': '128px'
+  		},
   		colors: {
+  			ink: '#1A1A17',
+  			charcoal: '#2C2C2A',
+  			stone: '#5F5E5A',
+  			linen: '#F1EFE8',
+  			offwhite: '#FAFAF8',
+  			red: '#C0391B',
+  			deepred: '#8C2812',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
