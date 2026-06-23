@@ -7,4 +7,6 @@ export const SITE = {
   phone: "TODO: add studio phone number",
   whatsappNumber: "TODO: add WhatsApp number (digits only, country code, no +)",
   email: "TODO: add studio email",
+  instagramUrl: "TODO: add Instagram profile URL",
+  linkedinUrl: "TODO: add LinkedIn profile URL",
 } as const;
