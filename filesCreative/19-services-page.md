@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Build the Services page at app/(site)/services/page.tsx as shown in the attached design exactly.
+Build the Services page at app/(site)/services/page.tsx to the written specification below.
 
 Page hero: white (#FAFAF8) background. Section label "Services". Headline "What we bring to every project." Cormorant Garamond 52px.
 
@@ -25,7 +25,3 @@ CTA block at bottom: "Ready to start your project?" — button routes to /contac
 Set page metadata: title "Services | Creative Studio India".
 
 Do not change any other page, section, Nav, Footer, or Sanity files.
-
----
-
-[Attach Figma design: Services page]

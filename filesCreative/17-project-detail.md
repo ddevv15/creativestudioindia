@@ -4,7 +4,7 @@ Build the individual project detail page at app/(site)/projects/[slug]/page.tsx.
 
 Implement generateStaticParams to pre-build all project slug paths at deploy time using getAllProjects from lib/sanity/queries.ts. Set notFound() if a slug returns no result.
 
-Page structure from top to bottom as shown in the attached design:
+Page structure from top to bottom as specified below:
 
 Hero: full-viewport coverImage as background (Next.js <Image> fill + object-cover). Dark gradient overlay bottom-up. Over the image: category tag (pill, white border, white text), project headline (verb-phrase, Cormorant Garamond 56px desktop / 36px mobile, white), and a spec strip below the headline in DM Sans 13px rgba(255,255,255,0.65) — location · year · area · status — separated by center-dots.
 
@@ -17,7 +17,3 @@ Related projects: "More projects" heading, 3-column grid of ProjectCard.tsx comp
 Set dynamic page metadata: title "[project.title] | Creative Studio India", description from project.seo.metaDescription or first 160 chars of description. OG image from project.seo.ogImage or project.coverImage.
 
 Do not change the projects listing page, homepage sections, Nav, Footer, or Sanity schemas.
-
----
-
-[Attach Figma design: Project detail page]

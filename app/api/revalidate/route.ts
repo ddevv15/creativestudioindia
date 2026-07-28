@@ -19,9 +19,21 @@ export async function POST(request: NextRequest) {
     case "project":
       revalidatePath("/projects");
       revalidatePath("/");
+      // /services borrows project covers; /about uses them for process imagery.
+      revalidatePath("/services");
+      revalidatePath("/about");
       if (body.slug?.current) {
         revalidatePath(`/projects/${body.slug.current}`);
       }
+      break;
+    case "sketch":
+      revalidatePath("/sketches");
+      revalidatePath("/");
+      revalidatePath("/about");
+      break;
+    case "now":
+      // Drives the conditional Recognition section on /about.
+      revalidatePath("/about");
       break;
     case "teamMember":
       revalidatePath("/about");

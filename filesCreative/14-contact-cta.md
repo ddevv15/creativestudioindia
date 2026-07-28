@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Implement ContactCTA.tsx as shown in the attached design exactly. This is the final section before the footer on the homepage.
+Implement ContactCTA.tsx to the written specification below. This is the final section before the footer on the homepage.
 
 Background: ink (#1A1A17).
 
@@ -19,7 +19,3 @@ Content:
 GSAP ScrollTrigger entrance: headline fades in from Y: 32px → 0, opacity 0 → 1, 0.6s. Buttons fade in 0.2s later. Trigger: "top 80%".
 
 Do not change any previously built section, Nav, Footer, or Sanity files.
-
----
-
-[Attach Figma design: Contact CTA section]

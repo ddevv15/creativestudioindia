@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Implement CredentialBar.tsx as shown in the attached design exactly.
+Implement CredentialBar.tsx to the written specification below.
 
 It is a thin single-line horizontal strip sitting immediately below the hero. Background is linen (#F1EFE8). Padding: 14px vertical.
 

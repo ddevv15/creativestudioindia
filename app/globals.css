@@ -3,6 +3,21 @@
 @tailwind utilities;
 
 @layer base {
+  /*
+   * IMPORTANT — variable format.
+   * tailwind.config.ts consumes these as hsl(var(--token)), so each value must
+   * be bare HSL channels ("H S% L%") with NO function wrapper. shadcn's newer
+   * generator emits oklch(...) instead, which produces hsl(oklch(...)) — invalid
+   * CSS that browsers silently discard, leaving primitives transparent. That is
+   * what happened here: the Select dropdown rendered with no background at all.
+   *
+   * Values below are the studio palette, so shadcn primitives inherit the brand
+   * rather than shadcn's neutral greys. Keep them in sync with the `colors`
+   * block in tailwind.config.ts.
+   *
+   *   ink #1A1A17 · charcoal #2C2C2A · stone #5F5E5A
+   *   linen #F1EFE8 · offwhite #FAFAF8 · red #C0391B
+   */
   :root {
     --color-ink: #1a1a17;
     --color-charcoal: #2c2c2a;
@@ -12,71 +27,78 @@
     --color-red: #c0391b;
     --color-deepred: #8c2812;
 
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.5rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0)
+    --background: 60 17% 98%; /* offwhite */
+    --foreground: 60 6% 10%; /* ink */
+    --card: 60 17% 98%;
+    --card-foreground: 60 6% 10%;
+    --popover: 60 17% 98%; /* dropdown / lightbox panels */
+    --popover-foreground: 60 6% 10%;
+    --primary: 60 6% 10%; /* ink */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 47 24% 93%; /* linen */
+    --secondary-foreground: 60 6% 10%;
+    --muted: 47 24% 93%;
+    --muted-foreground: 48 3% 36%; /* stone */
+    --accent: 47 24% 93%; /* linen — primitive hover state */
+    --accent-foreground: 60 6% 10%;
+    --destructive: 11 75% 43%; /* red */
+    --border: 55 3% 82%; /* ≈ stone at 25% over offwhite */
+    --input: 55 3% 82%;
+    --ring: 48 3% 36%; /* stone */
+    --chart-1: 0 0% 84%;
+    --chart-2: 0 0% 46%;
+    --chart-3: 0 0% 35%;
+    --chart-4: 0 0% 29%;
+    --chart-5: 0 0% 20%;
+    /* Sharp corners are a locked design decision — see AGENTS.md. */
+    --radius: 0rem;
+    --sidebar: 60 17% 98%;
+    --sidebar-foreground: 60 6% 10%;
+    --sidebar-primary: 60 6% 10%;
+    --sidebar-primary-foreground: 60 17% 98%;
+    --sidebar-accent: 47 24% 93%;
+    --sidebar-accent-foreground: 60 6% 10%;
+    --sidebar-border: 55 3% 82%;
+    --sidebar-ring: 48 3% 36%;
   }
+
+  /*
+   * Dark mode is not used by this site (light body with dark hero and footer is
+   * the locked colour mode). Kept valid so enabling it later cannot reintroduce
+   * the invalid-format bug above.
+   */
   .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0)
+    --background: 60 6% 10%; /* ink */
+    --foreground: 60 17% 98%;
+    --card: 60 2% 17%; /* charcoal */
+    --card-foreground: 60 17% 98%;
+    --popover: 60 2% 17%;
+    --popover-foreground: 60 17% 98%;
+    --primary: 60 17% 98%;
+    --primary-foreground: 60 6% 10%;
+    --secondary: 60 2% 17%;
+    --secondary-foreground: 60 17% 98%;
+    --muted: 60 2% 17%;
+    --muted-foreground: 48 3% 65%;
+    --accent: 60 2% 17%;
+    --accent-foreground: 60 17% 98%;
+    --destructive: 11 75% 43%;
+    --border: 60 2% 25%;
+    --input: 60 2% 25%;
+    --ring: 48 3% 55%;
+    --chart-1: 0 0% 84%;
+    --chart-2: 0 0% 46%;
+    --chart-3: 0 0% 35%;
+    --chart-4: 0 0% 29%;
+    --chart-5: 0 0% 20%;
+    --sidebar: 60 2% 17%;
+    --sidebar-foreground: 60 17% 98%;
+    --sidebar-primary: 60 17% 98%;
+    --sidebar-primary-foreground: 60 6% 10%;
+    --sidebar-accent: 60 6% 10%;
+    --sidebar-accent-foreground: 60 17% 98%;
+    --sidebar-border: 60 2% 25%;
+    --sidebar-ring: 48 3% 55%;
   }
 }
 

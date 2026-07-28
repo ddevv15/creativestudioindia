@@ -25,7 +25,3 @@ Add global CSS to app/globals.css:
 - A display-headline utility class: Cormorant Garamond, font-weight 500, line-height 1.1, letter-spacing -0.02em
 
 Do not build any page or component UI yet. Verify that a test className using the new tokens resolves correctly in the build.
-
----
-
-[Attach Figma design system screenshot]

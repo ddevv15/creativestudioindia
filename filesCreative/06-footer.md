@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Implement Footer.tsx as shown in the attached design exactly.
+Implement Footer.tsx to the written specification below.
 
 The footer has a dark background (#1A1A17) and contains:
 - Top row: logo left ("CREATIVE STUDIO"), Instagram and LinkedIn icon links right — pulled from constants/site.ts
@@ -10,7 +10,3 @@ The footer has a dark background (#1A1A17) and contains:
 All text is white or rgba(255,255,255,0.5) for secondary text. No red in the footer. No newsletter email input for v1 — replace it with an Instagram follow line: "Follow our work on Instagram →" linking to the Instagram URL from constants/site.ts.
 
 Do not change Nav, any page, or any Sanity/API file.
-
----
-
-[Attach Figma design: Footer]

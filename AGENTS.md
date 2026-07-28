@@ -152,11 +152,13 @@ public/
 
 ## UI Rules
 
+There are no Figma files for this project. The written spec in `filesCreative/` is the design source of truth.
+
 For any UI task:
 
-- Match the provided Figma design exactly.
-- Match layout, spacing, padding, font sizes, font hierarchy, colors, border radius, shadows, alignment, and proportions exactly.
-- Do not approximate. Do not simplify unless explicitly asked.
+- Build to the spec in `filesCreative/` exactly. Every value it names — layout, spacing, padding, font sizes, font hierarchy, colors, border radius, shadows, alignment, proportions — is a requirement, not a suggestion.
+- Where the spec names a value, use that value. Do not approximate. Do not simplify unless explicitly asked.
+- Where the spec is silent, follow the locked design decisions below and match the patterns already established in the built homepage sections.
 
 ### Design decisions (locked — do not change without asking)
 
@@ -266,6 +268,7 @@ Be concise. State what files were changed and how to verify the result.
 Before every feature:
 
 - Read this file.
-- Follow it strictly.
+- Read the matching spec in `filesCreative/`.
+- Follow both strictly.
 - Build clean, simple code.
-- Replicate UI exactly when Figma designs are provided.
+- Replicate the written spec exactly — it is the design source of truth.

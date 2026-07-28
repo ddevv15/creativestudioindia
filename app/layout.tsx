@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { SITE } from "@/constants/site";
+import { siteUrl } from "@/lib/seo";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -18,15 +19,17 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
-const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : "http://localhost:3000";
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: SITE.name,
   description: SITE.description,
   openGraph: {
+    title: SITE.name,
+    description: SITE.description,
+    images: [SITE.ogImage],
+  },
+  twitter: {
+    card: "summary_large_image",
     title: SITE.name,
     description: SITE.description,
     images: [SITE.ogImage],

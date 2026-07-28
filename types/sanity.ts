@@ -14,13 +14,74 @@ export type SanityImage = {
   };
 };
 
-export type Project = {
+/**
+ * Array members inside a Sanity image array carry a _key and may carry a caption.
+ * Kept assignable to SanityImageObject so urlFor() accepts it directly.
+ */
+export type GalleryImage = SanityImageObject & {
+  _key: string;
+  caption?: string;
+};
+
+/** Matches the `category` option list in sanity/schemas/project.ts exactly. */
+export type ProjectCategory =
+  | "bungalow"
+  | "residential"
+  | "commercial"
+  | "mixed-use";
+
+/** Matches the `status` option list in sanity/schemas/project.ts exactly. */
+export type ProjectStatus = "completed" | "under-construction" | "concept";
+
+/** Matches the `department` option list in sanity/schemas/teamMember.ts exactly. */
+export type Department =
+  | "leadership"
+  | "architecture"
+  | "engineering"
+  | "drafts"
+  | "admin";
+
+/** Matches the `type` option list in sanity/schemas/now.ts exactly. */
+export type NowType =
+  | "project-completion"
+  | "award"
+  | "press"
+  | "event"
+  | "partnership";
+
+/**
+ * The narrow projection ProjectCard consumes — six fields, nothing more.
+ * getFeaturedProjects returns exactly this shape.
+ */
+export type ProjectCardData = {
   _id: string;
   title: string;
   slug: string;
-  category: string;
+  category: ProjectCategory;
   coverImage: SanityImageObject;
   year?: number;
+};
+
+/**
+ * The full project document. Intersected with ProjectCardData so a complete
+ * Project remains assignable wherever the card projection is expected.
+ */
+export type Project = ProjectCardData & {
+  /** Sanity system field — absent on demo data, drives sitemap lastModified. */
+  _updatedAt?: string;
+  headline: string;
+  gallery: GalleryImage[];
+  description?: PortableTextBlock[];
+  location?: string;
+  area?: string;
+  status?: ProjectStatus;
+  featured?: boolean;
+  order?: number;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    ogImage?: SanityImageObject;
+  };
 };
 
 export type Sketch = {
@@ -28,6 +89,29 @@ export type Sketch = {
   title: string;
   image: SanityImageObject;
   year?: number;
+  /** Projected via `relatedProject->{ slug }` — absent when unlinked. */
+  relatedProject?: { slug: string };
+};
+
+export type TeamMember = {
+  _id: string;
+  name: string;
+  role: string;
+  photo: SanityImageObject;
+  department: Department;
+  bio?: string;
+  order?: number;
+};
+
+export type Now = {
+  _id: string;
+  title: string;
+  type: NowType;
+  /** ISO date string (Sanity `date` type). */
+  date: string;
+  body?: PortableTextBlock[];
+  image?: SanityImageObject;
+  relatedProject?: { slug: string };
 };
 
 export type SiteSettings = {

@@ -21,7 +21,3 @@ Projects page:
 Set page metadata: title "Projects | Creative Studio India".
 
 Do not change any homepage section, Nav, Footer, or Sanity schemas.
-
----
-
-[Attach Figma design: Projects listing page]

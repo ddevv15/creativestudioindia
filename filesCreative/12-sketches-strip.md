@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Implement SketchesStrip.tsx as shown in the attached design exactly. This section is CSI's design signature — it must feel distinct and crafted.
+Implement SketchesStrip.tsx to the written specification below. This section is CSI's design signature — it must feel distinct and crafted.
 
 Background: charcoal (#2C2C2A). Full width.
 
@@ -27,7 +27,3 @@ Fetches all sketches from Sanity using getAllSketches GROQ query, ordered by the
 GSAP ScrollTrigger entrance: section header fades in from Y: 24px → 0. The strip itself does not animate — it appears immediately once the header is in view. Trigger: "top 80%".
 
 Do not change any previously built section, Nav, Footer, or Sanity schemas.
-
----
-
-[Attach Figma design: Sketches strip section]

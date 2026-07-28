@@ -5,15 +5,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { urlFor } from "@/lib/sanity/image";
-import type { Project } from "@/types/sanity";
+import { CATEGORY_LABELS } from "@/constants/categories";
+import type { ProjectCardData } from "@/types/sanity";
 
-type ProjectCardProps = Omit<Project, "_id">;
+type ProjectCardProps = Omit<ProjectCardData, "_id"> & {
+  /** Set on the first above-the-fold card so it is not the unoptimised LCP. */
+  priority?: boolean;
+};
 
 export default function ProjectCard({
   title,
   slug,
   category,
   coverImage,
+  priority = false,
 }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false);
 
@@ -29,6 +34,7 @@ export default function ProjectCard({
           src={urlFor(coverImage).width(900).height(600).fit("crop").url()}
           alt={title}
           fill
+          priority={priority}
           sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
           className="object-cover transition-transform [transition-duration:400ms] [transition-timing-function:ease] md:group-hover:scale-[1.04]"
         />
@@ -47,7 +53,7 @@ export default function ProjectCard({
             />
           </p>
           <p className="mt-4 font-sans text-[11px] text-white/60">
-            {category}
+            {CATEGORY_LABELS[category]}
           </p>
         </div>
       </div>

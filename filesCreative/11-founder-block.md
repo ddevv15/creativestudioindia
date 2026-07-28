@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Implement FounderBlock.tsx as shown in the attached design exactly.
+Implement FounderBlock.tsx to the written specification below.
 
 Background: linen (#F1EFE8).
 
@@ -18,7 +18,3 @@ Right column:
 GSAP ScrollTrigger entrance: right column content fades in from X: 30px → 0, opacity 0 → 1, staggered 0.15s per element. Left column photo fades in opacity 0 → 1. Trigger: "top 75%".
 
 Do not change any previously built sections, Nav, Footer, or Sanity files.
-
----
-
-[Attach Figma design: Founder block section]

@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Implement ServicesOverview.tsx as shown in the attached design exactly.
+Implement ServicesOverview.tsx to the written specification below.
 
 Background: white (#FAFAF8).
 
@@ -24,7 +24,3 @@ Below the three cards: a single CTA text link "Explore our services →" centere
 GSAP ScrollTrigger entrance: cards stagger in from Y: 32px → 0, opacity 0 → 1, 0.15s stagger. Trigger: "top 80%".
 
 Do not change any previously built section, Nav, Footer, or Sanity files.
-
----
-
-[Attach Figma design: Services overview section]

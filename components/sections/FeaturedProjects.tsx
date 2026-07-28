@@ -4,10 +4,10 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { gsap } from "@/lib/gsap";
 import ProjectCard from "@/components/ProjectCard";
-import type { Project } from "@/types/sanity";
+import type { ProjectCardData } from "@/types/sanity";
 
 type FeaturedProjectsProps = {
-  projects: Project[];
+  projects: ProjectCardData[];
 };
 
 export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {

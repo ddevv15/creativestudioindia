@@ -2,7 +2,7 @@ Read AGENTS.md first and follow it strictly.
 
 Build the Studio/About page at app/(site)/about/page.tsx. The nav label is "Studio" but the URL is /about. Do not confuse this with the Sanity Studio at /studio.
 
-This is a long-scroll page. Build each of the following sections in order as shown in the attached design:
+This is a long-scroll page. Build each of the following sections in order as specified below:
 
 Page hero: linen (#F1EFE8) background. Section label "Studio". Headline "25 years of intentional design." Cormorant Garamond 56px. No image needed — typography-only hero. 80px padding.
 
@@ -19,7 +19,3 @@ Recognition section (conditional): only render this section if there are now ite
 Set page metadata: title "Studio | Creative Studio India".
 
 Do not change the homepage, projects pages, Nav, Footer, or Sanity schemas.
-
----
-
-[Attach Figma design: Studio/About page]

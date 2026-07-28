@@ -3,8 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
+import { gsap, SplitText } from "@/lib/gsap";
 import type { SiteSettings } from "@/types/sanity";
 
 type HeroProps = Pick<SiteSettings, "heroHeadline" | "heroMedia">;

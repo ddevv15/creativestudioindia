@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Build the Sketches gallery page at app/(site)/sketches/page.tsx as shown in the attached design exactly.
+Build the Sketches gallery page at app/(site)/sketches/page.tsx to the written specification below.
 
 Page hero: charcoal (#2C2C2A) background. Section label "Process" in rgba(255,255,255,0.4). Headline "Design begins by hand." Cormorant Garamond 52px, white. Sub-copy: "Every building we have designed started as a sketch. This is where ideas become architecture." DM Sans 17px, rgba(255,255,255,0.6). 80px padding vertical.
 
@@ -23,7 +23,3 @@ Clicking any sketch image opens it in a shadcn Dialog (lightbox) at full size. D
 Set page metadata: title "Sketches | Creative Studio India".
 
 Do not change any other page, section, Nav, Footer, or Sanity schemas.
-
----
-
-[Attach Figma design: Sketches gallery page]

@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Implement Hero.tsx as shown in the attached design exactly.
+Implement Hero.tsx to the written specification below.
 
 The hero is full-viewport height (100vh). It has a dark background (#1A1A17). The heroMedia field from Sanity siteSettings drives the background — if it is a video file, render it as a muted, autoplay, looping, playsinline background video. If it is an image, render it as a Next.js <Image> with fill and object-cover. Overlay a gradient from transparent to rgba(0,0,0,0.45) bottom-up so the headline stays readable.
 
@@ -16,7 +16,3 @@ GSAP animations on load (not scroll-triggered — these play once on mount):
 - Sub-copy and CTA fade in last, 0.5s, 0.2s apart
 
 Do not change Nav, Footer, or any other section. Do not change Sanity schemas or API files.
-
----
-
-[Attach Figma design: Hero section]

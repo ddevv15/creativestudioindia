@@ -22,7 +22,3 @@ FeaturedProjects.tsx:
 - GSAP ScrollTrigger: cards stagger in from Y: 40px → 0, opacity 0 → 1, 0.15s stagger, trigger "top 80%"
 
 Do not change Hero, CredentialBar, Nav, Footer, or any Sanity schema.
-
----
-
-[Attach Figma design: Featured projects section and project card]

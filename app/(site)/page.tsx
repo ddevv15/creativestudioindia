@@ -1,13 +1,4 @@
-// =============================================================================
-// TEMPORARY DEMO BUILD
-// -----------------------------------------------------------------------------
-// This homepage is fed by lib/demoData.ts instead of Sanity so the client can
-// preview the built design before the CMS is set up. To restore the real,
-// Sanity-backed version, revert this file to the previous commit and follow the
-// removal steps in lib/demoData.ts.
-// =============================================================================
-
-import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
 import Hero from "@/components/sections/Hero";
 import CredentialBar from "@/components/sections/CredentialBar";
 import FeaturedProjects from "@/components/sections/FeaturedProjects";
@@ -16,30 +7,40 @@ import SketchesStrip from "@/components/sections/SketchesStrip";
 import ServicesOverview from "@/components/sections/ServicesOverview";
 import ContactCTA from "@/components/sections/ContactCTA";
 import {
-  demoSiteSettings,
-  demoFeaturedProjects,
-  demoSketches,
-} from "@/lib/demoData";
+  getAllSketches,
+  getFeaturedProjects,
+  getSiteSettings,
+} from "@/lib/content";
+import { localBusinessSchema, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Creative Studio India | Architecture & 3D Visualization, Ahmedabad",
-  description: demoSiteSettings.defaultSeo?.metaDescription,
-};
+  description:
+    "Ahmedabad-based architecture studio led by principal architect Jignesh Patel — 25+ years of residential, commercial, and mixed-use design.",
+});
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [siteSettings, featuredProjects, sketches] = await Promise.all([
+    getSiteSettings(),
+    getFeaturedProjects(),
+    getAllSketches(),
+  ]);
+
   return (
     <>
+      <JsonLd data={localBusinessSchema()} />
+
       <Hero
-        heroHeadline={demoSiteSettings.heroHeadline}
-        heroMedia={demoSiteSettings.heroMedia}
+        heroHeadline={siteSettings.heroHeadline}
+        heroMedia={siteSettings.heroMedia}
       />
       <CredentialBar />
-      <FeaturedProjects projects={demoFeaturedProjects} />
+      <FeaturedProjects projects={featuredProjects} />
       <FounderBlock
-        principalPhoto={demoSiteSettings.principalPhoto}
-        principalBio={demoSiteSettings.principalBio}
+        principalPhoto={siteSettings.principalPhoto}
+        principalBio={siteSettings.principalBio}
       />
-      <SketchesStrip sketches={demoSketches} />
+      <SketchesStrip sketches={sketches} />
       <ServicesOverview />
       <ContactCTA />
     </>

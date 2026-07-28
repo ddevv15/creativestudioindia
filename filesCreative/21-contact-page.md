@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Build the contact page at app/(site)/contact/page.tsx and the /api/contact API route at app/api/contact/route.ts as shown in the attached design exactly.
+Build the contact page at app/(site)/contact/page.tsx and the /api/contact API route at app/api/contact/route.ts to the written specification below.
 
 Contact page layout — two columns on desktop (lg and above), stacked on mobile:
 
@@ -35,7 +35,3 @@ Right column: inquiry form
 Set page metadata: title "Contact | Creative Studio India".
 
 Do not change any other page, section, Nav, Footer, or Sanity files.
-
----
-
-[Attach Figma design: Contact page]

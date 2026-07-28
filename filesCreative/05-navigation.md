@@ -1,6 +1,6 @@
 Read AGENTS.md first and follow it strictly.
 
-Implement Nav.tsx and MobileNav.tsx as shown in the attached design exactly.
+Implement Nav.tsx and MobileNav.tsx to the written specification below.
 
 Nav.tsx (desktop):
 - Fixed position, full width, z-index above hero
@@ -22,7 +22,3 @@ MobileNav.tsx:
 Register GSAP and ScrollTrigger once in Nav.tsx using a useEffect with a cleanup. Do not register them anywhere else.
 
 Do not change the global layout. Do not change any Sanity or API files.
-
----
-
-[Attach Figma design: Navigation — desktop and mobile states]
