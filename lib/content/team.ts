@@ -1,11 +1,7 @@
-import { demoTeamMembers } from "@/lib/demoData";
+import { sanityFetch } from "@/lib/sanity/client";
+import * as queries from "@/lib/sanity/queries";
 import type { TeamMember } from "@/types/sanity";
 
-/** GROQ: *[_type == "teamMember"] | order(order asc) */
 export async function getAllTeamMembers(): Promise<TeamMember[]> {
-  return [...demoTeamMembers].sort(
-    (a, b) =>
-      (a.order ?? Number.MAX_SAFE_INTEGER) -
-      (b.order ?? Number.MAX_SAFE_INTEGER),
-  );
+  return sanityFetch<TeamMember[]>({ query: queries.getAllTeamMembers });
 }

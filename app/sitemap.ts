@@ -23,8 +23,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...projects.map((project) => ({
       url: `${siteUrl}/projects/${project.slug}`,
-      // _updatedAt only exists once content comes from Sanity; demo data has
-      // no modification history, so the build time stands in.
+      // _updatedAt is projected by the GROQ, but stays optional in the type so
+      // a document that predates the field does not break the build.
       lastModified: project._updatedAt ? new Date(project._updatedAt) : now,
       priority: 0.8,
     })),

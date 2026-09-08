@@ -1,7 +1,7 @@
-import { demoSketches } from "@/lib/demoData";
+import { sanityFetch } from "@/lib/sanity/client";
+import * as queries from "@/lib/sanity/queries";
 import type { Sketch } from "@/types/sanity";
 
-/** GROQ: *[_type == "sketch"] | order(order asc) with relatedProject->{ slug } */
 export async function getAllSketches(): Promise<Sketch[]> {
-  return [...demoSketches];
+  return sanityFetch<Sketch[]>({ query: queries.getAllSketches });
 }

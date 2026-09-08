@@ -1,7 +1,7 @@
-import { demoNowItems } from "@/lib/demoData";
+import { sanityFetch } from "@/lib/sanity/client";
+import * as queries from "@/lib/sanity/queries";
 import type { Now } from "@/types/sanity";
 
-/** GROQ: *[_type == "now"] | order(date desc) */
 export async function getAllNowItems(): Promise<Now[]> {
-  return [...demoNowItems].sort((a, b) => b.date.localeCompare(a.date));
+  return sanityFetch<Now[]>({ query: queries.getAllNowItems });
 }

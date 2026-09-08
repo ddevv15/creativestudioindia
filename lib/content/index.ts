@@ -1,15 +1,15 @@
 /**
  * The content layer — the single seam between the site and its data source.
  *
- * Page components import from here and never from lib/demoData.ts. Today these
- * functions return demo data; when the Sanity project is provisioned each body
- * becomes a client.fetch() using the GROQ already written in
- * lib/sanity/queries.ts. Signatures are async and shaped to match the eventual
- * Sanity return, so no page component changes on that day.
+ * Page components import from here and never from lib/sanity/client.ts,
+ * lib/sanity/queries.ts, or lib/demoData.ts. Each function below now reads from
+ * Sanity via sanityFetch(); the signatures are unchanged from the demo-data
+ * era, which is why no page component moved on the swap.
  */
 
 export {
   getAllProjects,
+  getAllProjectSlugs,
   getFeaturedProjects,
   getProjectBySlug,
   getRelatedProjects,

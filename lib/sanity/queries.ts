@@ -1,13 +1,15 @@
 /**
  * All GROQ lives here. Never write GROQ inline in a page or component.
  *
- * These queries are written but not yet executed — the site currently serves
- * demo data through lib/content/*. Each function in that directory documents
- * which query it will call. Ordering and limits are kept in lockstep between
- * the two so behaviour does not shift on the swap.
+ * These queries are executed by lib/content/*, which is the only module that
+ * imports them. Page components call lib/content and never reach in here.
  *
  * Note: `relatedProject->{ "slug": slug.current }` flattens the slug object to a
  * string, matching the `{ slug: string }` shape in types/sanity.ts.
+ *
+ * Note: ordering uses `coalesce(order, 999999)` so documents with no `order`
+ * sort last. Plain `order(order asc)` sorts nulls first in GROQ, which would
+ * float unordered drafts to the top of every listing.
  */
 
 /** Full project document fields, shared by the list and detail queries. */
@@ -45,24 +47,33 @@ const projectCardFields = `
 `;
 
 export const getAllProjects = `
-  *[_type == "project"] | order(order asc) {${projectFields}}
+  *[_type == "project"] | order(coalesce(order, 999999) asc) {${projectFields}}
 `;
 
 export const getProjectBySlug = `
   *[_type == "project" && slug.current == $slug][0] {${projectFields}}
 `;
 
+/**
+ * Slugs only, for generateStaticParams. Pulling full documents there would
+ * fetch every gallery image and Portable Text body just to read one string.
+ * `defined(slug.current)` guards against a half-filled draft breaking the build.
+ */
+export const getAllProjectSlugs = `
+  *[_type == "project" && defined(slug.current)] {"slug": slug.current}
+`;
+
 export const getFeaturedProjects = `
-  *[_type == "project" && featured == true] | order(order asc) [0...3] {${projectCardFields}}
+  *[_type == "project" && featured == true] | order(coalesce(order, 999999) asc) [0...3] {${projectCardFields}}
 `;
 
 export const getRelatedProjects = `
   *[_type == "project" && category == $category && slug.current != $slug]
-    | order(order asc) [0...3] {${projectCardFields}}
+    | order(coalesce(order, 999999) asc) [0...3] {${projectCardFields}}
 `;
 
 export const getAllTeamMembers = `
-  *[_type == "teamMember"] | order(order asc) {
+  *[_type == "teamMember"] | order(coalesce(order, 999999) asc) {
     _id,
     name,
     role,
@@ -74,7 +85,7 @@ export const getAllTeamMembers = `
 `;
 
 export const getAllSketches = `
-  *[_type == "sketch"] | order(order asc) {
+  *[_type == "sketch"] | order(coalesce(order, 999999) asc) {
     _id,
     title,
     image,
