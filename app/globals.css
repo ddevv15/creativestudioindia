@@ -144,4 +144,74 @@
     line-height: 1.1;
     letter-spacing: -0.02em;
   }
+
+  /*
+   * Hero cutout. The image sits in a rounded frame with a notch removed from its
+   * top left corner, and the headline sits in that notch on the Ink background.
+   * Geometry values come from docs/specs/0001-hero-media-delivery.md.
+   *
+   * Built from CSS custom properties on purpose, NOT an SVG clipPath. An SVG
+   * path's `d` attribute is a literal coordinate string that cannot read a CSS
+   * variable, so a clipPath notch would have to be recomputed as a string in
+   * JavaScript on every measurement. Here the notch has a correct size before
+   * any JavaScript runs, and Hero.tsx only refines --notch-w and --notch-h to
+   * the real headline once the display font has loaded.
+   */
+  .hero-frame {
+    --hero-r: 32px;
+    /* Sensible defaults so the shape is right at first paint. */
+    --notch-w: 62%;
+    --notch-h: 38%;
+    position: relative;
+    border-radius: var(--hero-r);
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .hero-frame {
+      --hero-r: 56px;
+    }
+  }
+
+  /*
+   * Three pieces make the notch: the block itself, whose rounded bottom right
+   * corner the image curves around, and two quarter disc wedges where the notch
+   * meets the frame's top and left edges. Each wedge is Ink everywhere except a
+   * quarter circle at its own bottom right corner, which is what turns an
+   * otherwise square 90 degree join into a smooth concave curve.
+   */
+  .hero-notch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--notch-w);
+    height: var(--notch-h);
+    background: var(--color-ink);
+    border-bottom-right-radius: var(--hero-r);
+  }
+
+  .hero-notch::before,
+  .hero-notch::after {
+    content: "";
+    position: absolute;
+    width: var(--hero-r);
+    height: var(--hero-r);
+    background: radial-gradient(
+      circle at 100% 100%,
+      transparent var(--hero-r),
+      var(--color-ink) calc(var(--hero-r) + 0.5px)
+    );
+  }
+
+  /* Where the notch meets the frame's top edge. */
+  .hero-notch::after {
+    top: 0;
+    left: 100%;
+  }
+
+  /* Where the notch meets the frame's left edge. */
+  .hero-notch::before {
+    top: 100%;
+    left: 0;
+  }
 }

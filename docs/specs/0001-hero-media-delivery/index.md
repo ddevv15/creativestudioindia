@@ -1,25 +1,11 @@
 # 0001. Hero media delivery: image only field and a curved cutout hero
 
 **Date**: 2026-09-08
-**Status**: Proposed
+**Status**: In Progress
 
 ## Summary
 
 The homepage hero changes in two coupled ways. The Sanity `heroMedia` field stops being a `file` (which could hold a video that streams straight off Sanity storage, with no transcoding and a bandwidth bill to match) and becomes an `image`. On top of that, the hero is rebuilt so the picture sits inside a shape with a notch cut out of its top left corner, and the headline sits in that notch on the dark background rather than on top of the picture. The studio keeps control of both the headline and the image. Nothing about the nav, the fonts, or the sharp cornered buttons changes.
-
-## Context
-
-> ⚠️ Premise note: the reference for this work is the React Bits Pro "Hero 12" block, from an interior design site. Once the design system conflicts were resolved, the only idea actually being adopted from it is the curved cutout. The grotesque sans headline, the soft radii on buttons and cards, the pill call to action, and the feature card were all declined in favour of the locked decisions in `AGENTS.md`. That is the right call, and it means the finished hero will not look like the screenshot. Expect a Cormorant Garamond hero, sharp cornered, with a curved notch. If a closer match to the reference is wanted later, the thing to reopen is the typography rule, not this spec.
-
-`components/sections/Hero.tsx` renders a full viewport panel with the picture behind the text and a gradient scrim keeping the words readable. The picture comes from `siteSettings.heroMedia`, which `sanity/schemas/siteSettings.ts` declares as a `file`. The component branches on `heroMedia.asset.mimeType.startsWith("video/")` and, for a video, renders an autoplaying looping `<video>` pointed straight at the Sanity asset URL.
-
-That branch is the problem. Sanity serves file assets as plain downloads. There is no transcoding and no adaptive streaming, so the first time anyone at the studio uploads an MP4 the whole file is pulled from the CDN on every uncached load of the busiest page on the site. Nothing errors. The bill simply grows, and the page gets slower on poor connections. The field type invites exactly this, and the component is built to accept it.
-
-Being a `file` also costs something every day it stays. Sanity's image pipeline only works on image assets: hotspot cropping, low quality image placeholders, and width based responsive sources are all unavailable to a `file`. The hero is the largest image on the site and the element that decides the page's Largest Contentful Paint, so it is the worst place to give that up.
-
-Separately, the studio asked for a different hero composition: the headline lifted out of the picture and set into a curved notch cut from its corner. That is not a cosmetic change layered on top. It needs the image inside a masked shape rather than a full bleed background, so it lands naturally in the same piece of work.
-
-The constraint that shapes everything here is that this hero is not free standing. `components/layout/Nav.tsx` finds it with `document.querySelector("[data-nav-overlay]")` and measures that element to decide when the nav turns from transparent to solid. `constants/nav.ts` lists `/` as an overlay route. Break that contract and the homepage nav regresses to the bug fixed in commit `ba2a4c7`.
 
 ## Requirements
 
@@ -41,44 +27,6 @@ The constraint that shapes everything here is that this hero is not free standin
 - **AC-10**: The hero image is served through Sanity's image pipeline with `priority` and `sizes="calc(100vw - 48px)"` below `md`, `calc(100vw - 96px)` above. It paints immediately with its CSS default shape and is never gated behind JavaScript, so it remains the Largest Contentful Paint element.
 - **AC-11**: The section label "01 / Architecture" and the sub copy line are removed from the hero.
 
-## Options considered
-
-### Option 1: Narrow the field to `image` and rebuild the hero around a cutout mask
-
-Change the schema type, delete the video branch, drop `mimeType` from the GROQ projection, and rebuild the composition so the image sits in a masked shape with the headline in the notch.
-
-**Pros**:
-- Removes the bandwidth risk permanently rather than documenting it.
-- Unlocks hotspot, low quality placeholders, and responsive sources on the site's LCP image.
-- One field means one obvious thing for the studio to set.
-
-**Cons**:
-- The existing `heroMedia` value becomes invalid and someone has to re upload the image.
-- Rules out a video hero without another spec.
-
-### Option 2: Keep `file`, reject video by validation
-
-Leave the type alone and add a Sanity validation rule rejecting video mime types.
-
-**Pros**:
-- Smallest change, and the current stored value stays valid.
-
-**Cons**:
-- The video branch stays in `Hero.tsx` as a trap for whoever reads it next.
-- Still no image pipeline, so the LCP image stays unoptimised.
-- Validation guards the Studio, not the API, so a scripted write can still put a video there.
-
-### Option 3: Keep video, move it to Mux
-
-Install `sanity-plugin-mux-input` so video is transcoded and adaptively streamed.
-
-**Pros**:
-- Real video support, done the way video should be done.
-
-**Cons**:
-- A new paid third party service and a new plugin for one background loop nobody has asked for.
-- More for the studio to learn, and another account to keep alive.
-
 ## Decision
 
 **Chosen option**: Option 1: narrow the field to `image` and rebuild the hero around a cutout mask.
@@ -89,11 +37,7 @@ Install `sanity-plugin-mux-input` so video is transcoded and adaptively streamed
 
 ## Rationale
 
-The bandwidth exposure is latent, not theoretical: the component is written to autoplay a video and the field type accepts one, so it takes a single content upload by someone who has no idea about any of this. A validation rule (Option 2) leaves that shape in place and only narrows who can trigger it. Deleting the branch is what actually closes it.
-
-The image pipeline settles it beyond the bandwidth question. This is the largest image on the busiest page and the element that decides the page's LCP, and a `file` asset cannot be cropped by hotspot, cannot emit a placeholder, and cannot produce width based sources. Giving that up on the hero specifically is the worst possible place to give it up. Option 3 would solve video properly, but it answers a question nobody has asked: there is no video, no plan for one, and no appetite for another paid service on a brochure site.
-
-The engineer originally described the effect as text bent along a curve, and the reference screenshot showed something different: straight text in a curved cutout. Building it as a cutout is both what was actually wanted and the safer engineering. Text on an SVG path is hard to keep accessible, hard to keep readable at small widths, and hostile to a headline whose length the studio controls.
+Reasoning, the options weighed, and the problem context: see [rationale.md](rationale.md).
 
 ## Feature design
 
@@ -165,15 +109,15 @@ The section fills `100vh`. The image fills that height minus its insets, floored
 
 Ordered as a thin thread first, per the project's Tracer Bullet approach: steps 1 to 5 give a working, shippable image hero end to end through schema, query, content and component. Steps 6 to 9 then thicken it with the shape and the motion. The build is releasable after step 5.
 
-1. Change `heroMedia` to `image` with hotspot in `sanity/schemas/siteSettings.ts` and deploy the schema. Satisfies **AC-1**.
-2. Update the `getSiteSettings` projection in `lib/sanity/queries.ts` and the `SiteSettings` type in `types/sanity.ts`. Satisfies **AC-1**, **AC-10**.
-3. Re upload the hero image in the Studio and confirm the singleton validates. Satisfies **AC-1**.
-4. Rewrite `Hero.tsx` as a plain image hero: delete the video branch, render through `urlFor()` with `priority`, a width based `sizes`, and the LQIP blur placeholder. Keep `data-nav-overlay`, keep the headline as `<h1>` and the call to action, remove the section label and sub copy. Satisfies **AC-3**, **AC-6**, **AC-8**, **AC-10**, **AC-11**.
-5. Add the committed default image in `public/` and use it when `heroMedia` is absent. Satisfies **AC-7**.
-6. Add the cutout with the CSS inverse radius technique, every value from the Geometry table as a custom property, so the notch is correct at first paint with no JavaScript. Satisfies **AC-2**.
-7. Refine the notch to the real headline: measure the `<h1>` box with a `ResizeObserver`, gated behind `document.fonts.ready` exactly as the animation is, and write the result back to the same custom properties. Add the `min-height` floor. Satisfies **AC-4**.
-8. Remove the notch below `md`, keeping the outer radius and moving the headline above the image. Satisfies **AC-5**.
-9. Keep the SplitText reveal and guard it with `prefers-reduced-motion`. Satisfies **AC-9**.
+1. [x] Change `heroMedia` to `image` with hotspot in `sanity/schemas/siteSettings.ts` and deploy the schema. Satisfies **AC-1**.
+2. [x] Update the `getSiteSettings` projection in `lib/sanity/queries.ts` and the `SiteSettings` type in `types/sanity.ts`. Satisfies **AC-1**, **AC-10**.
+3. [x] Re upload the hero image in the Studio and confirm the singleton validates. Satisfies **AC-1**.
+4. [x] Rewrite `Hero.tsx` as a plain image hero: delete the video branch, render through `urlFor()` with `priority`, a width based `sizes`, and the LQIP blur placeholder. Keep `data-nav-overlay`, keep the headline as `<h1>` and the call to action, remove the section label and sub copy. Satisfies **AC-3**, **AC-6**, **AC-8**, **AC-10**, **AC-11**.
+5. [x] Add the committed default image in `public/` and use it when `heroMedia` is absent. Satisfies **AC-7**.
+6. [x] Add the cutout with the CSS inverse radius technique, every value from the Geometry table as a custom property, so the notch is correct at first paint with no JavaScript. Satisfies **AC-2**.
+7. [x] Refine the notch to the real headline: measure the `<h1>` box with a `ResizeObserver`, gated behind `document.fonts.ready` exactly as the animation is, and write the result back to the same custom properties. Add the `min-height` floor. Satisfies **AC-4**.
+8. [x] Remove the notch below `md`, keeping the outer radius and moving the headline above the image. Satisfies **AC-5**.
+9. [x] Keep the SplitText reveal and guard it with `prefers-reduced-motion`. Satisfies **AC-9**.
 
 ## Migration plan
 

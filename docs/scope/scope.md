@@ -156,13 +156,19 @@ Fixed 2026-09-09. The real cause was not the component alone: `photo` is `rule.r
 `heroMedia` is a Sanity `file` field and the hero has a branch that autoplays it when the file is a video. Sanity serves file assets as plain downloads, with no transcoding and no adaptive streaming, so the first time the studio uploads an MP4 every visitor pulls the whole file on every uncached load. Nothing breaks; the bill just grows quietly. Now also carries the homepage hero redesign: the image moves into a shape with a notch cut from its corner, with the headline set into the notch.
 **Done when:** the schema can no longer accept a video that streams straight off Sanity file storage, the hero renders correctly for whatever the field now allows, and the reasoning is written down so nobody reintroduces it.
 - [x] Design it (spec): `/architect hero media delivery`
-- [ ] Build it: `/develop hero media delivery`
-   - [ ] Schema and query move to an image field: type change, GROQ projection, types, re upload (AC-1, AC-10)
-   - [ ] Hero renders as an image hero, shippable on its own: video branch deleted, `priority` and Sanity sources, label and sub copy removed, `data-nav-overlay` kept, default image fallback (AC-3, AC-6, AC-7, AC-8, AC-10, AC-11)
-   - [ ] The notch: CSS inverse radius corners from the Geometry table, then refined to the real headline after fonts load (AC-2, AC-4)
-   - [ ] Responsive and motion: notch removed below `md`, reduced motion honoured (AC-5, AC-9)
+- [x] Build it: `/develop hero media delivery`
+   - [x] Schema and query move to an image field: type change, GROQ projection, types, re upload (AC-1, AC-10)
+   - [x] Hero renders as an image hero, shippable on its own: video branch deleted, `priority` and Sanity sources, label and sub copy removed, `data-nav-overlay` kept, default image fallback (AC-3, AC-6, AC-7, AC-8, AC-10, AC-11)
+   - [x] The notch: CSS inverse radius corners from the Geometry table, then refined to the real headline after fonts load (AC-2, AC-4)
+   - [x] Responsive and motion: notch removed below `md`, reduced motion honoured (AC-5, AC-9)
 - [ ] Verify it: `/check verify hero media delivery`
-spec [0001](../specs/0001-hero-media-delivery.md)
+spec [0001](../specs/0001-hero-media-delivery/index.md) · [verify steps](../specs/0001-hero-media-delivery/verify.md) · code in `components/sections/Hero.tsx`, `app/globals.css`, `sanity/schemas/siteSettings.ts`, `lib/sanity/queries.ts`, `types/sanity.ts`
+
+Two things the build changed from the spec, for `/architect` to reconcile into the Geometry table:
+the top inset is `--nav-h` plus the gutter rather than a flat 48px, because at 48px the fixed nav's
+white links sat on the photograph; and the default image is `public/hero-default.jpg` at 1920x1080,
+the asset that actually exists, not the 2400x1600 the spec names. AC-9's reduced motion path is
+built but was not exercised, since the browser tooling here cannot emulate that setting.
 
 Migration depends on feature 3. Until the publish to live path works, the window where the homepage shows the default image is up to an hour rather than seconds.
 

@@ -110,16 +110,22 @@ export const getAllNowItems = `
   }
 `;
 
+/**
+ * Note the `heroMedia{ ... }` spread. It deliberately does NOT dereference the
+ * asset. `urlFor()` needs the raw image object, with `asset._ref` plus the
+ * `hotspot` and `crop` fields, to honour the hotspot the studio sets; a
+ * dereferenced `asset->` would hand it an asset document and silently lose the
+ * crop. The blur placeholder is pulled out as a flat `lqip` field instead, so
+ * the image object stays intact.
+ */
 export const getSiteSettings = `
   *[_type == "siteSettings"][0]{
     _id,
     studioName,
     heroHeadline,
     heroMedia{
-      asset->{
-        url,
-        mimeType
-      }
+      ...,
+      "lqip": asset->metadata.lqip
     },
     principalBio,
     principalPhoto{

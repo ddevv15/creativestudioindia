@@ -1,11 +1,14 @@
 import type { PortableTextBlock } from "@sanity/types";
 import type { SanityImageObject } from "@sanity/image-url";
 
-export type SanityFile = {
-  asset: {
-    url: string;
-    mimeType: string;
-  };
+/**
+ * The hero image. A full Sanity image object so `urlFor()` can read its hotspot
+ * and crop, plus the low quality placeholder pulled out as a flat field by the
+ * GROQ (see lib/sanity/queries.ts). `lqip` is a tiny base64 data URL Sanity
+ * generates per asset, used as the blur shown while the real image loads.
+ */
+export type HeroImage = SanityImageObject & {
+  lqip?: string;
 };
 
 export type SanityImage = {
@@ -126,7 +129,7 @@ export type SiteSettings = {
   _id: string;
   studioName: string;
   heroHeadline: string;
-  heroMedia: SanityFile;
+  heroMedia?: HeroImage;
   principalBio: PortableTextBlock[];
   principalPhoto: SanityImage;
   phone: string;

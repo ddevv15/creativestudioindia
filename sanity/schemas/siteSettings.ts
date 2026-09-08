@@ -19,8 +19,15 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "heroMedia",
-      title: "Hero Media",
-      type: "file",
+      title: "Hero Image",
+      // `image`, not `file`. A file asset is served as a plain download with no
+      // transcoding and no adaptive streaming, so a video here would pull the
+      // whole thing from the CDN on every uncached load of the busiest page.
+      // An image asset also unlocks hotspot cropping, the blur placeholder, and
+      // width based sources, which matter most on the page's LCP element.
+      // See docs/specs/0001-hero-media-delivery.md.
+      type: "image",
+      options: { hotspot: true },
       validation: (rule) => rule.required(),
     }),
     defineField({
