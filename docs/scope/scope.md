@@ -40,7 +40,7 @@ Features 1 to 23 were built before this workflow existed, from the written specs
 | 23 | SEO and metadata layer | Slice 4: Motion and SEO | existing |
 | 28 | Sanity client crashes the browser | Slice 5: Runtime fixes | planned |
 | 29 | Team card crashes /about | Slice 5: Runtime fixes | planned |
-| 24 | Hero media delivery | Slice 6: Launch readiness | planned |
+| 24 | Hero media delivery | Slice 6: Launch readiness | in-progress |
 | 25 | Real studio content | Slice 6: Launch readiness | planned |
 | 26 | GA4 analytics | Slice 6: Launch readiness | planned |
 | 27 | Test foundation | Slice 6: Launch readiness | planned |
@@ -148,10 +148,19 @@ Two defects found by `/check verify` on 2026-09-08. Both are live right now on `
 
 ## Slice 6: Launch readiness
 
-### 24. Hero media delivery · needs a decision
-`heroMedia` is a Sanity `file` field and the hero has a branch that autoplays it when the file is a video. Sanity serves file assets as plain downloads, with no transcoding and no adaptive streaming, so the first time the studio uploads an MP4 every visitor pulls the whole file on every uncached load. Nothing breaks; the bill just grows quietly.
+### 24. Hero media delivery · in-progress
+`heroMedia` is a Sanity `file` field and the hero has a branch that autoplays it when the file is a video. Sanity serves file assets as plain downloads, with no transcoding and no adaptive streaming, so the first time the studio uploads an MP4 every visitor pulls the whole file on every uncached load. Nothing breaks; the bill just grows quietly. Now also carries the homepage hero redesign: the image moves into a shape with a notch cut from its corner, with the headline set into the notch.
 **Done when:** the schema can no longer accept a video that streams straight off Sanity file storage, the hero renders correctly for whatever the field now allows, and the reasoning is written down so nobody reintroduces it.
-- [ ] Design it (spec): `/architect hero media delivery`
+- [x] Design it (spec): `/architect hero media delivery`
+- [ ] Build it: `/develop hero media delivery`
+   - [ ] Schema and query move to an image field: type change, GROQ projection, types, re upload (AC-1, AC-10)
+   - [ ] Hero renders as an image hero, shippable on its own: video branch deleted, `priority` and Sanity sources, label and sub copy removed, `data-nav-overlay` kept, default image fallback (AC-3, AC-6, AC-7, AC-8, AC-10, AC-11)
+   - [ ] The notch: CSS inverse radius corners from the Geometry table, then refined to the real headline after fonts load (AC-2, AC-4)
+   - [ ] Responsive and motion: notch removed below `md`, reduced motion honoured (AC-5, AC-9)
+- [ ] Verify it: `/check verify hero media delivery`
+spec [0001](../specs/0001-hero-media-delivery.md)
+
+Migration depends on feature 3. Until the publish to live path works, the window where the homepage shows the default image is up to an hour rather than seconds.
 
 ### 25. Real studio content
 Every document in Sanity currently holds the reviewed placeholder copy the seed script loaded, team members have no portraits, and `constants/site.ts` still carries a demo phone number and address. This is the last thing standing between the site and being genuinely the studio's.
@@ -175,6 +184,9 @@ Out of scope for the current build pass, kept so the plan stays honest.
 - **Cookie consent banner**: only if feature 26's decision says analytics needs gating · needs a decision
 - **Accessibility audit**: no WCAG target has been set for the site yet · needs a decision
 - **Performance budget**: no Core Web Vitals targets agreed, though the hero and gallery are the obvious risks · needs a decision
+- **Reconcile the section label rule in `AGENTS.md`**: it is written as absolute, and the new hero is a deliberate exception · from spec 0001 · `/sync` owns that file
+- **`filesCreative/08-hero-section.md` is partly superseded**: it still describes the video branch and the old composition · from spec 0001
+- **Art direction for the hero on mobile**: a different crop rather than the same image scaled; hotspot helps but is not the same thing · from spec 0001 · needs a decision
 
 ## Legend
 
