@@ -97,7 +97,15 @@ export type TeamMember = {
   _id: string;
   name: string;
   role: string;
-  photo: SanityImageObject;
+  /**
+   * Optional even though the schema marks it required. Sanity validation runs
+   * in the Studio, not at the API, so a document written by a script or an
+   * import can be missing it and the query will still return that document.
+   * The type describes what the API can hand back, not what the Studio asks
+   * for. Keeping it required here is what let TeamCard call urlFor() on a
+   * missing photo and take /about down with a 500.
+   */
+  photo?: SanityImageObject;
   department: Department;
   bio?: string;
   order?: number;

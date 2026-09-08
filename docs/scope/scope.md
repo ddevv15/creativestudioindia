@@ -9,7 +9,9 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 Features 1 to 23 were built before this workflow existed, from the written specs in `filesCreative/`. They are enrolled for context, so later work can point at them. Features 24 to 27 are what stands between the site as it is and a launch the studio can run on its own.
 
-`/check verify` ran against features 1 to 23 on 2026-09-08 and found three runtime failures, so the picture is less finished than the `existing` rows first suggested. Two became features 28 and 29 in Slice 5, and the third moved feature 3 back to `in-progress`. Take Slice 5 before Slice 6: every route answers HTTP 200 today while the browser crashes on most of them, so a status check is not proof of anything here.
+`/check verify` ran against features 1 to 23 on 2026-09-08 and found three runtime failures, so the picture was less finished than the `existing` rows first suggested. Two became features 28 and 29 in Slice 5, and the third moved feature 3 back to `in-progress`. Features 28 and 29 were fixed on 2026-09-09 and every public route now loads in a real browser with zero console errors. Feature 3 is still open.
+
+The lesson from that round is worth keeping: HTTP 200 proved nothing here. The server rendered every page fine while the browser crashed on most of them, and a stale `.next` cache hid a second failure on top. Verify in a browser, from a cleared cache.
 
 ## At a glance
 
@@ -38,8 +40,8 @@ Features 1 to 23 were built before this workflow existed, from the written specs
 | 21 | Contact page | Slice 3: Inner pages | existing |
 | 22 | GSAP animation pass | Slice 4: Motion and SEO | existing |
 | 23 | SEO and metadata layer | Slice 4: Motion and SEO | existing |
-| 28 | Sanity client crashes the browser | Slice 5: Runtime fixes | planned |
-| 29 | Team card crashes /about | Slice 5: Runtime fixes | planned |
+| 28 | Sanity client crashes the browser | Slice 5: Runtime fixes | done |
+| 29 | Team card crashes /about | Slice 5: Runtime fixes | done |
 | 24 | Hero media delivery | Slice 6: Launch readiness | in-progress |
 | 25 | Real studio content | Slice 6: Launch readiness | planned |
 | 26 | GA4 analytics | Slice 6: Launch readiness | planned |
@@ -136,15 +138,17 @@ Unique metadata per page, Open Graph and Twitter cards, JSON LD for the practice
 
 Two defects found by `/check verify` on 2026-09-08. Both are live right now on `main`. They come first because features 8 to 18 cannot honestly be verified until 28 is fixed: the server renders their HTML fine, so they return HTTP 200, and then the browser crashes.
 
-### 28. Sanity client crashes the browser
+### 28. Sanity client crashes the browser · done
 `lib/sanity/client.ts` reads its configuration through a helper that does `process.env[name]` with a computed key. Next and Turbopack only replace literal `process.env.NEXT_PUBLIC_X` references at build time, so a computed lookup survives into the browser bundle as `undefined` and the helper throws while the module is still evaluating. Five client components reach this module through `lib/sanity/image.ts` (`ProjectCard`, `TeamCard`, `SketchCard`, `ProjectGallery`, `SketchesStrip`), and `ProjectCard` alone puts it on the home page, the projects listing, and every project detail page. Server rendering is unaffected, which is why every route still answers 200 and the breakage is invisible to a status check.
 **Done when:** every public route loads in a real browser with no runtime error overlay and no console error, and the server still fails loudly when its own environment is genuinely missing.
-- [ ] Fix it: `/debug sanity client browser crash`
+- [x] Fix it: `/debug sanity client browser crash`
+Fixed 2026-09-09 in `lib/sanity/client.ts`: the two values are now read as literal `process.env.X` member expressions so the build time replacement can see them. Proof: the projectId went from 0 to 1 occurrences in the client chunk, and the home page loads with zero console errors. Owes a regression test, blocked on feature 27.
 
-### 29. Team card crashes /about
+### 29. Team card crashes /about · done
 `components/TeamCard.tsx` calls `urlFor(member.photo)` on line 24, one line above the `src ?` guard that was meant to catch a missing portrait, so the typographic fallback below it can never run. With no portraits in Sanity the call throws `Unable to resolve image URL from source (null)` and the whole page returns 500. The fallback only ever worked because the deleted demo shim in `lib/sanity/image.ts` returned an empty string rather than throwing; the comment above line 24 still describes that shim.
 **Done when:** `/about` returns 200 and renders every team member, with the typographic block standing in wherever a portrait is missing.
-- [ ] Fix it: `/debug team card null photo`
+- [x] Fix it: `/debug team card null photo`
+Fixed 2026-09-09. The real cause was not the component alone: `photo` is `rule.required()` in the schema, but Sanity enforces validation in the Studio and not at the API, so the seed script wrote seven members without it. `types/sanity.ts` now types `photo` as optional, which describes what the API can actually return, and `TeamCard` guards the `urlFor()` call rather than only its result. The schema stays `required()` on purpose so the Studio keeps asking for portraits. Owes a regression test, blocked on feature 27.
 
 ## Slice 6: Launch readiness
 

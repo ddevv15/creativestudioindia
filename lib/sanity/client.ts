@@ -1,12 +1,32 @@
 import { createClient, type QueryParams } from "next-sanity";
 
 /**
+ * Read each variable as a LITERAL `process.env.X` member expression, never
+ * `process.env[someVariable]`.
+ *
+ * Next and Turbopack put NEXT_PUBLIC_* values into the browser bundle by
+ * statically replacing literal member expressions at build time. A computed
+ * lookup is invisible to that pass, so it survives into the browser as a
+ * property read against an object that has no such key, and the value is
+ * undefined no matter what the environment holds.
+ *
+ * That matters here because this module is not server only. `lib/sanity/image.ts`
+ * imports `client` to build the image URL builder, and five client components
+ * import that (ProjectCard, TeamCard, SketchCard, ProjectGallery, SketchesStrip),
+ * so this file evaluates in the browser too. When the lookup came back undefined
+ * the guard below threw while the module was still evaluating, which took down
+ * every page rendering one of those components. The server was unaffected, so
+ * the routes still answered 200 and only a real browser showed it.
+ */
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+
+/**
  * Fail loudly at module load if the project is unconfigured. The previous
  * `|| "demo"` fallbacks let a misconfigured deploy boot and then 404 every
  * query, which reads as "the CMS is empty" rather than "the env is missing".
  */
-function required(name: string): string {
-  const value = process.env[name];
+function required(name: string, value: string | undefined): string {
   if (!value) {
     throw new Error(
       `Missing ${name}. Copy .env.example to .env.local and fill it in.`,
@@ -16,8 +36,8 @@ function required(name: string): string {
 }
 
 export const client = createClient({
-  projectId: required("NEXT_PUBLIC_SANITY_PROJECT_ID"),
-  dataset: required("NEXT_PUBLIC_SANITY_DATASET"),
+  projectId: required("NEXT_PUBLIC_SANITY_PROJECT_ID", projectId),
+  dataset: required("NEXT_PUBLIC_SANITY_DATASET", dataset),
   apiVersion: "2026-06-20",
   useCdn: true,
   // Never let an unpublished draft reach the public site.

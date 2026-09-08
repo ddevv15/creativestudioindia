@@ -18,10 +18,17 @@ function initials(name: string) {
 }
 
 export default function TeamCard({ member }: TeamCardProps) {
-  // No portrait photography exists yet, so demo members resolve to an empty
-  // URL and fall back to a typographic block. When real photos land in Sanity
-  // the Image branch takes over with no code change here.
-  const src = urlFor(member.photo).width(600).height(600).fit("crop").url();
+  // Guard the urlFor() CALL, not just its result. urlFor() throws on a missing
+  // source rather than returning an empty string, so calling it unconditionally
+  // made the typographic fallback below unreachable and took the whole /about
+  // page down with a 500 for any member without a portrait.
+  //
+  // The schema marks photo required, but that is enforced by the Studio and not
+  // by the API, so a member written by a script can genuinely arrive without one.
+  // When real photos land in Sanity the Image branch takes over with no change here.
+  const src = member.photo
+    ? urlFor(member.photo).width(600).height(600).fit("crop").url()
+    : null;
 
   return (
     <div>
