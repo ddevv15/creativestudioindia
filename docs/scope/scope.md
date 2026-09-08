@@ -7,7 +7,9 @@ The portfolio website for Creative Studio India, an Ahmedabad architecture pract
 
 _These are recommendations to keep your build orderly, not requirements. Skip anything that does not fit: if you already know how to build a feature, use `/develop` and skip `/architect`. You decide when a feature is `done`._
 
-Features 1 to 23 were built before this workflow existed, from the written specs in `filesCreative/`. They are enrolled as `existing` for context, so later work can point at them. Features 24 to 27 are what stands between the site as it is and a launch the studio can run on its own.
+Features 1 to 23 were built before this workflow existed, from the written specs in `filesCreative/`. They are enrolled for context, so later work can point at them. Features 24 to 27 are what stands between the site as it is and a launch the studio can run on its own.
+
+`/check verify` ran against features 1 to 23 on 2026-09-08 and found three runtime failures, so the picture is less finished than the `existing` rows first suggested. Two became features 28 and 29 in Slice 5, and the third moved feature 3 back to `in-progress`. Take Slice 5 before Slice 6: every route answers HTTP 200 today while the browser crashes on most of them, so a status check is not proof of anything here.
 
 ## At a glance
 
@@ -15,7 +17,7 @@ Features 1 to 23 were built before this workflow existed, from the written specs
 |---|---------|-------|--------|
 | 1 | Project setup | Foundation | existing |
 | 2 | Design system | Foundation | existing |
-| 3 | Sanity CMS setup | Foundation | existing |
+| 3 | Sanity CMS setup | Foundation | in-progress |
 | 4 | Global layout | Global chrome | existing |
 | 5 | Navigation | Global chrome | existing |
 | 6 | Footer | Global chrome | existing |
@@ -36,10 +38,12 @@ Features 1 to 23 were built before this workflow existed, from the written specs
 | 21 | Contact page | Slice 3: Inner pages | existing |
 | 22 | GSAP animation pass | Slice 4: Motion and SEO | existing |
 | 23 | SEO and metadata layer | Slice 4: Motion and SEO | existing |
-| 24 | Hero media delivery | Slice 5: Launch readiness | planned |
-| 25 | Real studio content | Slice 5: Launch readiness | planned |
-| 26 | GA4 analytics | Slice 5: Launch readiness | planned |
-| 27 | Test foundation | Slice 5: Launch readiness | planned |
+| 28 | Sanity client crashes the browser | Slice 5: Runtime fixes | planned |
+| 29 | Team card crashes /about | Slice 5: Runtime fixes | planned |
+| 24 | Hero media delivery | Slice 6: Launch readiness | planned |
+| 25 | Real studio content | Slice 6: Launch readiness | planned |
+| 26 | GA4 analytics | Slice 6: Launch readiness | planned |
+| 27 | Test foundation | Slice 6: Launch readiness | planned |
 
 ## Foundation
 
@@ -49,8 +53,14 @@ Next.js 15 App Router scaffold on TypeScript, with the full dependency set and f
 ### 2. Design system · existing
 The locked palette, type scale, and spacing tokens, plus the sharp corner rule, as Tailwind theme extensions. code in `tailwind.config.ts`, `app/globals.css`
 
-### 3. Sanity CMS setup · existing
-Five document types, the embedded Studio, every GROQ query in one file, the image URL builder, and the webhook that rebuilds pages the moment the studio publishes. Dataset is seeded and live. code in `sanity/`, `lib/sanity/`, `lib/content/`, `app/studio/`, `app/api/revalidate/`
+### 3. Sanity CMS setup · in-progress
+Five document types, the embedded Studio, every GROQ query in one file, the image URL builder, and a webhook route meant to rebuild pages the moment the studio publishes. Dataset is seeded and live.
+
+Moved back from `existing` by `/check verify` on 2026-09-08. Everything here works except the publish to live path: `REVALIDATE_SECRET` is empty in `.env.local`, so `/api/revalidate` returns 401 for every request including a correctly formed one. The route fails closed, which is the safe direction, but on demand revalidation is simply not working. Publishing in the Studio leaves the site stale until the 3600 second fallback catches up.
+**Done when:** a real secret is set in `.env.local` and in the Vercel project, a webhook is registered in Sanity pointing at `/api/revalidate`, and publishing a document in the Studio visibly updates the live page without a redeploy.
+- [ ] Finish the publish to live path: `/develop sanity revalidation`
+- [ ] Verify it: `/check verify sanity revalidation`
+code in `sanity/`, `lib/sanity/`, `lib/content/`, `app/studio/`, `app/api/revalidate/`
 
 ## Global chrome
 
@@ -122,7 +132,21 @@ Scroll driven reveals across every section, with the plugins registered exactly 
 ### 23. SEO and metadata layer · existing
 Unique metadata per page, Open Graph and Twitter cards, JSON LD for the practice and its galleries, sitemap, and a robots file that keeps the Studio out of search. code in `lib/seo.ts`, `app/sitemap.ts`, `app/robots.ts`, `components/JsonLd.tsx`
 
-## Slice 5: Launch readiness
+## Slice 5: Runtime fixes
+
+Two defects found by `/check verify` on 2026-09-08. Both are live right now on `main`. They come first because features 8 to 18 cannot honestly be verified until 28 is fixed: the server renders their HTML fine, so they return HTTP 200, and then the browser crashes.
+
+### 28. Sanity client crashes the browser
+`lib/sanity/client.ts` reads its configuration through a helper that does `process.env[name]` with a computed key. Next and Turbopack only replace literal `process.env.NEXT_PUBLIC_X` references at build time, so a computed lookup survives into the browser bundle as `undefined` and the helper throws while the module is still evaluating. Five client components reach this module through `lib/sanity/image.ts` (`ProjectCard`, `TeamCard`, `SketchCard`, `ProjectGallery`, `SketchesStrip`), and `ProjectCard` alone puts it on the home page, the projects listing, and every project detail page. Server rendering is unaffected, which is why every route still answers 200 and the breakage is invisible to a status check.
+**Done when:** every public route loads in a real browser with no runtime error overlay and no console error, and the server still fails loudly when its own environment is genuinely missing.
+- [ ] Fix it: `/debug sanity client browser crash`
+
+### 29. Team card crashes /about
+`components/TeamCard.tsx` calls `urlFor(member.photo)` on line 24, one line above the `src ?` guard that was meant to catch a missing portrait, so the typographic fallback below it can never run. With no portraits in Sanity the call throws `Unable to resolve image URL from source (null)` and the whole page returns 500. The fallback only ever worked because the deleted demo shim in `lib/sanity/image.ts` returned an empty string rather than throwing; the comment above line 24 still describes that shim.
+**Done when:** `/about` returns 200 and renders every team member, with the typographic block standing in wherever a portrait is missing.
+- [ ] Fix it: `/debug team card null photo`
+
+## Slice 6: Launch readiness
 
 ### 24. Hero media delivery · needs a decision
 `heroMedia` is a Sanity `file` field and the hero has a branch that autoplays it when the file is a video. Sanity serves file assets as plain downloads, with no transcoding and no adaptive streaming, so the first time the studio uploads an MP4 every visitor pulls the whole file on every uncached load. Nothing breaks; the bill just grows quietly.
