@@ -13,6 +13,10 @@
 # testing
 /coverage
 
+# browser-automation artifacts (Playwright MCP snapshots, console logs, screenshots)
+/.playwright-mcp/
+/*.png
+
 # next.js
 /.next/
 /out/
@@ -41,3 +45,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# vendored AI-agent skills — third-party docs pulled from sanity-io/agent-toolkit,
+# reinstallable from skills-lock.json. Not project code.
+# .claude/skills is a symlink into .agents/; .claude itself stays trackable so
+# shared project settings can be committed later.
+/.agents/
+/.claude/skills/
