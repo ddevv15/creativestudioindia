@@ -46,15 +46,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# AI-agent tooling — installed per-developer, never part of the build.
+# AI-agent skills — installed per-developer, never part of the build.
 #
-# /.agents/  vendored Sanity skill docs from sanity-io/agent-toolkit,
-#            reinstallable from skills-lock.json
-# /.claude/  ECC project-local install (~488 files: rules, agents, commands,
-#            skills). ECC owns this whole directory — it writes its own
-#            AGENTS.md, plugin.json and marketplace.json at the root — so the
-#            directory is ignored wholesale rather than per-subtree. Reinstall
-#            with:
-#              npx ecc-universal install --target claude-project --profile minimal
+# skills-lock.json IS committed and pins the exact source + hash of every
+# skill, so these directories are reproducible the way node_modules is from
+# package-lock.json. Reinstall both with:
+#
+#   npx skills@latest add jsmastery-pro/skills -a claude-code
+#   npx skills@latest add sanity-io/agent-toolkit -a claude-code
+#
+# /.claude/  Claude Code skill installs (jsmastery-pro workflow skills +
+#            a symlink to the Sanity skill)
+# /.agents/  the generic copy other agents (Codex, etc.) read
 /.agents/
 /.claude/
