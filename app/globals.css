@@ -146,26 +146,26 @@
   }
 
   /*
-   * Hero cutout. The image sits in a rounded frame with a notch removed from its
-   * top left corner, and the headline sits in that notch on the Ink background.
-   * Geometry values come from docs/specs/0001-hero-media-delivery.md.
+   * Hero. The headline sits in a void cut from the picture's top left corner,
+   * stepping in line by line. See docs/specs/0001-hero-media-delivery.
    *
-   * Built from CSS custom properties on purpose, NOT an SVG clipPath. An SVG
-   * path's `d` attribute is a literal coordinate string that cannot read a CSS
-   * variable, so a clipPath notch would have to be recomputed as a string in
-   * JavaScript on every measurement. Here the notch has a correct size before
-   * any JavaScript runs, and Hero.tsx only refines --notch-w and --notch-h to
-   * the real headline once the display font has loaded.
+   * The image is mounted like a drawing on board, with an Ink mat around it.
+   *
+   * The curves here are a deliberate exception to the `border-radius: 0` rule
+   * locked in `AGENTS.md`. That rule still governs buttons, inputs and cards
+   * everywhere, including this hero's own call to action; the curves are the
+   * hero's shape language only. `/sync` should record the exception.
    */
   .hero-frame {
-    --hero-r: 32px;
     position: relative;
     border-radius: var(--hero-r);
     overflow: hidden;
   }
 
-  /* How far the carve runs past the text to reach the page edge: the section's
-     own inset, so the two Ink areas meet exactly. */
+  /* --hero-r is the shared corner radius. --hero-bleed is how far the carve runs
+     past the text to reach the page edge, matching the section's own inset so
+     the two Ink areas meet exactly. */
+  .hero-frame,
   .hero-carve-wrap {
     --hero-r: 32px;
     --hero-bleed: 24px;
@@ -175,54 +175,38 @@
     .hero-frame,
     .hero-carve-wrap {
       --hero-r: 56px;
-    }
-
-    .hero-carve-wrap {
       --hero-bleed: 48px;
     }
   }
 
-  /*
-   * The nav is fixed, transparent, and white over this hero, and the image now
-   * runs up behind it. Whether that text is readable would otherwise depend on
-   * whatever the studio uploads, so this scrim guarantees it. It only covers
-   * the bar's own height and fades out, so it costs almost nothing visually.
-   */
   /* The call to action continues the carve below the last headline line, so it
      sits on Ink rather than on the photograph. */
   .hero-carve-cta {
     background-color: var(--color-ink);
-    padding: 14px 0.5em 14px var(--hero-bleed);
+    padding: 18px 24px 18px var(--hero-bleed);
     margin-left: calc(var(--hero-bleed) * -1);
     border-top-right-radius: var(--hero-r);
     border-bottom-right-radius: var(--hero-r);
   }
 
-  .hero-nav-scrim {
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: calc(var(--nav-h) + 40px);
-    background: linear-gradient(
-      to bottom,
-      rgb(0 0 0 / 0.55),
-      rgb(0 0 0 / 0)
-    );
-    pointer-events: none;
-  }
 
   /*
-   * The carve hugs each LINE of the headline, not the headline's bounding box.
-   * In the reference the first line cuts much further into the picture than the
-   * second, and that stepped profile is the whole character of the design. A
-   * single rectangle sized to the block reads as a slab instead.
+   * The carve hugs each LINE of the headline, not the headline's bounding box,
+   * so the void steps in as the lines get shorter. Read it as a setback: the
+   * plan device an architect already knows, rather than a decorative shape.
    *
-   * `box-decoration-break: clone` is what makes this work: it gives every line
-   * box its own background, padding, and border radius, so the dark shape
-   * follows the text at any headline length and any viewport, with no
-   * JavaScript measuring anything. The left padding is bled back out with a
-   * matching negative margin so each line runs off the left edge and merges
-   * with the section's own Ink, which is what makes it read as carved out of
-   * the picture rather than a pill floating on top of it.
+   * `box-decoration-break: clone` gives every line box its own background and
+   * padding, so the shape follows the text at any headline length and any
+   * viewport with no JavaScript measuring anything.
+   *
+   * Known limit: each line box rounds independently, so a headline that wraps
+   * onto several lines reads as stacked rounded blocks rather than one shape
+   * flowing through concave joins. Drawing those joins needs a measured SVG
+   * path per line, which is a bigger change than this technique.
+   *
+   * The left padding is bled back out with a matching negative margin so each
+   * line runs off the left edge and merges with the section's own Ink, which is
+   * what makes it read as cut out of the picture rather than laid on top.
    */
   .hero-carve {
     display: inline;
@@ -231,12 +215,12 @@
     -webkit-box-decoration-break: clone;
     /*
      * The vertical padding is what makes consecutive lines MEET. Each line's
-     * background box is its text content plus this padding, while the boxes are
-     * spaced a full line-height apart, so too little padding leaves a hairline
-     * of photograph showing between them. 0.28em slightly overlaps instead,
-     * which is invisible because both boxes are the same Ink.
+     * background box is its text plus this padding, while the boxes sit a full
+     * line-height apart, so too little padding leaves a hairline of photograph
+     * between them. 0.28em overlaps slightly instead, invisible because both
+     * boxes are the same Ink.
      */
-    padding: 0.28em 0.4em 0.28em var(--hero-bleed);
+    padding: 0.28em 0.5em 0.28em var(--hero-bleed);
     margin-left: calc(var(--hero-bleed) * -1);
     border-top-right-radius: var(--hero-r);
     border-bottom-right-radius: var(--hero-r);

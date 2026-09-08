@@ -63,7 +63,11 @@ export default function Hero({ heroHeadline, heroMedia }: HeroProps) {
       // in normal flow there, directly under the bar. From md up the headline is
       // lifted onto the picture and the image runs full height behind the nav,
       // kept readable by the scrim instead.
-      className="relative flex h-screen flex-col bg-ink p-24 pt-[calc(var(--nav-h)+24px)] md:p-48"
+      // The top inset clears the nav at every width. On desktop that also makes
+      // the frame's top edge line up exactly with the top of the carve, so the
+      // void reads as cut out of the picture's corner rather than as a slab
+      // floating over it with a sliver of image above.
+      className="relative flex h-screen flex-col bg-ink p-24 pt-[calc(var(--nav-h)+24px)] md:p-48 md:pt-[calc(var(--nav-h)+16px)]"
     >
       {/*
         Two placements, one element. Below md the headline sits above the image
@@ -110,8 +114,6 @@ export default function Hero({ heroHeadline, heroMedia }: HeroProps) {
             : {})}
         />
 
-        {/* Keeps the fixed nav readable now that the image runs up behind it. */}
-        <div className="hero-nav-scrim hidden md:block" aria-hidden="true" />
       </div>
     </section>
   );
