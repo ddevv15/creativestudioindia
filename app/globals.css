@@ -159,59 +159,87 @@
    */
   .hero-frame {
     --hero-r: 32px;
-    /* Sensible defaults so the shape is right at first paint. */
-    --notch-w: 62%;
-    --notch-h: 38%;
     position: relative;
     border-radius: var(--hero-r);
     overflow: hidden;
   }
 
+  /* How far the carve runs past the text to reach the page edge: the section's
+     own inset, so the two Ink areas meet exactly. */
+  .hero-carve-wrap {
+    --hero-r: 32px;
+    --hero-bleed: 24px;
+  }
+
   @media (min-width: 768px) {
-    .hero-frame {
+    .hero-frame,
+    .hero-carve-wrap {
       --hero-r: 56px;
+    }
+
+    .hero-carve-wrap {
+      --hero-bleed: 48px;
     }
   }
 
   /*
-   * Three pieces make the notch: the block itself, whose rounded bottom right
-   * corner the image curves around, and two quarter disc wedges where the notch
-   * meets the frame's top and left edges. Each wedge is Ink everywhere except a
-   * quarter circle at its own bottom right corner, which is what turns an
-   * otherwise square 90 degree join into a smooth concave curve.
+   * The nav is fixed, transparent, and white over this hero, and the image now
+   * runs up behind it. Whether that text is readable would otherwise depend on
+   * whatever the studio uploads, so this scrim guarantees it. It only covers
+   * the bar's own height and fades out, so it costs almost nothing visually.
    */
-  .hero-notch {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--notch-w);
-    height: var(--notch-h);
-    background: var(--color-ink);
+  /* The call to action continues the carve below the last headline line, so it
+     sits on Ink rather than on the photograph. */
+  .hero-carve-cta {
+    background-color: var(--color-ink);
+    padding: 14px 0.5em 14px var(--hero-bleed);
+    margin-left: calc(var(--hero-bleed) * -1);
+    border-top-right-radius: var(--hero-r);
     border-bottom-right-radius: var(--hero-r);
   }
 
-  .hero-notch::before,
-  .hero-notch::after {
-    content: "";
+  .hero-nav-scrim {
     position: absolute;
-    width: var(--hero-r);
-    height: var(--hero-r);
-    background: radial-gradient(
-      circle at 100% 100%,
-      transparent var(--hero-r),
-      var(--color-ink) calc(var(--hero-r) + 0.5px)
+    inset: 0 0 auto 0;
+    height: calc(var(--nav-h) + 40px);
+    background: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.55),
+      rgb(0 0 0 / 0)
     );
+    pointer-events: none;
   }
 
-  /* Where the notch meets the frame's top edge. */
-  .hero-notch::after {
-    top: 0;
-    left: 100%;
-  }
-
-  /* Where the notch meets the frame's left edge. */
-  .hero-notch::before {
-    top: 100%;
-    left: 0;
+  /*
+   * The carve hugs each LINE of the headline, not the headline's bounding box.
+   * In the reference the first line cuts much further into the picture than the
+   * second, and that stepped profile is the whole character of the design. A
+   * single rectangle sized to the block reads as a slab instead.
+   *
+   * `box-decoration-break: clone` is what makes this work: it gives every line
+   * box its own background, padding, and border radius, so the dark shape
+   * follows the text at any headline length and any viewport, with no
+   * JavaScript measuring anything. The left padding is bled back out with a
+   * matching negative margin so each line runs off the left edge and merges
+   * with the section's own Ink, which is what makes it read as carved out of
+   * the picture rather than a pill floating on top of it.
+   */
+  .hero-carve {
+    display: inline;
+    background-color: var(--color-ink);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    /*
+     * The vertical padding is what makes consecutive lines MEET. Each line's
+     * background box is its text content plus this padding, while the boxes are
+     * spaced a full line-height apart, so too little padding leaves a hairline
+     * of photograph showing between them. 0.28em slightly overlaps instead,
+     * which is invisible because both boxes are the same Ink.
+     */
+    padding: 0.28em 0.4em 0.28em var(--hero-bleed);
+    margin-left: calc(var(--hero-bleed) * -1);
+    border-top-right-radius: var(--hero-r);
+    border-bottom-right-radius: var(--hero-r);
+    line-height: 1.5;
   }
 }

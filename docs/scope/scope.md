@@ -164,11 +164,24 @@ Fixed 2026-09-09. The real cause was not the component alone: `photo` is `rule.r
 - [ ] Verify it: `/check verify hero media delivery`
 spec [0001](../specs/0001-hero-media-delivery/index.md) · [verify steps](../specs/0001-hero-media-delivery/verify.md) · code in `components/sections/Hero.tsx`, `app/globals.css`, `sanity/schemas/siteSettings.ts`, `lib/sanity/queries.ts`, `types/sanity.ts`
 
-Two things the build changed from the spec, for `/architect` to reconcile into the Geometry table:
-the top inset is `--nav-h` plus the gutter rather than a flat 48px, because at 48px the fixed nav's
-white links sat on the photograph; and the default image is `public/hero-default.jpg` at 1920x1080,
-the asset that actually exists, not the 2400x1600 the spec names. AC-9's reduced motion path is
-built but was not exercised, since the browser tooling here cannot emulate that setting.
+The build diverged from the spec once a second reference screenshot arrived, and spec 0001 now needs
+`/architect` to catch up. What actually shipped:
+
+- The dark shape hugs **each line** of the headline, stepping in as lines get shorter, rather than
+  being one rectangle sized to the whole block. That stepped profile is the character of the
+  reference; a single rectangle read as a slab. Built with `box-decoration-break: clone`, so it
+  needs no measurement at all and the ResizeObserver the spec called for is gone.
+- The image runs nearly full bleed instead of sitting inside a uniform 48px inset, which is what
+  makes it read like the reference. A gradient scrim behind the nav keeps its white links readable
+  now that the picture runs up behind them.
+- The GSAP reveal animates the whole block rather than line by line. SplitText rewrites the text
+  into per line divs, which destroys the inline backing the carve depends on. Keeping the shape
+  correct at first paint mattered more than the stagger.
+- The default image is `public/hero-default.jpg` at 1920x1080, the asset that actually exists, not
+  the 2400x1600 the spec names.
+
+AC-9's reduced motion path is built but was not exercised, since the browser tooling here cannot
+emulate that setting.
 
 Migration depends on feature 3. Until the publish to live path works, the window where the homepage shows the default image is up to an hour rather than seconds.
 
