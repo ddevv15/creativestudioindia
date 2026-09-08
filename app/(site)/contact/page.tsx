@@ -14,7 +14,7 @@ export default function ContactPage() {
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(SITE.address)}&output=embed`;
 
   return (
-    <section className="bg-offwhite px-24 py-96 md:px-48">
+    <section className="bg-offwhite px-24 pb-96 pt-nav-96 md:px-48">
       <JsonLd data={localBusinessSchema()} />
 
       <div className="grid grid-cols-1 gap-64 lg:grid-cols-2 lg:gap-96">

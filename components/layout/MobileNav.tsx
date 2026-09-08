@@ -6,7 +6,8 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "@/constants/nav";
 
-export default function MobileNav({ scrolled }: { scrolled: boolean }) {
+/** `solid` is owned by Nav — true unless the route has a dark hero to sit over. */
+export default function MobileNav({ solid }: { solid: boolean }) {
   const [open, setOpen] = useState(false);
 
   const close = () => setOpen(false);
@@ -15,8 +16,8 @@ export default function MobileNav({ scrolled }: { scrolled: boolean }) {
     <div className="md:hidden">
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 flex h-64 items-center justify-between px-24 transition-colors duration-300",
-          scrolled || open ? "bg-ink border-b-[0.5px] border-white/10" : "bg-transparent"
+          "fixed inset-x-0 top-0 z-50 flex h-nav items-center justify-between px-24 transition-colors duration-300",
+          solid || open ? "bg-ink border-b-[0.5px] border-white/10" : "bg-transparent"
         )}
       >
         <Link
@@ -44,7 +45,8 @@ export default function MobileNav({ scrolled }: { scrolled: boolean }) {
 
       <div
         className={cn(
-          "fixed inset-0 z-40 flex flex-col bg-ink pt-64 transition-transform duration-300 ease-in-out",
+          // pt-nav clears the bar above, which stays visible over the overlay.
+          "fixed inset-0 z-40 flex flex-col bg-ink pt-nav transition-transform duration-300 ease-in-out",
           open ? "translate-y-0" : "-translate-y-full"
         )}
       >

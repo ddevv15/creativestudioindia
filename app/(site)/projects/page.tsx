@@ -13,7 +13,7 @@ export default async function ProjectsPage() {
 
   return (
     <>
-      <section className="bg-linen px-24 pt-96 md:px-48">
+      <section className="bg-linen px-24 pt-nav-96 md:px-48">
         <p className="section-label">Projects</p>
 
         <h1 className="display-headline mt-16 text-[52px] text-ink">

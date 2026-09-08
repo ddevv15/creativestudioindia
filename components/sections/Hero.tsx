@@ -45,7 +45,12 @@ export default function Hero({ heroHeadline, heroMedia }: HeroProps) {
   }, []);
 
   return (
-    <section className="relative flex h-screen items-center justify-center overflow-hidden bg-ink">
+    // data-nav-overlay: marks this as a dark hero the nav may sit transparently
+    // over, and gives Nav's ScrollTrigger a real element to measure.
+    <section
+      data-nav-overlay
+      className="relative flex h-screen items-center justify-center overflow-hidden bg-ink"
+    >
       <div className="absolute inset-0">
         {isVideo ? (
           <video

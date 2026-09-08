@@ -7,7 +7,7 @@ import ProjectCard from "@/components/ProjectCard";
 import ProjectGallery from "@/components/ProjectGallery";
 import ScrollProgress from "@/components/ScrollProgress";
 import { CATEGORY_LABELS, STATUS_LABELS } from "@/constants/categories";
-import { getAllProjects, getProjectBySlug, getRelatedProjects } from "@/lib/content";
+import { getAllProjectSlugs, getProjectBySlug, getRelatedProjects } from "@/lib/content";
 import { urlFor } from "@/lib/sanity/image";
 import { galleryImageSchema } from "@/lib/seo";
 import { toPlainText, truncate } from "@/lib/utils";
@@ -17,8 +17,7 @@ type ProjectPageProps = {
 };
 
 export async function generateStaticParams() {
-  const projects = await getAllProjects();
-  return projects.map((project) => ({ slug: project.slug }));
+  return getAllProjectSlugs();
 }
 
 export async function generateMetadata({
@@ -92,7 +91,8 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
 
       <ScrollProgress />
 
-      <section className="relative h-screen w-full">
+      {/* data-nav-overlay: dark full-viewport hero the nav may sit over. */}
+      <section data-nav-overlay className="relative h-screen w-full">
         <Image
           src={urlFor(project.coverImage).width(1920).height(1080).fit("crop").url()}
           alt={project.title}

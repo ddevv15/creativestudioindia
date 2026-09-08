@@ -28,7 +28,23 @@ const config: Config = {
   			'48': '48px',
   			'64': '64px',
   			'96': '96px',
-  			'128': '128px'
+  			'128': '128px',
+  			/*
+  			 * Fixed-nav clearance. `--nav-h` is defined once in globals.css and is
+  			 * responsive (64px → 96px at md), so these tokens are correct at both
+  			 * breakpoints without a `md:` variant.
+  			 *
+  			 *   nav      — the bar's own height (h-nav on Nav / MobileNav)
+  			 *   nav-80   — nav clearance + the 80px page-hero rhythm (specs 18, 20)
+  			 *   nav-96   — nav clearance + the 96px section rhythm (specs 16, 19, 21)
+  			 *
+  			 * Any page whose first section sits under the nav needs pt-nav-80 or
+  			 * pt-nav-96. Pages with a full-viewport dark hero (/, /projects/[slug])
+  			 * deliberately sit under it and need neither.
+  			 */
+  			nav: 'var(--nav-h)',
+  			'nav-80': 'calc(var(--nav-h) + 80px)',
+  			'nav-96': 'calc(var(--nav-h) + 96px)'
   		},
   		colors: {
   			ink: '#1A1A17',

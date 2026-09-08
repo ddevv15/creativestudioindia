@@ -67,7 +67,7 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <section className="bg-offwhite px-24 pb-64 pt-96 md:px-48">
+      <section className="bg-offwhite px-24 pb-64 pt-nav-96 md:px-48">
         <p className="section-label">Services</p>
 
         <h1 className="display-headline mt-16 text-[52px] text-ink">

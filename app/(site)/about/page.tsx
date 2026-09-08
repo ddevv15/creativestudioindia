@@ -70,7 +70,10 @@ export default async function AboutPage() {
 
   return (
     <>
-      <section className="bg-linen px-24 py-[80px] md:px-48">
+      {/* pt-nav-80, not py-[80px]: the nav is fixed and solid on this route, so a
+          bare 80px put the "Studio" label behind the bar. Spec 18's 80px is
+          preserved as the visible gap below the nav. */}
+      <section className="bg-linen px-24 pb-[80px] pt-nav-80 md:px-48">
         <p className="section-label">Studio</p>
 
         <h1 className="display-headline mt-16 text-[56px] text-ink">

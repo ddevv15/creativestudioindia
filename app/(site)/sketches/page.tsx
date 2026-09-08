@@ -13,7 +13,13 @@ export default async function SketchesPage() {
 
   return (
     <>
-      <section className="bg-charcoal px-24 py-[80px] md:px-48">
+      {/* data-nav-overlay: charcoal hero — short, so Nav measures this element
+          rather than assuming a full viewport. Must also stay listed in
+          OVERLAY_HERO_ROUTES in constants/nav.ts.
+
+          pt-nav-80 keeps the transparent nav from overlapping the label: the bar
+          is see-through here, but its logo and links still occupy that space. */}
+      <section data-nav-overlay className="bg-charcoal px-24 pb-[80px] pt-nav-80 md:px-48">
         <p className="section-label !text-white/40">Process</p>
 
         <h1 className="display-headline mt-16 text-[52px] text-white">

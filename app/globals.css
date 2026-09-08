@@ -52,6 +52,25 @@
     --chart-5: 0 0% 20%;
     /* Sharp corners are a locked design decision — see AGENTS.md. */
     --radius: 0rem;
+
+    /*
+     * Height of the fixed nav bar — the ONLY place this number is defined.
+     *
+     * The nav is `fixed`, so it reserves no space in the document. Nothing
+     * separates it from page content except that page's own top padding, which
+     * means the bar height and every page's clearance are two numbers that must
+     * agree. Before this variable existed they didn't: five pages each hardcoded
+     * their own top padding, and all five sat under the bar.
+     *
+     * Consumed as the `nav` / `nav-80` / `nav-96` spacing tokens in
+     * tailwind.config.ts, and read at runtime by Nav.tsx's ScrollTrigger. Change
+     * it here and the bars, the page clearances, and the scroll trigger all
+     * follow. Do not hardcode 64 or 96 anywhere else.
+     *
+     * 64px below md (MobileNav bar) · 96px at md and up (desktop Nav) — the
+     * breakpoint matches Nav's `hidden md:flex` / MobileNav's `md:hidden`.
+     */
+    --nav-h: 64px;
     --sidebar: 60 17% 98%;
     --sidebar-foreground: 60 6% 10%;
     --sidebar-primary: 60 6% 10%;
@@ -60,6 +79,14 @@
     --sidebar-accent-foreground: 60 6% 10%;
     --sidebar-border: 55 3% 82%;
     --sidebar-ring: 48 3% 36%;
+  }
+
+  /* md — desktop Nav replaces MobileNav, so the bar gets taller. 768px must stay
+     in sync with Tailwind's `md` breakpoint. */
+  @media (min-width: 768px) {
+    :root {
+      --nav-h: 96px;
+    }
   }
 
   /*
