@@ -9,8 +9,17 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Flattens Portable Text to a plain string — used for meta descriptions, where
  * the rich-text structure is irrelevant and only the prose matters.
+ *
+ * Guards with Array.isArray rather than a default parameter. A default only
+ * substitutes for `undefined`, and GROQ returns `null` for a field the document
+ * does not have, so `toPlainText(project.description)` threw on every project
+ * without a description. That is most of them: description is optional in the
+ * schema and the media ingest does not write one.
  */
-export function toPlainText(blocks: PortableTextBlock[] = []): string {
+export function toPlainText(
+  blocks?: PortableTextBlock[] | null,
+): string {
+  if (!Array.isArray(blocks)) return ""
   return blocks
     .map((block) => {
       if (block._type !== "block" || !Array.isArray(block.children)) return ""
