@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import { SITE } from "@/constants/site";
+import { useNavCloak } from "@/lib/useNavCloak";
+import { cn } from "@/lib/utils";
 
 function WhatsAppIcon() {
   return (
@@ -18,14 +20,22 @@ function WhatsAppIcon() {
 }
 
 export default function WhatsAppButton() {
+  // Hides for a route's opening moment alongside the nav, so the homepage
+  // really does land on nothing but the hero frame.
+  const cloaked = useNavCloak();
+
   return (
     <motion.a
       href={`https://wa.me/${SITE.whatsappNumber}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"
+      inert={cloaked || undefined}
       whileHover={{ scale: 1.05 }}
-      className="fixed bottom-24 right-24 z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#25D366] shadow-lg"
+      className={cn(
+        "fixed bottom-24 right-24 z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#25D366] shadow-lg transition-opacity duration-300",
+        cloaked && "pointer-events-none opacity-0"
+      )}
     >
       <WhatsAppIcon />
     </motion.a>

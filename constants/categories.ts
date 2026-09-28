@@ -6,21 +6,33 @@ import type { ProjectCategory, ProjectStatus } from "@/types/sanity";
  */
 export type CategoryFilter = ProjectCategory | "all";
 
-/** Filter pills on /projects, in spec order. Labels are plural per spec 16. */
+/**
+ * Filter pills on /projects. Ordered the way the client orders their own
+ * project list and photography folders (Commercial, Mixed Use, Residential,
+ * Institutional, Private Residence, Weekend Villa) rather than the original
+ * spec 16 order, so the site reads the way they think about their work.
+ *
+ * Labels are plural per spec 16. "Private Residences" and "Weekend Villas"
+ * replaced the single "Bungalows" pill when the category was split.
+ */
 export const PROJECT_CATEGORIES: { value: CategoryFilter; label: string }[] = [
   { value: "all", label: "All" },
-  { value: "bungalow", label: "Bungalows" },
-  { value: "residential", label: "Residential" },
   { value: "commercial", label: "Commercial" },
   { value: "mixed-use", label: "Mixed-Use" },
+  { value: "residential", label: "Residential" },
+  { value: "institutional", label: "Institutional" },
+  { value: "private-residence", label: "Private Residences" },
+  { value: "weekend-villa", label: "Weekend Villas" },
 ];
 
 /** Singular labels for cards, tags, and spec rows. */
 export const CATEGORY_LABELS: Record<ProjectCategory, string> = {
-  bungalow: "Bungalow",
-  residential: "Residential",
   commercial: "Commercial",
   "mixed-use": "Mixed-Use",
+  residential: "Residential",
+  institutional: "Institutional",
+  "private-residence": "Private Residence",
+  "weekend-villa": "Weekend Villa",
 };
 
 export const STATUS_LABELS: Record<ProjectStatus, string> = {

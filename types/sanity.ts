@@ -28,10 +28,12 @@ export type GalleryImage = SanityImageObject & {
 
 /** Matches the `category` option list in sanity/schemas/project.ts exactly. */
 export type ProjectCategory =
-  | "bungalow"
-  | "residential"
   | "commercial"
-  | "mixed-use";
+  | "mixed-use"
+  | "residential"
+  | "institutional"
+  | "private-residence"
+  | "weekend-villa";
 
 /** Matches the `status` option list in sanity/schemas/project.ts exactly. */
 export type ProjectStatus = "completed" | "under-construction" | "concept";
@@ -76,6 +78,8 @@ export type Project = ProjectCardData & {
   gallery: GalleryImage[];
   description?: PortableTextBlock[];
   location?: string;
+  /** Google Maps link for the site. Stored, not yet rendered anywhere. */
+  mapUrl?: string;
   area?: string;
   status?: ProjectStatus;
   featured?: boolean;

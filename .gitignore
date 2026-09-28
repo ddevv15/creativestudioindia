@@ -42,6 +42,32 @@ yarn-error.log*
 # vercel
 .vercel
 
+# sanity — `sanity schema deploy` extracts a manifest here. Build output, not
+# source; the schema itself lives in sanity/schemas/.
+dist/
+
+# Client source material and backups. These live in the repo root for
+# convenience while the site is being built, but they are hundreds of megabytes
+# each — GitHub rejects any file over 100MB, and a committed binary stays in
+# history forever even after deletion. Keep them local.
+*.tar.gz
+CREATIVE STUDIO_Portfolio.pdf
+CSI WEBSITE_PROJECT LIST.xlsx
+
+# The client's raw project photography, as delivered: 81 full-resolution JPGs
+# (20–49MB each, ~2GB total) plus write-ups, foldered by category. Staged here
+# only so it is easy to browse while wiring up projects.
+#
+# It must never be committed. No single file trips GitHub's 100MB limit, so a
+# push would SUCCEED and bolt 2GB into history permanently. It must also never
+# ship in the build — everything under public/ is copied verbatim into the
+# deployment and served unoptimized.
+#
+# The real destination is Sanity: project.coverImage and project.gallery are
+# image assets served off Sanity's CDN. Once a project's photos are uploaded
+# there, its folder here is redundant.
+/public/02 - Projects*/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
@@ -60,3 +86,4 @@ next-env.d.ts
 # /.agents/  the generic copy other agents (Codex, etc.) read
 /.agents/
 /.claude/
+.env*

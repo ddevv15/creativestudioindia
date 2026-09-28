@@ -102,7 +102,7 @@ components/
     WhatsAppButton.tsx           — Fixed floating WhatsApp CTA (bottom-right)
 
   sections/
-    Hero.tsx                     — Full-viewport hero (video/image bg, headline, CTA)
+    HeroScrollExpand.tsx         — Homepage hero: opens on Ink + headline only, scroll expands an aperture to a full-bleed image
     CredentialBar.tsx            — Horizontal credential strip
     FeaturedProjects.tsx         — Homepage 3-card project grid (Sanity: featured: true)
     FounderBlock.tsx             — 2-col layout: Jignesh photo left, copy right
@@ -189,7 +189,7 @@ Do not use inline styles unless a value cannot be expressed in Tailwind (e.g., G
 ## GSAP Rules
 
 GSAP ScrollTrigger owns all scroll-driven animations:
-- Hero text and CTA button reveal on page load
+- NOT the homepage hero — that is a clip-path animation driven by its own rAF loop in `components/ScrollExpand.tsx`, deliberately outside GSAP
 - Section entrance animations (fade up + Y translate) for all homepage sections
 - Project card stagger on the projects page on load and after filter change
 - Nav background transition (transparent → #1A1A17 with a subtle border-bottom)

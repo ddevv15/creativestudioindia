@@ -138,7 +138,7 @@ export const demoProjects: Project[] = [
     title: "Riverside Bungalow",
     slug: "riverside-bungalow",
     headline: "A house that opens to the river.",
-    category: "bungalow",
+    category: "private-residence",
     coverImage: demoImage("/demo/project-1.jpg"),
     gallery: gallery("p1", [
       "Approach from the east, screened by a jaali wall",
@@ -251,7 +251,7 @@ export const demoProjects: Project[] = [
     title: "Courtyard Bungalow",
     slug: "courtyard-bungalow",
     headline: "Wrapping four rooms around a single tree.",
-    category: "bungalow",
+    category: "private-residence",
     coverImage: demoImage("/demo/project-2.jpg"),
     gallery: gallery("p4", [
       "The retained neem at the centre of the plan",

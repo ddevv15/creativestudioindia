@@ -146,84 +146,19 @@
   }
 
   /*
-   * Hero. The headline sits in a void cut from the picture's top left corner,
-   * stepping in line by line. See docs/specs/0001-hero-media-delivery.
+   * The homepage hero has no CSS of its own. It is a clip-path animation driven
+   * from JavaScript in components/ScrollExpand.tsx, so its shape — including
+   * the corner radius — lives in the `startRadius` prop that
+   * components/sections/HeroScrollExpand.tsx passes, not here.
    *
-   * The image is mounted like a drawing on board, with an Ink mat around it.
+   * That radius is a deliberate exception to the `border-radius: 0` rule locked
+   * in `AGENTS.md`. The rule still governs buttons, inputs and cards
+   * everywhere; the curve is the hero aperture's shape language only.
+   * `/sync` should record the exception.
    *
-   * The curves here are a deliberate exception to the `border-radius: 0` rule
-   * locked in `AGENTS.md`. That rule still governs buttons, inputs and cards
-   * everywhere, including this hero's own call to action; the curves are the
-   * hero's shape language only. `/sync` should record the exception.
+   * The carve that used to live here — the void cut from the picture's top left
+   * corner, stepping in line by line, from docs/specs/0001-hero-media-delivery —
+   * is gone along with the hero that used it. See git history for `.hero-carve`
+   * and `lib/heroCarve.ts` if that technique is ever wanted again.
    */
-  .hero-frame {
-    position: relative;
-    border-radius: var(--hero-r);
-    overflow: hidden;
-  }
-
-  /* --hero-r is the shared corner radius. --hero-bleed is how far the carve runs
-     past the text to reach the page edge, matching the section's own inset so
-     the two Ink areas meet exactly. */
-  .hero-frame,
-  .hero-carve-wrap {
-    --hero-r: 32px;
-    --hero-bleed: 24px;
-  }
-
-  @media (min-width: 768px) {
-    .hero-frame,
-    .hero-carve-wrap {
-      --hero-r: 56px;
-      --hero-bleed: 48px;
-    }
-  }
-
-  /* The call to action continues the carve below the last headline line, so it
-     sits on Ink rather than on the photograph. */
-  .hero-carve-cta {
-    background-color: var(--color-ink);
-    padding: 18px 24px 18px var(--hero-bleed);
-    margin-left: calc(var(--hero-bleed) * -1);
-    border-top-right-radius: var(--hero-r);
-    border-bottom-right-radius: var(--hero-r);
-  }
-
-
-  /*
-   * The carve hugs each LINE of the headline, not the headline's bounding box,
-   * so the void steps in as the lines get shorter. Read it as a setback: the
-   * plan device an architect already knows, rather than a decorative shape.
-   *
-   * `box-decoration-break: clone` gives every line box its own background and
-   * padding, so the shape follows the text at any headline length and any
-   * viewport with no JavaScript measuring anything.
-   *
-   * Known limit: each line box rounds independently, so a headline that wraps
-   * onto several lines reads as stacked rounded blocks rather than one shape
-   * flowing through concave joins. Drawing those joins needs a measured SVG
-   * path per line, which is a bigger change than this technique.
-   *
-   * The left padding is bled back out with a matching negative margin so each
-   * line runs off the left edge and merges with the section's own Ink, which is
-   * what makes it read as cut out of the picture rather than laid on top.
-   */
-  .hero-carve {
-    display: inline;
-    background-color: var(--color-ink);
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-    /*
-     * The vertical padding is what makes consecutive lines MEET. Each line's
-     * background box is its text plus this padding, while the boxes sit a full
-     * line-height apart, so too little padding leaves a hairline of photograph
-     * between them. 0.28em overlaps slightly instead, invisible because both
-     * boxes are the same Ink.
-     */
-    padding: 0.28em 0.5em 0.28em var(--hero-bleed);
-    margin-left: calc(var(--hero-bleed) * -1);
-    border-top-right-radius: var(--hero-r);
-    border-bottom-right-radius: var(--hero-r);
-    line-height: 1.5;
-  }
 }

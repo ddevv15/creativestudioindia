@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { ScrollTrigger } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS, hasOverlayHero } from "@/constants/nav";
+import { useNavCloak } from "@/lib/useNavCloak";
 import MobileNav from "./MobileNav";
 
 /**
@@ -24,6 +25,9 @@ export default function Nav() {
   const pathname = usePathname();
   const overlay = hasOverlayHero(pathname);
   const [pastHero, setPastHero] = useState(false);
+
+  // True while a route's opening moment owns the screen. See lib/useNavCloak.
+  const cloaked = useNavCloak();
 
   // Solid unless this route actually has a dark hero to sit over. Computed
   // during render, so pages without one are never transparent — not even for
@@ -82,12 +86,17 @@ export default function Nav() {
     };
   }, [pathname, overlay]);
 
+
   return (
     <>
       <header
+        // `inert` rather than only opacity: a cloaked bar must be unreachable by
+        // keyboard and invisible to screen readers, not merely transparent.
+        inert={cloaked || undefined}
         className={cn(
-          "fixed inset-x-0 top-0 z-50 hidden h-nav items-center px-48 transition-colors duration-300 md:flex",
-          solid ? "bg-ink border-b-[0.5px] border-white/10" : "bg-transparent"
+          "fixed inset-x-0 top-0 z-50 hidden h-nav items-center px-48 transition-[background-color,opacity,transform] duration-300 md:flex",
+          solid ? "bg-ink border-b-[0.5px] border-white/10" : "bg-transparent",
+          cloaked && "pointer-events-none -translate-y-full opacity-0"
         )}
       >
         <Link
@@ -125,7 +134,7 @@ export default function Nav() {
         </Link>
       </header>
 
-      <MobileNav solid={solid} />
+      <MobileNav solid={solid} cloaked={cloaked} />
     </>
   );
 }

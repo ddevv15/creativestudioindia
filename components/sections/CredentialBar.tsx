@@ -3,15 +3,25 @@
 import { Fragment, useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 
+// Both numbers are the studio's own, from the portfolio profile (page 2):
+// "With 35 years of experience... With 700+ projects".
+//
+// The trailing entries are disciplines, and they name the same six categories
+// the work is filed under. Deliberately not derived from PROJECT_CATEGORIES:
+// this is marketing copy about what the studio does, and the order and wording
+// are chosen to read well aloud, not to mirror a filter UI.
 const CREDENTIALS = [
-  "25+ Years",
+  "35 Years",
+  "700+ Projects",
   "Ahmedabad",
   "Architecture",
   "3D Visualization",
-  "Bungalows",
-  "Residential",
   "Commercial",
   "Mixed-Use",
+  "Residential",
+  "Institutional",
+  "Private Residences",
+  "Weekend Villas",
 ];
 
 export default function CredentialBar() {

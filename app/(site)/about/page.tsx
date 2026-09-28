@@ -15,7 +15,7 @@ import type { NowType } from "@/types/sanity";
 export const metadata = pageMetadata({
   title: "Studio | Creative Studio India",
   description:
-    "Creative Studio India — 25 years of intentional architecture in Ahmedabad, led by principal architect Jignesh Patel.",
+    "Creative Studio India — 35 years of intentional architecture in Ahmedabad, led by principal designer Jignesh Patel.",
 });
 
 const PROCESS_STEPS = [
@@ -77,7 +77,7 @@ export default async function AboutPage() {
         <p className="section-label">Studio</p>
 
         <h1 className="display-headline mt-16 text-[56px] text-ink">
-          25 years of intentional design.
+          35 years of intentional design.
         </h1>
       </section>
 
@@ -92,7 +92,7 @@ export default async function AboutPage() {
           <div className="relative aspect-[4/5]">
             <Image
               src={siteSettings.principalPhoto.asset.url}
-              alt="Jignesh Patel, principal architect"
+              alt="Jignesh Patel, principal designer"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"
@@ -107,7 +107,18 @@ export default async function AboutPage() {
             </h2>
 
             <p className="mt-8 font-sans text-[13px] uppercase tracking-wider text-stone">
-              Principal Architect · B.Arch, CEPT · Council of Architecture
+              {/*
+                Was "Principal Architect · B.Arch, CEPT · Council of
+                Architecture" — invented demo data asserting a specific degree
+                and a statutory registration. "Architect" is a title protected
+                by the Architects Act in India and COA registration is a matter
+                of public record, so it must not be claimed on the studio's
+                behalf without evidence. The portfolio titles him Principal
+                Designer, and titles the other two team members Architect,
+                which reads as a deliberate distinction. Add qualifications
+                back only once the studio confirms them.
+              */}
+              Principal Designer
             </p>
 
             <blockquote className="mt-32 border-l-[0.5px] border-stone/40 pl-24 font-sans text-[17px] leading-[1.75] text-stone">

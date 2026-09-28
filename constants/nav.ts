@@ -19,7 +19,9 @@ export const NAV_ITEMS: NavItem[] = [
  * transparent before correcting itself.
  */
 const OVERLAY_HERO_ROUTES: RegExp[] = [
-  /^\/$/, // homepage — full-viewport Hero
+  // The homepage is deliberately absent. Its hero hides the nav entirely until
+  // the scroll expansion finishes (see `data-nav-cloak` in Nav.tsx), so the nav
+  // never sits over it and should be solid the moment it appears.
   /^\/sketches$/, // charcoal hero
   /^\/projects\/[^/]+$/, // project detail — full-viewport cover image
 ];

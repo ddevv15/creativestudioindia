@@ -7,7 +7,14 @@ import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "@/constants/nav";
 
 /** `solid` is owned by Nav — true unless the route has a dark hero to sit over. */
-export default function MobileNav({ solid }: { solid: boolean }) {
+export default function MobileNav({
+  solid,
+  cloaked = false,
+}: {
+  solid: boolean;
+  /** `cloaked` is owned by Nav — true while a route hides the bar entirely. */
+  cloaked?: boolean;
+}) {
   const [open, setOpen] = useState(false);
 
   const close = () => setOpen(false);
@@ -15,9 +22,13 @@ export default function MobileNav({ solid }: { solid: boolean }) {
   return (
     <div className="md:hidden">
       <header
+        // Cloaked means unreachable, not just invisible. Never cloak while the
+        // overlay is open, or the close button would vanish from under someone.
+        inert={(cloaked && !open) || undefined}
         className={cn(
-          "fixed inset-x-0 top-0 z-50 flex h-nav items-center justify-between px-24 transition-colors duration-300",
-          solid || open ? "bg-ink border-b-[0.5px] border-white/10" : "bg-transparent"
+          "fixed inset-x-0 top-0 z-50 flex h-nav items-center justify-between px-24 transition-[background-color,opacity,transform] duration-300",
+          solid || open ? "bg-ink border-b-[0.5px] border-white/10" : "bg-transparent",
+          cloaked && !open && "pointer-events-none -translate-y-full opacity-0"
         )}
       >
         <Link

@@ -55,7 +55,7 @@ export default function FounderBlock({
         <div ref={photoRef} className="relative aspect-[4/5]">
           <Image
             src={principalPhoto.asset.url}
-            alt="Jignesh Patel, principal architect"
+            alt="Jignesh Patel, principal designer"
             fill
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="object-cover"
@@ -73,7 +73,7 @@ export default function FounderBlock({
           </p>
 
           <h2 className="display-headline mt-8 text-[40px] text-ink">
-            25 years of design. One principle.
+            35 years of design. One principle.
           </h2>
 
           <div className="mt-24 font-sans text-base leading-[1.7] text-stone [&>p]:mb-16 [&>p:last-child]:mb-0">
