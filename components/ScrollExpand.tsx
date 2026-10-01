@@ -3,7 +3,7 @@
 /**
  * ScrollExpand, vendored from React Bits (reactbits.dev), TypeScript + Tailwind
  * variant. Kept close to the upstream source so it stays easy to diff against a
- * future version. Five deliberate changes, all marked ADAPTED below:
+ * future version. Six deliberate changes, all marked ADAPTED below:
  *
  *   1. "use client" — required by the App Router; the upstream file assumes a
  *      client-only bundler.
@@ -27,6 +27,11 @@
  *         effect pins progress at 1, which upstream reads as "fully scrolled"
  *         and so fades the title away — leaving reduced-motion visitors on a
  *         hero with no heading on it at all.
+ *   6. Responsive image sources: `srcSet`, `sizes` and `portraitSrcSet`.
+ *      Upstream takes one `src`, so a phone downloaded the same full-width
+ *      desktop file — and, being portrait, then stretched its height to fill
+ *      the screen. With `portraitSrcSet` the <img> is wrapped in a <picture>
+ *      whose portrait source can serve a tall crop instead.
  */
 
 import { useCallback, useEffect, useRef } from "react";
@@ -59,6 +64,11 @@ export interface ScrollExpandProps {
   mediaType?: "image" | "video";
   poster?: string;
   alt?: string;
+  /** ADAPTED: responsive candidates for the image — see note 6. */
+  srcSet?: string;
+  sizes?: string;
+  /** ADAPTED: used instead of `srcSet` when the screen is in portrait. */
+  portraitSrcSet?: string;
   /** ADAPTED: ReactNode rather than string, so a real heading can be passed. */
   title?: ReactNode;
   scrollHint?: string;
@@ -88,6 +98,9 @@ export default function ScrollExpand({
   mediaType = "image",
   poster = "",
   alt = "",
+  srcSet,
+  sizes,
+  portraitSrcSet,
   title,
   scrollHint = "",
   startWidth = 42,
@@ -292,19 +305,34 @@ export default function ScrollExpand({
         playsInline
       />
     ) : (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        ref={mediaRef}
-        className="absolute inset-0 h-full w-full select-none object-cover origin-center [will-change:transform]"
-        style={restTransform}
-        src={src}
-        alt={alt}
-        draggable={false}
-        // ADAPTED: this is the landing screen's largest element, so it must not
-        // wait behind lazy loading defaults.
-        loading="eager"
-        fetchPriority="high"
-      />
+      // ADAPTED: <picture> for the portrait crop (note 6). It is unpositioned,
+      // so the absolutely positioned <img> still fills the same frame.
+      <picture>
+        {portraitSrcSet ? (
+          <source
+            media="(orientation: portrait)"
+            srcSet={portraitSrcSet}
+            sizes={sizes}
+          />
+        ) : null}
+        <img
+          ref={mediaRef}
+          className="absolute inset-0 h-full w-full select-none object-cover origin-center [will-change:transform]"
+          style={restTransform}
+          // ADAPTED: undefined rather than "" while the caller has no source
+          // yet, so the browser requests nothing (an empty src is a request
+          // for the page itself in some browsers, and React warns on it).
+          src={src || undefined}
+          srcSet={srcSet}
+          sizes={sizes}
+          alt={alt}
+          draggable={false}
+          // ADAPTED: this is the landing screen's largest element, so it must
+          // not wait behind lazy loading defaults.
+          loading="eager"
+          fetchPriority="high"
+        />
+      </picture>
     );
 
   /**

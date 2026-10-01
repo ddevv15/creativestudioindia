@@ -62,10 +62,19 @@ export default function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   // phones never create the canvas; the swipe row below is plain CSS and is
   // already right in the server markup.
   const [isDesktop, setIsDesktop] = useState(false);
+  // Whether the swipe row should fetch every card now. Starts false so the
+  // server HTML is lazy: on lg+ the row is display:none, and lazy images that
+  // are never shown are never fetched — eager ones would be, at full desktop
+  // size. Only once the client knows this is a phone or portrait iPad does
+  // it switch to eager, which starts the remaining downloads.
+  const [rowEager, setRowEager] = useState(false);
 
   useEffect(() => {
     const query = window.matchMedia(DESKTOP_QUERY);
-    const sync = () => setIsDesktop(query.matches);
+    const sync = () => {
+      setIsDesktop(query.matches);
+      setRowEager(!query.matches);
+    };
 
     sync();
     query.addEventListener("change", sync);
@@ -82,6 +91,7 @@ export default function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           .height(800)
           .fit("crop")
           .auto("format")
+          .quality(75)
           .url(),
         alt: project.title,
         title: project.title,
@@ -192,6 +202,26 @@ export default function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           </h2>
         </div>
 
+        {/*
+          The WebGL carousel only exists after hydration (isDesktop starts
+          false), so without these its images are not requested until the JS
+          has loaded, run and built a GL context. These put the first three in
+          the server HTML so the browser starts on them immediately — only at
+          lg and up (iPad landscape, desktop), so phones never download them.
+          crossOrigin must match FlexCarousel's `new Image()` or the browser
+          fetches each one twice.
+        */}
+        {items.slice(0, 3).map((item) => (
+          <link
+            key={item.src}
+            rel="preload"
+            as="image"
+            href={item.src}
+            media={DESKTOP_QUERY}
+            crossOrigin="anonymous"
+          />
+        ))}
+
         {isDesktop ? (
           <FlexCarousel
             items={items}
@@ -224,12 +254,26 @@ export default function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           ref={rowRef}
           className="mt-48 flex snap-x snap-mandatory gap-16 overflow-x-auto scroll-px-24 px-24 [scrollbar-width:none] md:scroll-px-48 md:px-48 lg:hidden [&::-webkit-scrollbar]:hidden"
         >
-          {projects.map((project, index) => (
+          {projects.map((project) => (
             <div
               key={project._id}
               className="w-[85%] shrink-0 snap-start md:w-[60%]"
             >
-              <ProjectCard {...project} priority={index === 0} />
+              {/*
+                Not `priority`: this row is several viewports below the hero
+                on a phone, and a preload in <head> would fight the hero image
+                for the first second. Eager (once rowEager confirms the row is
+                actually showing) but low priority instead — every card
+                downloads quietly behind the hero, so none is still empty when
+                it is swiped into view. Native lazy loading fired per swipe,
+                which is what showed blank cards on phones and iPads.
+              */}
+              <ProjectCard
+                {...project}
+                loading={rowEager ? "eager" : "lazy"}
+                fetchPriority="low"
+                sizes="(min-width: 768px) 60vw, 85vw"
+              />
             </div>
           ))}
         </div>

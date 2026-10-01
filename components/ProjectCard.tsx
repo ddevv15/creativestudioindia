@@ -11,6 +11,14 @@ import type { ProjectCardData } from "@/types/sanity";
 type ProjectCardProps = Omit<ProjectCardData, "_id"> & {
   /** Set on the first above-the-fold card so it is not the unoptimised LCP. */
   priority?: boolean;
+  /**
+   * For cards that are below the fold but must be ready before anyone
+   * reaches them — the homepage swipe row, where native lazy loading only
+   * fires as each card is swiped into view and so shows empty frames.
+   */
+  loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
+  sizes?: string;
 };
 
 export default function ProjectCard({
@@ -19,8 +27,24 @@ export default function ProjectCard({
   category,
   coverImage,
   priority = false,
+  loading,
+  fetchPriority,
+  sizes = "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw",
 }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false);
+
+  // Each srcset width goes straight to Sanity's CDN, cropped to 3:2 and in
+  // whatever format the browser accepts (AVIF/WebP). Without this, next/image
+  // sent every card through Vercel's optimiser as well — two transforms, two
+  // caches to miss, and on a phone the first visit paid for both.
+  const sanityLoader = ({ width, quality }: { width: number; quality?: number }) =>
+    urlFor(coverImage)
+      .width(width)
+      .height(Math.round((width * 2) / 3))
+      .fit("crop")
+      .auto("format")
+      .quality(quality ?? 75)
+      .url();
 
   return (
     <Link
@@ -31,11 +55,14 @@ export default function ProjectCard({
     >
       <div className="relative aspect-[3/2] overflow-hidden">
         <Image
-          src={urlFor(coverImage).width(900).height(600).fit("crop").url()}
+          loader={sanityLoader}
+          src={sanityLoader({ width: 900 })}
           alt={title}
           fill
           priority={priority}
-          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+          loading={priority ? undefined : loading}
+          fetchPriority={priority ? undefined : fetchPriority}
+          sizes={sizes}
           className="object-cover transition-transform [transition-duration:400ms] [transition-timing-function:ease] md:group-hover:scale-[1.04]"
         />
 

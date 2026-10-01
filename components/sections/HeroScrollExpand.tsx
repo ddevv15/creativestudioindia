@@ -101,11 +101,15 @@ export default function HeroScrollExpand({
   }, []);
 
   // The shuffle. Every visit shows one picture from heroMedia plus heroImages.
-  // The server always renders the first — the page is cached until Sanity
-  // revalidates it, so a server-side pick would freeze one "random" image for
-  // everyone. The client re-picks right after hydration instead, and that is
-  // invisible here because the aperture starts at zero area: nobody can see
-  // which picture is behind it until they scroll.
+  // The page is cached until Sanity revalidates it, so a server-side pick
+  // would freeze one "random" image for everyone; the client picks right
+  // after hydration instead. Until it has, no picture is requested at all:
+  // the server used to render the first one, which the browser downloaded
+  // and then threw away whenever the shuffle landed elsewhere — a wasted
+  // 300–500KB on every phone visit. Nothing is lost by waiting, because the
+  // aperture starts at zero area and nobody sees the picture until they
+  // scroll. With fewer than two pictures there is nothing to pick, so the
+  // server renders that one directly.
   //
   // So the swap only happens when the aperture is still shut — at the top of
   // the page with the effect on. A reload that restores scroll mid-hero, or a
@@ -114,27 +118,64 @@ export default function HeroScrollExpand({
   const pool = [heroMedia, ...(heroImages ?? [])].filter(
     (image): image is HeroImage => Boolean(image?.asset),
   );
-  const [picked, setPicked] = useState(0);
+  const [picked, setPicked] = useState<number | null>(
+    pool.length < 2 ? 0 : null,
+  );
 
   useEffect(() => {
     if (pool.length < 2) return;
-    if (window.scrollY > 4) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setPicked(Math.floor(Math.random() * pool.length));
+    const shuffle =
+      window.scrollY <= 4 &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setPicked(shuffle ? Math.floor(Math.random() * pool.length) : 0);
     // Once per mount: re-rolling on a prop change would swap a visible image.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const image = pool[picked] ?? pool[0];
-  const src = image
-    ? urlFor(image).width(2560).height(1440).fit("crop").url()
+  const image = picked === null ? undefined : pool[picked];
+  const awaitingPick = picked === null;
+
+  // Sized to the screen, in AVIF/WebP. Before this every device got one
+  // 2560px JPEG (~650KB) — and a portrait phone then cropped that wide frame
+  // down to a narrow slice and stretched it to the screen's full height.
+  // Landscape screens get 16:9 crops; portrait screens get 9:16 crops, so
+  // the picture is composed for the screen it is on (Sanity crops around
+  // the image's hotspot if one is set).
+  const candidates = (widths: number[], ratio: number) =>
+    image
+      ? widths
+          .map(
+            (w) =>
+              `${urlFor(image)
+                .width(w)
+                .height(Math.round(w * ratio))
+                .fit("crop")
+                .auto("format")
+                .quality(75)
+                .url()} ${w}w`,
+          )
+          .join(", ")
+      : undefined;
+
+  const src = awaitingPick
+    ? undefined
+    : image
+    ? urlFor(image).width(1920).height(1080).fit("crop").auto("format").quality(75).url()
     : FALLBACK_IMAGE;
+  const srcSet = candidates([1280, 1920, 2560], 9 / 16);
+  // Capped at 1080: a 3x phone asks for ~1170px and, offered nothing that
+  // large, takes 1080 — near full sharpness for roughly half the bytes of
+  // the 1440 it would otherwise pick.
+  const portraitSrcSet = candidates([750, 1080], 16 / 9);
 
   return (
     <div ref={wrapperRef} data-nav-cloak className="bg-ink">
       <div ref={fadeRef}>
       <ScrollExpand
         src={src}
+        srcSet={srcSet}
+        portraitSrcSet={portraitSrcSet}
+        sizes="100vw"
         // Decorative: the wordmark h1 carries the meaning, so describing the
         // picture here would just have it read out twice.
         alt=""
