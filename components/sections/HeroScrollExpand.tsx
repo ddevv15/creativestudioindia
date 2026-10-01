@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import localFont from "next/font/local";
 import { gsap } from "@/lib/gsap";
 import ScrollExpand from "@/components/ScrollExpand";
+import MoltenMetal from "@/components/MoltenMetal";
 import { urlFor } from "@/lib/sanity/image";
 import { cn } from "@/lib/utils";
 import type { HeroImage, SiteSettings } from "@/types/sanity";
@@ -157,7 +158,38 @@ export default function HeroScrollExpand({
         // No hint: the wordmark fills the screen edge to edge, so anything
         // pinned near the bottom would sit on top of "India".
         scrollHint=""
-        title={<HeroWordmark />}
+        title={
+          <>
+            {/*
+              Molten metal behind the wordmark, in Ink to white so it reads as
+              part of the black-and-white landing rather than a colour accent.
+              It lives in the title layer on purpose: it fades and lifts away
+              with the words, so it is gone before the aperture has any size
+              and never sits over the photograph. Absolute inset-0 reaches past
+              the title layer's side padding, so it is full bleed.
+
+              Skipped for reduced motion — that hero starts fully open with the
+              words over the photograph, where this would hide the picture.
+              Mouse drift is off: the title layer is pointer-events-none, and
+              a background that chases the cursor fights the type for focus.
+            */}
+            {!reducedMotion && (
+              <div aria-hidden className="absolute inset-0">
+                <MoltenMetal
+                  color1="#1A1A17"
+                  color2="#5F5E5A"
+                  color3="#FFFFFF"
+                  glow={2.4}
+                  brightness={2}
+                  blackPoint={0.02}
+                  opacity={0.8}
+                  mouseInteraction={false}
+                />
+              </div>
+            )}
+            <HeroWordmark />
+          </>
+        }
       />
       </div>
     </div>
@@ -222,7 +254,7 @@ function HeroWordmark() {
       aria-label="Creative Studio India"
       className={cn(
         barriecito.className,
-        "grid h-full w-full grid-rows-3 items-center uppercase leading-[0.8] text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.5)]",
+        "relative grid h-full w-full grid-rows-3 items-center uppercase leading-[0.8] text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.5)]",
       )}
     >
       {WORDS.map((word) => (

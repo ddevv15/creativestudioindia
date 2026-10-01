@@ -43,7 +43,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${cormorantGaramond.variable} ${dmSans.variable}`}>
-      <body className="bg-offwhite text-ink">
+      {/* Extensions like Grammarly stamp attributes onto <body> before React
+          hydrates. This silences only that mismatch, on this one element. */}
+      <body className="bg-offwhite text-ink" suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>
