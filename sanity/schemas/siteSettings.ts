@@ -31,6 +31,15 @@ export const siteSettings = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "heroImages",
+      title: "More Hero Images",
+      description:
+        "Optional. Each visit shows one image at random from the Hero Image above plus these. Dark or evening shots work best — the hero opens out of black.",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      validation: (rule) => rule.unique(),
+    }),
+    defineField({
       name: "principalBio",
       title: "Principal Bio",
       type: "array",

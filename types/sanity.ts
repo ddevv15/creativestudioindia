@@ -134,6 +134,8 @@ export type SiteSettings = {
   studioName: string;
   heroHeadline: string;
   heroMedia?: HeroImage;
+  /** Extra hero images; one of these or heroMedia is shown per visit. */
+  heroImages?: HeroImage[];
   principalBio: PortableTextBlock[];
   principalPhoto: SanityImage;
   phone: string;

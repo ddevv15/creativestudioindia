@@ -1,11 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import localFont from "next/font/local";
+import { gsap } from "@/lib/gsap";
 import ScrollExpand from "@/components/ScrollExpand";
 import { urlFor } from "@/lib/sanity/image";
-import type { SiteSettings } from "@/types/sanity";
+import { cn } from "@/lib/utils";
+import type { HeroImage, SiteSettings } from "@/types/sanity";
 
-type HeroScrollExpandProps = Pick<SiteSettings, "heroHeadline" | "heroMedia">;
+// The landing wordmark's face, and only that: loaded here rather than in the
+// root layout so no other page downloads it or picks it up. Barriecito by
+// Omnibus-Type, SIL Open Font License (OFL.txt alongside), self-hosted from
+// public/fonts/barriecito.
+const barriecito = localFont({
+  src: "../../public/fonts/barriecito/Barriecito-Regular.ttf",
+  weight: "400",
+  display: "swap",
+});
+
+type HeroScrollExpandProps = Pick<SiteSettings, "heroMedia" | "heroImages">;
 
 /**
  * Shown when the siteSettings singleton has no hero image. The page must never
@@ -39,8 +52,8 @@ const FALLBACK_IMAGE = "/hero-default.jpg";
  * or immediately if someone reaches for the keyboard (see Nav for that part).
  */
 export default function HeroScrollExpand({
-  heroHeadline,
   heroMedia,
+  heroImages,
 }: HeroScrollExpandProps) {
   // The aperture opens as you scroll, which is a large amount of movement for
   // anyone who asked for less of it. With reduced motion it starts fully open
@@ -56,15 +69,72 @@ export default function HeroScrollExpand({
     return () => motionQuery.removeEventListener("change", sync);
   }, []);
 
-  const src = heroMedia
-    ? urlFor(heroMedia).width(2560).height(1440).fit("crop").url()
+  // The exit. The hero opened out of Ink, so it closes back into it: once the
+  // photograph has held at full bleed for a moment, it dims to black as it
+  // scrolls away, and the projects carousel arrives on that same black. This is
+  // GSAP on the wrapper only — the aperture inside stays on ScrollExpand's own
+  // rAF loop, so the two never touch the same element.
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const fadeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.to(fadeRef.current, {
+        opacity: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: wrapperRef.current,
+          // The track ends 1.35 viewports after full bleed is reached
+          // (scrollDistance 1.2 of 2.55), so "bottom 115%" leaves ~0.2 of a
+          // viewport of full-bleed hold before the dim starts.
+          start: "bottom 115%",
+          end: "bottom 40%",
+          scrub: true,
+        },
+      });
+    });
+
+    return () => mm.revert();
+  }, []);
+
+  // The shuffle. Every visit shows one picture from heroMedia plus heroImages.
+  // The server always renders the first — the page is cached until Sanity
+  // revalidates it, so a server-side pick would freeze one "random" image for
+  // everyone. The client re-picks right after hydration instead, and that is
+  // invisible here because the aperture starts at zero area: nobody can see
+  // which picture is behind it until they scroll.
+  //
+  // So the swap only happens when the aperture is still shut — at the top of
+  // the page with the effect on. A reload that restores scroll mid-hero, or a
+  // reduced-motion visitor whose hero starts fully open, keeps the first
+  // picture rather than watching it change under them.
+  const pool = [heroMedia, ...(heroImages ?? [])].filter(
+    (image): image is HeroImage => Boolean(image?.asset),
+  );
+  const [picked, setPicked] = useState(0);
+
+  useEffect(() => {
+    if (pool.length < 2) return;
+    if (window.scrollY > 4) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setPicked(Math.floor(Math.random() * pool.length));
+    // Once per mount: re-rolling on a prop change would swap a visible image.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const image = pool[picked] ?? pool[0];
+  const src = image
+    ? urlFor(image).width(2560).height(1440).fit("crop").url()
     : FALLBACK_IMAGE;
 
   return (
-    <div data-nav-cloak className="bg-ink">
+    <div ref={wrapperRef} data-nav-cloak className="bg-ink">
+      <div ref={fadeRef}>
       <ScrollExpand
         src={src}
-        // Decorative: the h1 below carries the meaning, so describing the
+        // Decorative: the wordmark h1 carries the meaning, so describing the
         // picture here would just have it read out twice.
         alt=""
         useWindowScroll
@@ -84,23 +154,90 @@ export default function HeroScrollExpand({
         // half-opacity serif text across the photograph, which is unreadable
         // over anything the studio might upload and reads as a mistake.
         titleFade={[0.04, 0.26]}
-        scrollHint={reducedMotion ? "" : "Scroll"}
-        title={
-          // Nothing shares this screen, so the headline is set at display
-          // scale rather than tucked inside a frame — but the measure is set
-          // in px, not ch, because the headline is a sentence rather than a
-          // three word slogan. A ch measure keeps the line count constant as
-          // the size grows, which put this one on five lines filling half the
-          // screen; the black around it is doing as much work as the words.
-          //
-          // The shadow does nothing at rest on flat Ink. It earns its place
-          // during the crossfade, when the text is briefly over whatever
-          // photograph the studio uploaded.
-          <h1 className="display-headline max-w-[820px] text-balance text-[clamp(30px,4.6vw,62px)] leading-[1.12] text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.5)]">
-            {heroHeadline}
-          </h1>
-        }
+        // No hint: the wordmark fills the screen edge to edge, so anything
+        // pinned near the bottom would sit on top of "India".
+        scrollHint=""
+        title={<HeroWordmark />}
       />
+      </div>
     </div>
+  );
+}
+
+const WORDS = ["Creative", "Studio", "India"];
+
+/**
+ * The studio's name as the whole landing screen: three rows, each a third of
+ * the viewport, every word running from the left margin to the right.
+ *
+ * Two steps per word. First it is scaled as large as its row allows — whichever
+ * runs out first, the row's width or its height. Then the letters are spread
+ * across the full width (each letter is its own flex item, justify-between),
+ * so a word that hit the height limit first still spans margin to margin, with
+ * the leftover width going into the spacing between letters.
+ *
+ * Sized by measuring rather than by a vw guess so it holds if the face
+ * changes: every typeface has different letter widths, and a hardcoded ratio
+ * tuned for one would overflow or fall short in anything else.
+ *
+ * The shadow does nothing at rest on flat Ink. It earns its place during the
+ * crossfade, when the letters are briefly over the photograph.
+ */
+function HeroWordmark() {
+  const ref = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const heading = ref.current;
+    if (!heading) return;
+
+    const fit = () => {
+      const rowWidth = heading.clientWidth;
+      const rowHeight = heading.clientHeight / WORDS.length;
+      heading.querySelectorAll<HTMLElement>("[data-word]").forEach((word) => {
+        // Measure the word at its natural width and a known size…
+        word.style.width = "max-content";
+        word.style.fontSize = "100px";
+        const scale = Math.min(
+          rowWidth / word.offsetWidth,
+          (rowHeight * 0.92) / word.offsetHeight,
+        );
+        // …then set the size and hand the width back to the row, which
+        // spreads the letters out to both margins.
+        word.style.fontSize = `${100 * scale}px`;
+        word.style.width = "";
+      });
+    };
+
+    fit();
+    // Refit once the webfont lands — the first measure may be the fallback.
+    document.fonts.ready.then(fit);
+    const observer = new ResizeObserver(fit);
+    observer.observe(heading);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <h1
+      ref={ref}
+      aria-label="Creative Studio India"
+      className={cn(
+        barriecito.className,
+        "grid h-full w-full grid-rows-3 items-center uppercase leading-[0.8] text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.5)]",
+      )}
+    >
+      {WORDS.map((word) => (
+        // The text-[...] size is only the pre-hydration guess; fit() replaces it.
+        <span
+          key={word}
+          data-word
+          aria-hidden
+          className="flex w-full justify-between whitespace-nowrap text-[min(16vw,26dvh)]"
+        >
+          {[...word].map((letter, i) => (
+            <span key={i}>{letter}</span>
+          ))}
+        </span>
+      ))}
+    </h1>
   );
 }

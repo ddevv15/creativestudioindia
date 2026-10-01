@@ -63,8 +63,13 @@ export const getAllProjectSlugs = `
   *[_type == "project" && defined(slug.current)] {"slug": slug.current}
 `;
 
+/**
+ * The homepage carousel: twelve projects, the studio's featured picks first,
+ * then the rest by order. A loop of three reads thin, so featured is a
+ * priority here rather than a filter.
+ */
 export const getFeaturedProjects = `
-  *[_type == "project" && featured == true] | order(coalesce(order, 999999) asc) [0...3] {${projectCardFields}}
+  *[_type == "project"] | order(coalesce(featured, false) desc, coalesce(order, 999999) asc) [0...12] {${projectCardFields}}
 `;
 
 export const getRelatedProjects = `
@@ -124,6 +129,10 @@ export const getSiteSettings = `
     studioName,
     heroHeadline,
     heroMedia{
+      ...,
+      "lqip": asset->metadata.lqip
+    },
+    heroImages[]{
       ...,
       "lqip": asset->metadata.lqip
     },

@@ -1,7 +1,7 @@
 import JsonLd from "@/components/JsonLd";
 import HeroScrollExpand from "@/components/sections/HeroScrollExpand";
 import CredentialBar from "@/components/sections/CredentialBar";
-import FeaturedProjects from "@/components/sections/FeaturedProjects";
+import ProjectsCarousel from "@/components/sections/ProjectsCarousel";
 import FounderBlock from "@/components/sections/FounderBlock";
 import SketchesStrip from "@/components/sections/SketchesStrip";
 import ServicesOverview from "@/components/sections/ServicesOverview";
@@ -31,18 +31,29 @@ export default async function HomePage() {
       <JsonLd data={localBusinessSchema()} />
 
       <HeroScrollExpand
-        heroHeadline={siteSettings.heroHeadline}
         heroMedia={siteSettings.heroMedia}
+        heroImages={siteSettings.heroImages}
       />
-      <CredentialBar />
-      <FeaturedProjects projects={featuredProjects} />
-      <FounderBlock
-        principalPhoto={siteSettings.principalPhoto}
-        principalBio={siteSettings.principalBio}
-      />
-      <SketchesStrip sketches={sketches} />
-      <ServicesOverview />
-      <ContactCTA />
+      <ProjectsCarousel projects={featuredProjects} />
+
+      {/*
+        The sheet. Everything after the carousel slides up over its pinned
+        stage: the negative margin overlaps the carousel's last viewport of
+        track, which it keeps empty for exactly this. z-10 puts the sheet above
+        the stage; the shadow is the stage's edge as the sheet passes over it.
+        No overlap below lg or with reduced motion, where the carousel does
+        not pin.
+      */}
+      <div className="relative z-10 lg:-mt-[100dvh] lg:shadow-[0_-24px_60px_rgba(0,0,0,0.35)] motion-reduce:lg:mt-0">
+        <CredentialBar />
+        <FounderBlock
+          principalPhoto={siteSettings.principalPhoto}
+          principalBio={siteSettings.principalBio}
+        />
+        <SketchesStrip sketches={sketches} />
+        <ServicesOverview />
+        <ContactCTA />
+      </div>
     </>
   );
 }
