@@ -7,10 +7,10 @@ import ScrollExpand from "@/components/ScrollExpand";
 import MoltenMetal from "@/components/MoltenMetal";
 import { urlFor } from "@/lib/sanity/image";
 import { cn } from "@/lib/utils";
-import type { HeroImage, SiteSettings } from "@/types/sanity";
+import type { HeroImage } from "@/types/sanity";
 
-// The landing wordmark's face, and only that: loaded here rather than in the
-// root layout so no other page downloads it or picks it up. Barriecito by
+// The wordmark's face, and only that: loaded here rather than in the root
+// layout so only the pages that open on this hero download it. Barriecito by
 // Omnibus-Type, SIL Open Font License (OFL.txt alongside), self-hosted from
 // public/fonts/barriecito.
 const barriecito = localFont({
@@ -19,10 +19,30 @@ const barriecito = localFont({
   display: "swap",
 });
 
-type HeroScrollExpandProps = Pick<SiteSettings, "heroMedia" | "heroImages">;
+/**
+ * A wordmark row. A plain string spreads its letters margin to margin; set
+ * `spread: false` to keep the letters together, centred in the row (for a
+ * short connecting word like "of", which spread out reads as two letters).
+ */
+type WordmarkWord = string | { text: string; spread: false };
+
+const wordText = (word: WordmarkWord) =>
+  typeof word === "string" ? word : word.text;
+
+type HeroScrollExpandProps = {
+  /** Three words, one per third of the screen. */
+  words: WordmarkWord[];
+  /**
+   * The heading's accessible name. The visible words are a display cut of a
+   * phrase ("35 years / of / design"), so screen readers get the full one.
+   */
+  label: string;
+  /** The pool one picture is shuffled from per visit. Unset entries are skipped. */
+  images: (HeroImage | undefined)[];
+};
 
 /**
- * Shown when the siteSettings singleton has no hero image. The page must never
+ * Shown when a page passes no usable image. The page must never
  * fail over one unset field, so this is a committed file rather than a Sanity
  * lookup, and it is routed through the same aperture as a real image so the
  * fallback exercises the same code instead of being an untested branch nobody
@@ -33,16 +53,17 @@ type HeroScrollExpandProps = Pick<SiteSettings, "heroMedia" | "heroImages">;
  * opens out of Ink into near-Ink rather than punching a bright hole in it.
  *
  * It is also Chicago, not Ahmedabad. Fine for a fallback nobody should reach,
- * wrong the moment it is the picture a visitor actually sees — set `heroMedia`
- * on the siteSettings singleton in Sanity and this stops rendering.
+ * wrong the moment it is the picture a visitor actually sees — give the page
+ * an image in Sanity and this stops rendering.
  */
 const FALLBACK_IMAGE = "/hero-default.jpg";
 
 /**
- * The landing moment. The page opens on nothing but Ink and the headline — no
- * picture, no nav, no page. Scrolling opens an aperture in the middle of that
- * black and the photograph comes through it, growing to full bleed as the
- * headline lifts away. Once it has, the nav appears and the homepage follows.
+ * The landing moment, used by the homepage and the Studio page. The page opens
+ * on nothing but Ink and a three-word wordmark — no picture, no nav, no page.
+ * Scrolling opens an aperture in the middle of that black and the photograph
+ * comes through it, growing to full bleed as the words lift away. Once it
+ * has, the nav appears and the rest of the page follows.
  *
  * The picture is hidden by a zero-area clip path, not by being absent: it is
  * still in the document and still fetched eagerly, so the largest element on
@@ -53,8 +74,9 @@ const FALLBACK_IMAGE = "/hero-default.jpg";
  * or immediately if someone reaches for the keyboard (see Nav for that part).
  */
 export default function HeroScrollExpand({
-  heroMedia,
-  heroImages,
+  words,
+  label,
+  images,
 }: HeroScrollExpandProps) {
   // The aperture opens as you scroll, which is a large amount of movement for
   // anyone who asked for less of it. With reduced motion it starts fully open
@@ -72,7 +94,7 @@ export default function HeroScrollExpand({
 
   // The exit. The hero opened out of Ink, so it closes back into it: once the
   // photograph has held at full bleed for a moment, it dims to black as it
-  // scrolls away, and the projects carousel arrives on that same black. This is
+  // scrolls away, and the next section arrives after that black. This is
   // GSAP on the wrapper only — the aperture inside stays on ScrollExpand's own
   // rAF loop, so the two never touch the same element.
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -100,7 +122,7 @@ export default function HeroScrollExpand({
     return () => mm.revert();
   }, []);
 
-  // The shuffle. Every visit shows one picture from heroMedia plus heroImages.
+  // The shuffle. Every visit shows one picture from `images`.
   // The page is cached until Sanity revalidates it, so a server-side pick
   // would freeze one "random" image for everyone; the client picks right
   // after hydration instead. Until it has, no picture is requested at all:
@@ -115,7 +137,7 @@ export default function HeroScrollExpand({
   // the page with the effect on. A reload that restores scroll mid-hero, or a
   // reduced-motion visitor whose hero starts fully open, keeps the first
   // picture rather than watching it change under them.
-  const pool = [heroMedia, ...(heroImages ?? [])].filter(
+  const pool = images.filter(
     (image): image is HeroImage => Boolean(image?.asset),
   );
   const [picked, setPicked] = useState<number | null>(
@@ -197,7 +219,7 @@ export default function HeroScrollExpand({
         // over anything the studio might upload and reads as a mistake.
         titleFade={[0.04, 0.26]}
         // No hint: the wordmark fills the screen edge to edge, so anything
-        // pinned near the bottom would sit on top of "India".
+        // pinned near the bottom would sit on top of the last word.
         scrollHint=""
         title={
           <>
@@ -228,7 +250,7 @@ export default function HeroScrollExpand({
                 />
               </div>
             )}
-            <HeroWordmark />
+            <HeroWordmark words={words} label={label} />
           </>
         }
       />
@@ -237,11 +259,9 @@ export default function HeroScrollExpand({
   );
 }
 
-const WORDS = ["Creative", "Studio", "India"];
-
 /**
- * The studio's name as the whole landing screen: three rows, each a third of
- * the viewport, every word running from the left margin to the right.
+ * The wordmark as the whole landing screen: three rows, each a third of the
+ * viewport, every word running from the left margin to the right.
  *
  * Two steps per word. First it is scaled as large as its row allows — whichever
  * runs out first, the row's width or its height. Then the letters are spread
@@ -253,10 +273,20 @@ const WORDS = ["Creative", "Studio", "India"];
  * changes: every typeface has different letter widths, and a hardcoded ratio
  * tuned for one would overflow or fall short in anything else.
  *
+ * A space inside a word ("35 years") is kept as a narrow fixed gap; the
+ * letter spreading then widens it like every other gap, so the two parts
+ * still read as separate words.
+ *
  * The shadow does nothing at rest on flat Ink. It earns its place during the
  * crossfade, when the letters are briefly over the photograph.
  */
-function HeroWordmark() {
+function HeroWordmark({
+  words,
+  label,
+}: {
+  words: WordmarkWord[];
+  label: string;
+}) {
   const ref = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -265,7 +295,7 @@ function HeroWordmark() {
 
     const fit = () => {
       const rowWidth = heading.clientWidth;
-      const rowHeight = heading.clientHeight / WORDS.length;
+      const rowHeight = heading.clientHeight / words.length;
       heading.querySelectorAll<HTMLElement>("[data-word]").forEach((word) => {
         // Measure the word at its natural width and a known size…
         word.style.width = "max-content";
@@ -287,28 +317,38 @@ function HeroWordmark() {
     const observer = new ResizeObserver(fit);
     observer.observe(heading);
     return () => observer.disconnect();
-  }, []);
+    // Keyed on the text, not the array: a fresh array with the same words
+    // must not tear down and refit.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [words.map(wordText).join("|")]);
 
   return (
     <h1
       ref={ref}
-      aria-label="Creative Studio India"
+      aria-label={label}
       className={cn(
         barriecito.className,
         "relative grid h-full w-full grid-rows-3 items-center uppercase leading-[0.8] text-white [text-shadow:0_2px_40px_rgba(0,0,0,0.5)]",
       )}
     >
-      {WORDS.map((word) => (
+      {words.map((word) => (
         // The text-[...] size is only the pre-hydration guess; fit() replaces it.
         <span
-          key={word}
+          key={wordText(word)}
           data-word
           aria-hidden
-          className="flex w-full justify-between whitespace-nowrap text-[min(16vw,26dvh)]"
+          className={cn(
+            "flex w-full whitespace-nowrap text-[min(16vw,26dvh)]",
+            typeof word === "string" ? "justify-between" : "justify-center",
+          )}
         >
-          {[...word].map((letter, i) => (
-            <span key={i}>{letter}</span>
-          ))}
+          {[...wordText(word)].map((letter, i) =>
+            letter === " " ? (
+              <span key={i} className="w-[0.3em]" />
+            ) : (
+              <span key={i}>{letter}</span>
+            ),
+          )}
         </span>
       ))}
     </h1>

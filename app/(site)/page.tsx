@@ -31,8 +31,9 @@ export default async function HomePage() {
       <JsonLd data={localBusinessSchema()} />
 
       <HeroScrollExpand
-        heroMedia={siteSettings.heroMedia}
-        heroImages={siteSettings.heroImages}
+        words={["Creative", "Studio", "India"]}
+        label="Creative Studio India"
+        images={[siteSettings.heroMedia, ...(siteSettings.heroImages ?? [])]}
       />
       <ProjectsCarousel projects={featuredProjects} />
 

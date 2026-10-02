@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import TeamCard from "@/components/TeamCard";
+import HeroScrollExpand from "@/components/sections/HeroScrollExpand";
 import {
   getAllNowItems,
   getAllProjects,
@@ -70,16 +71,22 @@ export default async function AboutPage() {
 
   return (
     <>
-      {/* pt-nav-80, not py-[80px]: the nav is fixed and solid on this route, so a
-          bare 80px put the "Studio" label behind the bar. Spec 18's 80px is
-          preserved as the visible gap below the nav. */}
-      <section className="bg-linen px-24 pb-[80px] pt-nav-80 md:px-48">
-        <p className="section-label">Studio</p>
+      {/*
+        The homepage's landing moment, set for the Studio: the headline cut to
+        three words that fill the screen, over molten metal, then a project
+        photograph opening out of the black as you scroll. The full phrase is
+        the heading's accessible name.
 
-        <h1 className="display-headline mt-16 text-[56px] text-ink">
-          35 years of intentional design.
-        </h1>
-      </section>
+        The picture is shuffled from the studio's own project photography.
+        principalPhoto (322×512) and the sketches (560×420) are far too small
+        to fill a screen — upload a large studio photograph in Sanity and it
+        can go here instead.
+      */}
+      <HeroScrollExpand
+        words={["35 years", { text: "of", spread: false }, "design"]}
+        label="35 years of intentional design."
+        images={projects.map((project) => project.coverImage)}
+      />
 
       <section className="bg-offwhite px-24 py-96 md:px-48">
         <div className="mx-auto max-w-[680px] text-center font-sans text-[17px] leading-[1.75] text-stone [&>p]:mb-24 [&>p:last-child]:mb-0">
