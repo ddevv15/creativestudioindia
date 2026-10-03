@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import TeamCard from "@/components/TeamCard";
-import HeroScrollExpand from "@/components/sections/HeroScrollExpand";
+import StudioHero from "@/components/sections/StudioHero";
 import {
   getAllNowItems,
   getAllProjects,
@@ -71,22 +71,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      {/*
-        The homepage's landing moment, set for the Studio: the headline cut to
-        three words that fill the screen, over molten metal, then a project
-        photograph opening out of the black as you scroll. The full phrase is
-        the heading's accessible name.
-
-        The picture is shuffled from the studio's own project photography.
-        principalPhoto (322×512) and the sketches (560×420) are far too small
-        to fill a screen — upload a large studio photograph in Sanity and it
-        can go here instead.
-      */}
-      <HeroScrollExpand
-        words={["35 years", { text: "of", spread: false }, "design"]}
-        label="35 years of intentional design."
-        images={projects.map((project) => project.coverImage)}
-      />
+      <StudioHero />
 
       <section className="bg-offwhite px-24 py-96 md:px-48">
         <div className="mx-auto max-w-[680px] text-center font-sans text-[17px] leading-[1.75] text-stone [&>p]:mb-24 [&>p:last-child]:mb-0">

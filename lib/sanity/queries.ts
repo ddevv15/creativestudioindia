@@ -122,6 +122,11 @@ export const getAllNowItems = `
  * dereferenced `asset->` would hand it an asset document and silently lose the
  * crop. The blur placeholder is pulled out as a flat `lqip` field instead, so
  * the image object stays intact.
+ *
+ * `projectTitle` names the project each hero photograph belongs to — found by
+ * asset, as the project whose cover or gallery uses the same image — so the
+ * homepage can caption the picture it opens onto. Unset when the photograph
+ * is not part of any project.
  */
 export const getSiteSettings = `
   *[_type == "siteSettings"][0]{
@@ -130,11 +135,13 @@ export const getSiteSettings = `
     heroHeadline,
     heroMedia{
       ...,
-      "lqip": asset->metadata.lqip
+      "lqip": asset->metadata.lqip,
+      "projectTitle": *[_type == "project" && (coverImage.asset._ref == ^.asset._ref || ^.asset._ref in gallery[].asset._ref)][0].title
     },
     heroImages[]{
       ...,
-      "lqip": asset->metadata.lqip
+      "lqip": asset->metadata.lqip,
+      "projectTitle": *[_type == "project" && (coverImage.asset._ref == ^.asset._ref || ^.asset._ref in gallery[].asset._ref)][0].title
     },
     principalBio,
     principalPhoto{

@@ -9,6 +9,8 @@ import type { SanityImageObject } from "@sanity/image-url";
  */
 export type HeroImage = SanityImageObject & {
   lqip?: string;
+  /** The project this photograph belongs to, matched by asset in the GROQ. */
+  projectTitle?: string;
 };
 
 export type SanityImage = {

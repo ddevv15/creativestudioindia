@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import localFont from "next/font/local";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import ScrollExpand from "@/components/ScrollExpand";
 import MoltenMetal from "@/components/MoltenMetal";
+import StrokeText from "@/components/StrokeText";
 import { urlFor } from "@/lib/sanity/image";
 import { cn } from "@/lib/utils";
 import type { HeroImage } from "@/types/sanity";
@@ -19,26 +20,21 @@ const barriecito = localFont({
   display: "swap",
 });
 
-/**
- * A wordmark row. A plain string spreads its letters margin to margin; set
- * `spread: false` to keep the letters together, centred in the row (for a
- * short connecting word like "of", which spread out reads as two letters).
- */
-type WordmarkWord = string | { text: string; spread: false };
-
-const wordText = (word: WordmarkWord) =>
-  typeof word === "string" ? word : word.text;
-
 type HeroScrollExpandProps = {
   /** Three words, one per third of the screen. */
-  words: WordmarkWord[];
+  words: string[];
   /**
-   * The heading's accessible name. The visible words are a display cut of a
-   * phrase ("35 years / of / design"), so screen readers get the full one.
+   * The heading's accessible name — the visible rows are a display cut, so
+   * screen readers get the phrase as one piece.
    */
   label: string;
   /** The pool one picture is shuffled from per visit. Unset entries are skipped. */
   images: (HeroImage | undefined)[];
+  /**
+   * Write the picture's project name over it once it is full bleed. Only for
+   * a pool whose images carry `projectTitle` (the homepage's).
+   */
+  showProjectName?: boolean;
 };
 
 /**
@@ -59,7 +55,7 @@ type HeroScrollExpandProps = {
 const FALLBACK_IMAGE = "/hero-default.jpg";
 
 /**
- * The landing moment, used by the homepage and the Studio page. The page opens
+ * The homepage's landing moment. The page opens
  * on nothing but Ink and a three-word wordmark — no picture, no nav, no page.
  * Scrolling opens an aperture in the middle of that black and the photograph
  * comes through it, growing to full bleed as the words lift away. Once it
@@ -77,6 +73,7 @@ export default function HeroScrollExpand({
   words,
   label,
   images,
+  showProjectName = false,
 }: HeroScrollExpandProps) {
   // The aperture opens as you scroll, which is a large amount of movement for
   // anyone who asked for less of it. With reduced motion it starts fully open
@@ -122,6 +119,41 @@ export default function HeroScrollExpand({
     return () => mm.revert();
   }, []);
 
+  // The caption. Once the photograph has (nearly) reached full bleed, the
+  // name of the project it shows writes itself in at the foot of the frame;
+  // scrolling back up into the aperture takes it away again, so it redraws
+  // the next time. Full bleed lands 1.2 viewports into the track
+  // (scrollDistance), so 1.05 starts the writing as the last of the
+  // expansion settles, while ScrollExpand is fading its overlay in.
+  const [named, setNamed] = useState(false);
+
+  // The caption's size. StrokeText draws at a fixed px size (the SVG's height
+  // is fontSize × 1.3), so the responsive step is chosen here: 48px on
+  // phones, rising with the viewport to 80px. Still well under the wordmark:
+  // it labels the photograph, it does not compete with it.
+  const [captionSize, setCaptionSize] = useState(48);
+
+  useEffect(() => {
+    if (!showProjectName) return;
+    const sync = () =>
+      setCaptionSize(Math.round(Math.min(80, Math.max(48, window.innerWidth * 0.055))));
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, [showProjectName]);
+
+  useEffect(() => {
+    if (!showProjectName) return;
+    const trigger = ScrollTrigger.create({
+      trigger: wrapperRef.current,
+      start: () => `top+=${window.innerHeight * 1.05} top`,
+      invalidateOnRefresh: true,
+      onEnter: () => setNamed(true),
+      onLeaveBack: () => setNamed(false),
+    });
+    return () => trigger.kill();
+  }, [showProjectName]);
+
   // The shuffle. Every visit shows one picture from `images`.
   // The page is cached until Sanity revalidates it, so a server-side pick
   // would freeze one "random" image for everyone; the client picks right
@@ -156,6 +188,10 @@ export default function HeroScrollExpand({
 
   const image = picked === null ? undefined : pool[picked];
   const awaitingPick = picked === null;
+  // Not with reduced motion: that hero starts fully open with the wordmark
+  // over the photograph, and a second line of display type would sit on it.
+  const projectName =
+    showProjectName && !reducedMotion ? image?.projectTitle : undefined;
 
   // Sized to the screen, in AVIF/WebP. Before this every device got one
   // 2560px JPEG (~650KB) — and a portrait phone then cropped that wide frame
@@ -253,7 +289,47 @@ export default function HeroScrollExpand({
             <HeroWordmark words={words} label={label} />
           </>
         }
-      />
+      >
+        {projectName ? (
+          // ScrollExpand's overlay slot: it fades in over the last third of
+          // the expansion, rising as the page does, and sinks back the same
+          // way on the way up. Keyed on the name so each appearance mounts a
+          // fresh StrokeText and draws from nothing. aria-hidden: a caption on
+          // a decorative picture.
+          //
+          // Placement: bottom-left, on the page gutter — the same left edge
+          // as the nav logo (24px, 48px from md), so when the nav returns
+          // the two read as one column rather than two things floating. The
+          // bottom is where the frame's scrim is darkest, and left-aligned
+          // text draws from the margin in reading order rather than from an
+          // arbitrary point mid-screen. The bottom inset clears a phone's
+          // home indicator. Long names scale down to fit the width.
+          <div
+            aria-hidden
+            className="absolute bottom-[max(40px,calc(env(safe-area-inset-bottom)+24px))] left-24 right-24 text-left md:bottom-48 md:left-48 md:right-48 [filter:drop-shadow(0_2px_18px_rgba(0,0,0,0.55))]"
+          >
+            {named ? (
+              <StrokeText
+                key={projectName}
+                text={projectName}
+                // Lining figures: Cormorant's default old-style "1" is a short
+                // stroke that reads as a lowercase "i" in "TIMES SQUARE 1".
+                className="font-display [font-variant-numeric:lining-nums]"
+                align="start"
+                fontSize={captionSize}
+                fontWeight={500}
+                // Display sizes want slightly negative tracking (~-0.01em).
+                letterSpacing={-captionSize * 0.01}
+                strokeColor="rgba(255,255,255,0.8)"
+                strokeWidth={1}
+                fillColor="#FFFFFF"
+                drawDuration={1.2}
+                stagger={0.04}
+              />
+            ) : null}
+          </div>
+        ) : null}
+      </ScrollExpand>
       </div>
     </div>
   );
@@ -284,7 +360,7 @@ function HeroWordmark({
   words,
   label,
 }: {
-  words: WordmarkWord[];
+  words: string[];
   label: string;
 }) {
   const ref = useRef<HTMLHeadingElement>(null);
@@ -320,7 +396,7 @@ function HeroWordmark({
     // Keyed on the text, not the array: a fresh array with the same words
     // must not tear down and refit.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [words.map(wordText).join("|")]);
+  }, [words.join("|")]);
 
   return (
     <h1
@@ -334,15 +410,12 @@ function HeroWordmark({
       {words.map((word) => (
         // The text-[...] size is only the pre-hydration guess; fit() replaces it.
         <span
-          key={wordText(word)}
+          key={word}
           data-word
           aria-hidden
-          className={cn(
-            "flex w-full whitespace-nowrap text-[min(16vw,26dvh)]",
-            typeof word === "string" ? "justify-between" : "justify-center",
-          )}
+          className="flex w-full justify-between whitespace-nowrap text-[min(16vw,26dvh)]"
         >
-          {[...wordText(word)].map((letter, i) =>
+          {[...word].map((letter, i) =>
             letter === " " ? (
               <span key={i} className="w-[0.3em]" />
             ) : (

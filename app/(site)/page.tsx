@@ -34,6 +34,7 @@ export default async function HomePage() {
         words={["Creative", "Studio", "India"]}
         label="Creative Studio India"
         images={[siteSettings.heroMedia, ...(siteSettings.heroImages ?? [])]}
+        showProjectName
       />
       <ProjectsCarousel projects={featuredProjects} />
 
