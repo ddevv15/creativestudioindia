@@ -27,6 +27,26 @@
     --color-red: #c0391b;
     --color-deepred: #8c2812;
 
+    /*
+     * Glow-only pastel tokens, approved by Dev on 2026-11-01 for the /projects
+     * card hover. Not part of the brand palette: use them only via
+     * --glow-colors. Blush is the brand red, softened.
+     */
+    --glow-blush: #e8a598;
+    --glow-sand: #d9b98c;
+    --glow-sage: #a9bfa0;
+    --glow-sky: #9db7c9;
+    --glow-lilac: #b9a7c6;
+
+    /*
+     * Hover fill colours for /projects cards (CardGlow.tsx), in rotation: each
+     * hover picks one at random, never the same twice in a row. The shader lays
+     * them on at partial strength, so they read as soft washes on the light
+     * background. Add or remove entries here, nowhere else.
+     */
+    --glow-colors: var(--glow-blush), var(--glow-sand), var(--glow-sage), var(--glow-sky),
+      var(--glow-lilac);
+
     --background: 60 17% 98%; /* offwhite */
     --foreground: 60 6% 10%; /* ink */
     --card: 60 17% 98%;
@@ -71,6 +91,15 @@
      * breakpoint matches Nav's `hidden md:flex` / MobileNav's `md:hidden`.
      */
     --nav-h: 64px;
+
+    /* Page side margin (spec 0002). The header, menu and every section align
+       to it. Consumed as the `gutter` spacing token. */
+    --gutter: 24px;
+
+    /* Left edge of the menu's content panel, and of the header's Menu button
+       that sits above it. The image panel to its left is exactly this wide. */
+    --menu-x: 27vw;
+
     --sidebar: 60 17% 98%;
     --sidebar-foreground: 60 6% 10%;
     --sidebar-primary: 60 6% 10%;
@@ -81,11 +110,25 @@
     --sidebar-ring: 48 3% 36%;
   }
 
+  /* The open menu locks scrolling with overflow: hidden on <html>. Reserving
+     the scrollbar's space keeps the page from shifting sideways when it does. */
+  html {
+    scrollbar-gutter: stable;
+  }
+
   /* md — desktop Nav replaces MobileNav, so the bar gets taller. 768px must stay
      in sync with Tailwind's `md` breakpoint. */
   @media (min-width: 768px) {
     :root {
-      --nav-h: 96px;
+      /* 90px is the reference header, measured (spec 0002). */
+      --nav-h: 90px;
+      --gutter: 48px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    :root {
+      --gutter: 60px;
     }
   }
 
@@ -136,6 +179,54 @@
     text-transform: uppercase;
     letter-spacing: 0.07em;
     color: var(--color-stone);
+  }
+
+  /* Mono meta line above a title: location, year, "Sketch" (spec 0002). */
+  .caption-mono {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    color: var(--color-stone);
+  }
+
+  /*
+   * Scroll reveal, after the reference: opacity only. ScrollReveal.tsx (GSAP ScrollTrigger) sets
+   * `data-revealed`. The dimmed start state applies only once that component
+   * has marked the document ready, so with no JS nothing is ever stuck dim.
+   */
+  [data-reveal-ready] [data-reveal]:not([data-revealed]) {
+    opacity: 0.25;
+  }
+
+  /* Only the reveal animates. Dimming on page load is instant and off-screen.
+     The reference holds 0.6s and fades over 1s. That read as lag here, so the
+     hold is gone and the fade is a quicker, strong ease-out. */
+  [data-reveal-ready] [data-reveal][data-revealed] {
+    transition: opacity 700ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal-ready] [data-reveal][data-revealed] {
+      transition: opacity 200ms ease;
+    }
+  }
+
+  /* Cursor-following glow on project grid cards (after zha.com). ProjectGridCard
+     sets --glow-x / --glow-y on the glow element itself, not on the card, so
+     moving the pointer restyles one element rather than the card's children. */
+  .card-glow {
+    background: radial-gradient(
+      320px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      color-mix(in srgb, var(--color-red) 14%, transparent),
+      transparent 70%
+    );
+  }
+
+  /* CardGlow.tsx marks the grid area once its WebGL glow is running; the CSS
+     glow is only the fallback (reduced motion, touch, no WebGL). */
+  [data-glow="webgl"] .card-glow {
+    display: none;
   }
 
   .display-headline {

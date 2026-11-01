@@ -57,8 +57,8 @@ export type NowType =
   | "partnership";
 
 /**
- * The narrow projection ProjectCard consumes — six fields, nothing more.
- * getFeaturedProjects returns exactly this shape.
+ * The narrow projection cards consume. getFeaturedProjects returns exactly this
+ * shape. `location` feeds the hero slider and menu captions (spec 0002).
  */
 export type ProjectCardData = {
   _id: string;
@@ -67,6 +67,7 @@ export type ProjectCardData = {
   category: ProjectCategory;
   coverImage: SanityImageObject;
   year?: number;
+  location?: string;
 };
 
 /**
@@ -79,7 +80,6 @@ export type Project = ProjectCardData & {
   headline: string;
   gallery: GalleryImage[];
   description?: PortableTextBlock[];
-  location?: string;
   /** Google Maps link for the site. Stored, not yet rendered anywhere. */
   mapUrl?: string;
   area?: string;
@@ -92,6 +92,12 @@ export type Project = ProjectCardData & {
     ogImage?: SanityImageObject;
   };
 };
+
+/** The slim projection the /projects grid sends to the browser. */
+export type ProjectGridItem = Pick<
+  Project,
+  "_id" | "title" | "slug" | "category" | "status" | "coverImage" | "headline" | "location" | "year"
+>;
 
 export type Sketch = {
   _id: string;

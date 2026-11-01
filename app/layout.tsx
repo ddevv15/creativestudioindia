@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Cormorant_Garamond, DM_Mono, DM_Sans } from "next/font/google";
 import { SITE } from "@/constants/site";
 import { siteUrl } from "@/lib/seo";
 import { Providers } from "./providers";
@@ -16,6 +16,14 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+// Captions and meta lines (location, year, "Sketch"), per spec 0002.
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -42,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cormorantGaramond.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${cormorantGaramond.variable} ${dmSans.variable} ${dmMono.variable}`}>
       {/* Extensions like Grammarly stamp attributes onto <body> before React
           hydrates. This silences only that mismatch, on this one element. */}
       <body className="bg-offwhite text-ink" suppressHydrationWarning>

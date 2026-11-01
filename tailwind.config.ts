@@ -17,7 +17,8 @@ const config: Config = {
   		},
   		fontFamily: {
   			display: ['var(--font-display)', 'serif'],
-  			sans: ['var(--font-sans)', 'sans-serif']
+  			sans: ['var(--font-sans)', 'sans-serif'],
+  			mono: ['var(--font-mono)', 'monospace']
   		},
   		spacing: {
   			'4': '4px',
@@ -43,8 +44,21 @@ const config: Config = {
   			 * deliberately sit under it and need neither.
   			 */
   			nav: 'var(--nav-h)',
+  			/* Page side margin, responsive in globals.css (spec 0002). */
+  			gutter: 'var(--gutter)',
   			'nav-80': 'calc(var(--nav-h) + 80px)',
   			'nav-96': 'calc(var(--nav-h) + 96px)'
+  		},
+  		/* Hero slider: the active segment fills over one autoplay interval
+  		   (HeroSlider AUTOPLAY_MS). Keep the two numbers in step. */
+  		keyframes: {
+  			'slide-progress': {
+  				from: { transform: 'scaleX(0)' },
+  				to: { transform: 'scaleX(1)' }
+  			}
+  		},
+  		animation: {
+  			'slide-progress': 'slide-progress 6000ms linear forwards'
   		},
   		colors: {
   			ink: '#1A1A17',
