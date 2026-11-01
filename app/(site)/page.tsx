@@ -1,17 +1,13 @@
 import JsonLd from "@/components/JsonLd";
-import HeroScrollExpand from "@/components/sections/HeroScrollExpand";
-import CredentialBar from "@/components/sections/CredentialBar";
-import ProjectsCarousel from "@/components/sections/ProjectsCarousel";
-import FounderBlock from "@/components/sections/FounderBlock";
-import SketchesStrip from "@/components/sections/SketchesStrip";
-import ServicesOverview from "@/components/sections/ServicesOverview";
-import ContactCTA from "@/components/sections/ContactCTA";
-import {
-  getAllSketches,
-  getFeaturedProjects,
-  getSiteSettings,
-} from "@/lib/content";
+import HeroSlider from "@/components/sections/HeroSlider";
+import HomeFeed from "@/components/sections/HomeFeed";
+import ServicesStrip from "@/components/sections/ServicesStrip";
+import Statement from "@/components/sections/Statement";
+import StudioBlock from "@/components/sections/StudioBlock";
+import { SITE } from "@/constants/site";
+import { getAllProjects, getAllSketches, getSiteSettings } from "@/lib/content";
 import { localBusinessSchema, pageMetadata } from "@/lib/seo";
+import type { FeatureImage } from "@/types";
 
 export const metadata = pageMetadata({
   title: "Creative Studio India | Architecture & 3D Visualization, Ahmedabad",
@@ -20,42 +16,61 @@ export const metadata = pageMetadata({
 });
 
 export default async function HomePage() {
-  const [siteSettings, featuredProjects, sketches] = await Promise.all([
+  const [siteSettings, projects, sketches] = await Promise.all([
     getSiteSettings(),
-    getFeaturedProjects(),
+    getAllProjects(),
     getAllSketches(),
   ]);
+
+  // Featured projects lead the slider. With none flagged, the first few by
+  // order stand in. With no projects at all, the studio's hero image does.
+  const featured = projects.filter((project) => project.featured);
+  const slides: FeatureImage[] = (featured.length > 0 ? featured : projects)
+    .slice(0, 5)
+    .map((project) => ({
+      title: project.title,
+      href: `/projects/${project.slug}`,
+      location: project.location,
+      image: project.coverImage,
+    }));
+  if (slides.length === 0 && siteSettings.heroMedia) {
+    slides.push({ title: SITE.name, location: "Ahmedabad, India", image: siteSettings.heroMedia });
+  }
 
   return (
     <>
       <JsonLd data={localBusinessSchema()} />
 
-      <HeroScrollExpand
-        words={["Creative", "Studio", "India"]}
-        label="Creative Studio India"
-        images={[siteSettings.heroMedia, ...(siteSettings.heroImages ?? [])]}
-        showProjectName
-      />
-      <ProjectsCarousel projects={featuredProjects} />
+      <h1 className="sr-only">{SITE.name}: architecture and planning, Ahmedabad</h1>
+      <HeroSlider slides={slides} />
 
-      {/*
-        The sheet. Everything after the carousel slides up over its pinned
-        stage: the negative margin overlaps the carousel's last viewport of
-        track, which it keeps empty for exactly this. z-10 puts the sheet above
-        the stage; the shadow is the stage's edge as the sheet passes over it.
-        No overlap below lg or with reduced motion, where the carousel does
-        not pin.
-      */}
-      <div className="relative z-10 lg:-mt-[100dvh] lg:shadow-[0_-24px_60px_rgba(0,0,0,0.35)] motion-reduce:lg:mt-0">
-        <CredentialBar />
-        <FounderBlock
-          principalPhoto={siteSettings.principalPhoto}
-          principalBio={siteSettings.principalBio}
-        />
-        <SketchesStrip sketches={sketches} />
-        <ServicesOverview />
-        <ContactCTA />
-      </div>
+      <Statement
+        heading="Every building here begins as a sketch."
+        body="Led by principal designer Jignesh Patel, the studio has spent 35 years across architecture, 3D visualization and documentation, with 700+ residential, commercial, institutional and mixed-use projects."
+        facts={[
+          { value: "35", label: "Years of practice" },
+          { value: "700+", label: "Projects" },
+          { value: "3", label: "Disciplines" },
+        ]}
+      />
+
+      <HomeFeed projects={projects} sketches={sketches} />
+
+      <StudioBlock
+        principalPhoto={siteSettings.principalPhoto}
+        principalBio={siteSettings.principalBio}
+      />
+
+      <ServicesStrip />
+
+      <Statement
+        heading="Have a project in mind?"
+        body="Tell us about the site, the brief and the people it is for, and the studio will take it from there."
+        links={[
+          { label: "Start a project →", href: "/contact" },
+          { label: "WhatsApp", href: `https://wa.me/${SITE.whatsappNumber}` },
+        ]}
+      />
     </>
   );
 }

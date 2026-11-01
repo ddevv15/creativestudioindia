@@ -43,7 +43,8 @@ const projectCardFields = `
   "slug": slug.current,
   category,
   coverImage,
-  year
+  year,
+  location
 `;
 
 export const getAllProjects = `

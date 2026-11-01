@@ -2,139 +2,201 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { ScrollTrigger } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
-import { NAV_ITEMS, hasOverlayHero } from "@/constants/nav";
-import { useNavCloak } from "@/lib/useNavCloak";
-import MobileNav from "./MobileNav";
+import { QUICK_LINKS, hasOverlayHero } from "@/constants/nav";
+import type { FeatureImage } from "@/types";
+import SanityImage from "@/components/SanityImage";
+import MenuOverlay from "./MenuOverlay";
 
-/**
- * Current nav height, read from the `--nav-h` custom property in globals.css so
- * the scroll trigger uses the same number the bar is actually rendered at.
- *
- * Read at call time rather than captured once: `--nav-h` is responsive (64px →
- * 96px at md), and a hardcoded 96 fired the trigger 32px late on mobile.
- */
+/** Read at call time: `--nav-h` is responsive (64px → 90px at md). */
 function navHeight(): number {
   const value = getComputedStyle(document.documentElement).getPropertyValue("--nav-h");
-  return parseFloat(value) || 96;
+  return parseFloat(value) || 90;
 }
 
-export default function Nav() {
+/**
+ * One header for every breakpoint (spec 0002). It sits transparent with white
+ * text over a full-bleed hero at scroll 0, hides while scrolling down, and
+ * comes back solid on the way up. GSAP ScrollTrigger owns the scroll reading,
+ * per AGENTS.md. The Menu button opens MenuOverlay.
+ */
+export default function Nav({ features }: { features: FeatureImage[] }) {
   const pathname = usePathname();
-  const overlay = hasOverlayHero(pathname);
-  const [pastHero, setPastHero] = useState(false);
+  const overlayRoute = hasOverlayHero(pathname);
 
-  // True while a route's opening moment owns the screen. See lib/useNavCloak.
-  const cloaked = useNavCloak();
+  const [atTop, setAtTop] = useState(true);
+  const [hidden, setHidden] = useState(false);
+  const [open, setOpen] = useState(false);
+  // Which featured project the menu's image panel shows. Advances on every
+  // open, so repeat visits to the menu don't feel static.
+  const [featureIndex, setFeatureIndex] = useState(0);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
-  // Solid unless this route actually has a dark hero to sit over. Computed
-  // during render, so pages without one are never transparent — not even for
-  // a frame.
-  const solid = !overlay || pastHero;
+  // The image the menu will show next, fetched ahead of time so the wipe
+  // reveals a photograph rather than an empty panel. Only where the image
+  // panel exists (lg and up), and only once the page itself has settled.
+  const [preload, setPreload] = useState(false);
+  useEffect(() => {
+    if (!window.matchMedia("(min-width: 1024px)").matches) return;
+    const timer = window.setTimeout(() => setPreload(true), 2000);
+    return () => window.clearTimeout(timer);
+  }, []);
+  const upcoming = features.length > 1 ? features[(featureIndex + 1) % features.length] : features[0];
 
   useEffect(() => {
-    // Trigger off the hero element itself rather than window.innerHeight.
-    // The viewport-height proxy assumed every hero was full-bleed; /sketches'
-    // hero is ~333px tall, which left the nav transparent over the white
-    // gallery for ~429px of scrolling.
-    const hero = document.querySelector<HTMLElement>("[data-nav-overlay]");
-
-    // An overlay route needs BOTH halves of the contract: a pattern in
-    // OVERLAY_HERO_ROUTES (so the first paint is already correct) and a
-    // [data-nav-overlay] element (so the trigger measures the real hero). Half a
-    // contract fails silently in either direction, so say so in dev.
-    if (process.env.NODE_ENV !== "production") {
-      if (overlay && !hero) {
-        console.warn(
-          `[Nav] "${pathname}" matches OVERLAY_HERO_ROUTES but renders no ` +
-            `[data-nav-overlay] element — falling back to a viewport-height guess. ` +
-            `Add the attribute to the hero section.`
-        );
-      } else if (!overlay && hero) {
-        console.warn(
-          `[Nav] "${pathname}" renders a [data-nav-overlay] element but matches no ` +
-            `pattern in OVERLAY_HERO_ROUTES (constants/nav.ts) — the nav will stay ` +
-            `solid over it. Add a matching pattern.`
-        );
-      }
-    }
-
-    if (!overlay) {
-      setPastHero(false);
-      return;
-    }
+    setOpen(false);
+    setHidden(false);
+    setAtTop(window.scrollY < 8);
 
     const trigger = ScrollTrigger.create({
-      trigger: hero ?? document.documentElement,
-      // Fire as the hero's bottom edge passes under the nav bar, not once it
-      // has already cleared the top of the viewport. A function (not a string)
-      // so ScrollTrigger.refresh() re-reads the height after a resize crosses
-      // the md breakpoint.
-      start: hero ? () => `bottom top+=${navHeight()}` : () => window.innerHeight,
+      start: 0,
       end: "max",
-      onToggle: (self) => setPastHero(self.isActive),
+      onUpdate: (self) => {
+        const y = self.scroll();
+        setAtTop(y < 8);
+        // Down past the bar's own height hides it. Any upward scroll restores it.
+        setHidden(self.direction === 1 && y > navHeight());
+      },
     });
 
-    // Nav stays mounted across App Router navigations, so the trigger has to be
-    // rebuilt per route — otherwise it keeps the previous page's measurements.
-    ScrollTrigger.refresh();
+    return () => trigger.kill();
+  }, [pathname]);
+
+  // While open: the page behind is inert and doesn't scroll, and Escape closes
+  // the menu and returns focus to the button that opened it.
+  useEffect(() => {
+    if (!open) return;
+
+    const content = document.getElementById("site-content");
+    const root = document.documentElement;
+    root.style.overflow = "hidden";
+    if (content) content.inert = true;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      toggleRef.current?.focus();
+    };
+    window.addEventListener("keydown", onKeyDown);
 
     return () => {
-      trigger.kill();
+      root.style.overflow = "";
+      if (content) content.inert = false;
+      window.removeEventListener("keydown", onKeyDown);
     };
-  }, [pathname, overlay]);
+  }, [open]);
 
+  const toggle = () => {
+    if (!open && features.length > 1) {
+      setFeatureIndex((index) => (index + 1) % features.length);
+    }
+    setOpen((value) => !value);
+  };
+
+  const close = () => setOpen(false);
+
+  const transparent = !open && overlayRoute && atTop;
 
   return (
     <>
       <header
-        // `inert` rather than only opacity: a cloaked bar must be unreachable by
-        // keyboard and invisible to screen readers, not merely transparent.
-        inert={cloaked || undefined}
         className={cn(
-          "fixed inset-x-0 top-0 z-50 hidden h-nav items-center px-48 transition-[background-color,opacity,transform] duration-300 md:flex",
-          solid ? "bg-ink border-b-[0.5px] border-white/10" : "bg-transparent",
-          cloaked && "pointer-events-none -translate-y-full opacity-0"
+          "fixed inset-x-0 top-0 z-[60] h-nav px-gutter font-sans transition-[transform,background-color,color] duration-300 ease-in-out",
+          transparent ? "text-offwhite" : "text-ink",
+          transparent || open ? "bg-transparent" : "bg-offwhite",
+          hidden && !open && "-translate-y-full"
         )}
       >
-        <Link
-          href="/"
-          className="font-sans text-sm font-medium tracking-wider text-white"
-        >
-          CREATIVE STUDIO
-        </Link>
+        <div className="relative flex h-full items-end pb-[18px] md:pb-[22px]">
+          <Link
+            href="/"
+            onClick={close}
+            className="shrink-0 pb-[7px] pr-16 text-[15px] font-medium uppercase leading-none tracking-[0.06em]"
+          >
+            Creative Studio
+          </Link>
 
-        <nav className="flex flex-1 items-center justify-center gap-48">
-          {NAV_ITEMS.map((item) => {
-            const isActive = pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                // The underline alone conveys "current page" only visually.
-                aria-current={isActive ? "page" : undefined}
-                className={cn(
-                  "border-b pb-8 font-sans text-[13px] text-white",
-                  isActive ? "border-white" : "border-transparent"
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+          {/* The rule runs from the logo to the right gutter. */}
+          <div className="flex min-w-0 flex-1 items-end justify-end border-b-2 border-current pb-[6px]">
+            <motion.nav
+              aria-label="Quick links"
+              inert={open || undefined}
+              animate={
+                open
+                  ? { opacity: 0, transform: "translateX(10px)" }
+                  : { opacity: 1, transform: "translateX(0px)" }
+              }
+              transition={{ duration: 0.3, ease: [0, 0, 0.58, 1] }}
+              className="hidden items-center gap-24 text-[15px] md:flex"
+            >
+              {QUICK_LINKS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={pathname.startsWith(item.href) ? "page" : undefined}
+                  className="transition-opacity duration-200 hover:opacity-60 aria-[current=page]:underline aria-[current=page]:underline-offset-4"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </motion.nav>
 
-        <Link
-          href="/contact"
-          className="rounded-none border border-white px-24 py-8 font-sans text-[13px] text-white"
-        >
-          Start a project →
-        </Link>
+            <button
+              ref={toggleRef}
+              type="button"
+              aria-expanded={open}
+              aria-controls="site-menu"
+              onClick={toggle}
+              className={cn(
+                "flex min-h-[44px] items-center gap-12 text-[15px] transition-transform duration-150 ease-out active:scale-[0.97]",
+                // Below lg: at the right end of the rule. From lg, lifted out to
+                // sit above the menu's content panel edge, as on the reference.
+                // (At md, 27vw is too close to the logo's width to share a row.)
+                "md:ml-24 lg:absolute lg:bottom-[30px] lg:left-[calc(var(--menu-x)-var(--gutter)+10px)] lg:ml-0 lg:min-h-0"
+              )}
+            >
+              <span aria-hidden="true" className="relative block h-[8px] w-[30px]">
+                {/* Two lines close into one when open. */}
+                <span
+                  className={cn(
+                    "absolute inset-x-0 top-0 h-[1.5px] bg-current transition-transform duration-300 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)]",
+                    open && "translate-y-[3.25px]"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "absolute inset-x-0 bottom-0 h-[1.5px] bg-current transition-transform duration-300 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)]",
+                    open && "-translate-y-[3.25px]"
+                  )}
+                />
+              </span>
+              {open ? "Close" : "Menu"}
+            </button>
+          </div>
+        </div>
       </header>
 
-      <MobileNav solid={solid} cloaked={cloaked} />
+      {preload && upcoming && !open && (
+        // Same `sizes` as the panel, so the browser picks the same URL and the
+        // panel hits the cache. Images inside display:none still fetch.
+        <div aria-hidden="true" className="hidden">
+          <div className="relative">
+            <SanityImage source={upcoming.image} alt="" fill sizes="27vw" loading="eager" fetchPriority="low" />
+          </div>
+        </div>
+      )}
+
+      <MenuOverlay
+        open={open}
+        onClose={close}
+        feature={features[featureIndex]}
+        projectLinks={features
+          .flatMap((feature) => (feature.href ? [{ label: feature.title, href: feature.href }] : []))
+          .slice(0, 4)}
+      />
     </>
   );
 }

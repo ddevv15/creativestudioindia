@@ -1,29 +1,55 @@
-import type { NavItem } from "@/types";
+import type { MenuItem, NavItem } from "@/types";
+import { SITE } from "@/constants/site";
 
+/** Every top-level page. Footer link column and the menu's primary links. */
 export const NAV_ITEMS: NavItem[] = [
   { label: "Projects", href: "/projects" },
   { label: "Studio", href: "/about" },
   { label: "Services", href: "/services" },
+  { label: "Sketches", href: "/sketches" },
+  { label: "Contact", href: "/contact" },
+];
+
+/** The short list on the header's right. They hide while the menu is open. */
+export const QUICK_LINKS: NavItem[] = [
+  { label: "Projects", href: "/projects" },
+  { label: "Studio", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 
 /**
- * Routes that open with a dark hero the nav can legibly sit over.
+ * Menu rows: a primary link, then muted secondary links (spec 0002). The
+ * Projects row's secondaries are featured project titles, filled in at runtime
+ * from Sanity by MenuOverlay, so they aren't listed here.
+ */
+export const MENU_ITEMS: MenuItem[] = [
+  { label: "Projects", href: "/projects" },
+  { label: "Studio", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Sketches", href: "/sketches" },
+  {
+    label: "Contact",
+    href: "/contact",
+    sub: [
+      { label: "WhatsApp", href: `https://wa.me/${SITE.whatsappNumber}` },
+      { label: "Email", href: `mailto:${SITE.email}` },
+    ],
+  },
+];
+
+/**
+ * Routes that open on a full-bleed image. The header sits transparent, with
+ * white text, over these, but only at scroll 0. Once the page moves it's solid
+ * (spec 0002).
  *
- * Spec 05 describes the nav's default state as transparent "over the dark
- * hero" — a premise that only held while the homepage was the only page.
- * `/projects`, `/about`, `/services` and `/contact` open on linen or offwhite,
- * where white nav text measures 1.05:1 against a 4.5:1 AA requirement.
- *
- * Matched during render (not in an effect) so the nav never flashes
- * transparent before correcting itself.
+ * Matched during render (not in an effect) so the header never flashes the
+ * wrong colour on first paint.
  */
 const OVERLAY_HERO_ROUTES: RegExp[] = [
-  // The homepage is deliberately absent. Its hero hides the nav entirely until
-  // the scroll expansion finishes (see `data-nav-cloak` in Nav.tsx), so the nav
-  // never sits over it and should be solid the moment it appears.
+  /^\/$/, // hero slider
+  /^\/projects$/, // banner with the page title
   /^\/sketches$/, // charcoal hero
-  /^\/projects\/[^/]+$/, // project detail — full-viewport cover image
+  /^\/projects\/[^/]+$/, // project detail: full-viewport cover image
 ];
 
 export function hasOverlayHero(pathname: string): boolean {
