@@ -77,7 +77,8 @@ export default function ContactPage() {
       </section>
 
       <section aria-label="Map" className="px-gutter pb-64 lg:pb-96">
-        <div className="border border-ink/15">
+        {/* Linen until the lazy-loaded map paints, never an empty white box. */}
+        <div className="border border-ink/15 bg-linen">
           <iframe
             title="Creative Studio India on Google Maps"
             src={mapSrc}

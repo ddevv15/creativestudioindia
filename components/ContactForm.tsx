@@ -50,21 +50,35 @@ export default function ContactForm() {
   const [email, setEmail] = useState("");
   const [projectType, setProjectType] = useState("");
   const [message, setMessage] = useState("");
-  // Set when the phone-or-email rule fails, so both fields announce themselves as invalid.
-  const [needsReplyRoute, setNeedsReplyRoute] = useState(false);
+  // Fields that failed the last submit, so they announce themselves as invalid.
+  const [invalid, setInvalid] = useState<string[]>([]);
+  const needsReplyRoute = invalid.includes("phone");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!phone.trim() && !email.trim()) {
-      setError("Please add a phone number or an email address so the studio can reply.");
+    // The form's own checks replace the browser's bubbles (noValidate), so
+    // every missing field is named in one message, in the page's own voice.
+    const missing: { ids: string[]; label: string }[] = [];
+    if (!name.trim()) missing.push({ ids: ["name"], label: "your name" });
+    if (!phone.trim() && !email.trim()) missing.push({ ids: ["phone", "email"], label: "a phone number or an email" });
+    if (!message.trim()) missing.push({ ids: ["message"], label: "a few lines about the project" });
+
+    if (missing.length > 0) {
+      const labels = missing.map((item) => item.label);
+      // A serial comma once there are three: the middle item already has an "or".
+      const list =
+        labels.length > 2
+          ? `${labels.slice(0, -1).join(", ")}, and ${labels.at(-1)}`
+          : labels.join(" and ");
+      setError(`Please add ${list} so the studio can reply.`);
       setStatus("error");
-      setNeedsReplyRoute(true);
-      document.getElementById("phone")?.focus();
+      setInvalid(missing.flatMap((item) => item.ids));
+      document.getElementById(missing[0].ids[0])?.focus();
       return;
     }
 
-    setNeedsReplyRoute(false);
+    setInvalid([]);
     setStatus("submitting");
     setError("");
 
@@ -125,13 +139,13 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate aria-describedby={status === "error" ? "form-error" : undefined}>
       <div className="grid grid-cols-1 gap-x-[10px] gap-y-24 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label htmlFor="name" className={LABEL}>
             Full name
           </label>
-          <Input id="name" required autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className={FIELD} />
+          <Input id="name" required aria-invalid={invalid.includes("name") || undefined} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className={FIELD} />
         </div>
 
         <div>
@@ -201,6 +215,7 @@ export default function ContactForm() {
           </label>
           <Textarea
             id="message"
+            aria-invalid={invalid.includes("message") || undefined}
             required
             rows={5}
             placeholder="The site, the brief, and the people it is for."
@@ -212,7 +227,7 @@ export default function ContactForm() {
       </div>
 
       {status === "error" && (
-        <p role="alert" className="mt-24 text-[13px] text-red">
+        <p id="form-error" role="alert" className="mt-24 text-[13px] text-red">
           {error}
         </p>
       )}

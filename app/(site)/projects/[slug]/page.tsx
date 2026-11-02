@@ -151,7 +151,14 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   // carousel. Without body text, a second (mirrored) pair takes the place of the
   // image-and-text section, so a project told in photographs alone still reads
   // as a full page.
-  const gallery = project.gallery ?? [];
+  // An unbuilt project's images are renders, so every caption says so
+  // (DESIGN.md, honest caption), including frames the studio left uncaptioned.
+  const unbuilt = project.status === "under-construction";
+  const gallery = (project.gallery ?? []).map((image) =>
+    unbuilt
+      ? { ...image, caption: image.caption ? `${image.caption}, visualization` : "Visualization" }
+      : image
+  );
   let cursor = 0;
   const take = (count: number) => {
     const taken = gallery.slice(cursor, cursor + count);
