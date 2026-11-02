@@ -89,7 +89,7 @@ export default function ProjectsBrowser({ projects }: { projects: ProjectGridIte
             type="button"
             onClick={clearAll}
             disabled={!hasFilters}
-            className="min-h-[32px] underline decoration-1 underline-offset-4 transition-opacity duration-150 disabled:no-underline disabled:opacity-40"
+            className="hit-area min-h-[32px] underline decoration-1 underline-offset-4 transition-opacity duration-150 disabled:no-underline disabled:opacity-40"
           >
             Clear all
           </button>

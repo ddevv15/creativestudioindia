@@ -116,7 +116,7 @@ export default function Nav({ features }: { features: FeatureImage[] }) {
             onClick={close}
             // pb = the rule bar's pb-[6px] + its 2px border, and the same 1.5 line
             // height as the links, so logo, Menu and links share one baseline.
-            className="shrink-0 whitespace-nowrap pb-[8px] pr-16 text-[13px] font-medium uppercase leading-[1.5] tracking-[0.04em] md:text-[15px] md:tracking-[0.06em]"
+            className="hit-area shrink-0 whitespace-nowrap pb-[8px] pr-16 text-[13px] font-medium uppercase leading-[1.5] tracking-[0.04em] md:text-[15px] md:tracking-[0.06em]"
           >
             Creative Studio India
           </Link>
@@ -139,7 +139,7 @@ export default function Nav({ features }: { features: FeatureImage[] }) {
                   key={item.href}
                   href={item.href}
                   aria-current={pathname.startsWith(item.href) ? "page" : undefined}
-                  className="transition-opacity duration-200 hover:opacity-60 aria-[current=page]:underline aria-[current=page]:underline-offset-4"
+                  className="hit-area transition-opacity duration-200 hover:opacity-60 aria-[current=page]:underline aria-[current=page]:underline-offset-4"
                 >
                   {item.label}
                 </Link>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SanityImage from "@/components/SanityImage";
 import { CATEGORY_LABELS, STATUS_LABELS } from "@/constants/categories";
+import { SKETCHES_ARE_SAMPLES } from "@/constants/site";
 import { cn } from "@/lib/utils";
 import type { GalleryImage, Project, Sketch } from "@/types/sanity";
 
@@ -149,7 +150,13 @@ function SketchTile({ sketch }: { sketch: Sketch }) {
         />
       </div>
       <p className="caption-mono mt-16">
-        Sketch{sketch.year ? <span className="ml-8">{sketch.year}</span> : null}
+        {SKETCHES_ARE_SAMPLES ? (
+          "Sample sketch"
+        ) : (
+          <>
+            Sketch{sketch.year ? <span className="ml-8">{sketch.year}</span> : null}
+          </>
+        )}
       </p>
       <h3 className="mt-4 text-[15px] font-medium leading-[1.35] text-ink">{sketch.title}</h3>
     </Link>

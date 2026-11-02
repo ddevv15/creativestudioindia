@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
+import ImageScrim from "@/components/ImageScrim";
 import SanityImage from "@/components/SanityImage";
 import ScrollZoom from "@/components/ScrollZoom";
 import TeamCard from "@/components/TeamCard";
@@ -95,7 +96,8 @@ export default async function AboutPage() {
             className="object-cover"
           />
         )}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/10 to-ink/30" />
+        <ImageScrim edge="header" />
+        <ImageScrim edge="title" />
         <h1 className="absolute bottom-32 left-gutter text-[64px] font-normal leading-none tracking-[-0.03em] text-offwhite md:bottom-48 md:text-[112px] lg:text-[136px]">
           Studio
         </h1>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { SKETCHES_ARE_SAMPLES } from "@/constants/site";
 import { urlFor } from "@/lib/sanity/image";
 import type { Sketch } from "@/types/sanity";
 
@@ -34,6 +35,7 @@ export default function SketchCard({ sketch, onImageClick }: SketchCardProps) {
 
       <div className="px-16 pb-16 pt-8">
         <p className="font-sans text-[13px] text-stone">
+          {SKETCHES_ARE_SAMPLES && "Sample · "}
           {sketch.title}
           {sketch.year ? ` — ${sketch.year}` : ""}
         </p>

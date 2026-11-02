@@ -1,4 +1,5 @@
 import SketchesGallery from "@/components/SketchesGallery";
+import { SKETCHES_ARE_SAMPLES } from "@/constants/site";
 import { getAllSketches } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 
@@ -30,6 +31,12 @@ export default async function SketchesPage() {
           Every building we have designed started as a sketch. This is where
           ideas become architecture.
         </p>
+
+        {SKETCHES_ARE_SAMPLES && (
+          <p className="caption-mono mt-16 !text-offwhite/80">
+            Draft: these are sample images. The studio&rsquo;s own sketches are on their way.
+          </p>
+        )}
       </section>
 
       <SketchesGallery sketches={sketches} />

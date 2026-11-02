@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useSwipe } from "@/lib/useSwipe";
+import ImageScrim from "@/components/ImageScrim";
 import SanityImage from "@/components/SanityImage";
 import type { FeatureImage } from "@/types";
 
@@ -152,8 +153,8 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
       })}
 
       {/* Legibility for the caption and controls. */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/50 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[160px] bg-gradient-to-b from-ink/30 to-transparent" />
+      <ImageScrim edge="title" />
+      <ImageScrim edge="header" />
 
       <div className="absolute inset-x-gutter bottom-24 flex flex-col gap-24 md:bottom-32 md:flex-row md:items-end md:justify-between">
         {/* Keyed so each new caption fades in rather than swapping hard. */}
@@ -175,7 +176,7 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
             <button
               type="button"
               onClick={() => go(-1)}
-              className="min-h-[44px] transition-transform duration-150 ease-out active:scale-[0.97]"
+              className="hit-area min-h-[44px] transition-transform duration-150 ease-out active:scale-[0.97]"
             >
               Prev
             </button>
@@ -210,7 +211,7 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
             <button
               type="button"
               onClick={() => go(1)}
-              className="min-h-[44px] transition-transform duration-150 ease-out active:scale-[0.97]"
+              className="hit-area min-h-[44px] transition-transform duration-150 ease-out active:scale-[0.97]"
             >
               Next
             </button>

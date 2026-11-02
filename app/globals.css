@@ -183,6 +183,24 @@
 }
 
 @layer utilities {
+  /*
+   * A 44x44px minimum tap target (AGENTS.md, PRODUCT.md) for small text links
+   * and controls, without changing how they look: an invisible box centred on
+   * the element. The element itself keeps its size and baseline.
+   */
+  .hit-area {
+    position: relative;
+  }
+  .hit-area::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+
   .section-label {
     font-family: var(--font-sans);
     font-size: 11px;

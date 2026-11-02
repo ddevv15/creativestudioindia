@@ -6,6 +6,7 @@ import { PortableText } from "@portabletext/react";
 import type { PortableTextBlock } from "@sanity/types";
 import JsonLd from "@/components/JsonLd";
 import ProjectCarousel from "@/components/ProjectCarousel";
+import ImageScrim from "@/components/ImageScrim";
 import SanityImage from "@/components/SanityImage";
 import { CATEGORY_LABELS, STATUS_LABELS } from "@/constants/categories";
 import { SITE } from "@/constants/site";
@@ -192,7 +193,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
           priority
           className="object-cover"
         />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[160px] bg-gradient-to-b from-ink/30 to-transparent" />
+        <ImageScrim edge="header" />
       </section>
 
       {/* Intro panel */}

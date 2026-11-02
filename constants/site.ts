@@ -21,3 +21,10 @@ export const SITE = {
   instagramUrl: "https://instagram.com/",
   linkedinUrl: "https://linkedin.com/",
 } as const;
+
+/**
+ * The sketches in Sanity are sample photos, not the studio's drawings (client
+ * question 4.1). While true, every sketch is labelled "Sample" wherever it
+ * appears. Set to false once the real scans are published.
+ */
+export const SKETCHES_ARE_SAMPLES = true;

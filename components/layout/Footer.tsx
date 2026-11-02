@@ -2,7 +2,9 @@ import Link from "next/link";
 import { NAV_ITEMS } from "@/constants/nav";
 import { SITE } from "@/constants/site";
 
-const LINK = "underline decoration-1 underline-offset-4 transition-colors duration-200 hover:text-stone";
+// Touch screens get taller rows: stacked links 25px apart cannot each own a
+// 44px target, so the tight drawing-board spacing stays for mouse users only.
+const LINK = "hit-area [@media(pointer:coarse)]:py-[12px] underline decoration-1 underline-offset-4 transition-colors duration-200 hover:text-stone";
 
 /**
  * Light footer (spec 0002). A rule split at the menu column, the wordmark on

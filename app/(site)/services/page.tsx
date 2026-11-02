@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { SanityImageObject } from "@sanity/image-url";
+import ImageScrim from "@/components/ImageScrim";
 import SanityImage from "@/components/SanityImage";
 import Statement from "@/components/sections/Statement";
 import { SERVICES } from "@/constants/services";
@@ -74,7 +75,8 @@ export default async function ServicesPage() {
             className="object-cover"
           />
         )}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/10 to-ink/30" />
+        <ImageScrim edge="header" />
+        <ImageScrim edge="title" />
         <h1 className="absolute bottom-32 left-gutter text-[64px] font-normal leading-none tracking-[-0.03em] text-offwhite md:bottom-48 md:text-[112px] lg:text-[136px]">
           Services
         </h1>

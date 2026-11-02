@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Lightbox from "@/components/Lightbox";
 import SketchCard from "@/components/SketchCard";
+import { SKETCHES_ARE_SAMPLES } from "@/constants/site";
 import type { Sketch } from "@/types/sanity";
 
 type SketchesGalleryProps = {
@@ -36,6 +37,9 @@ export default function SketchesGallery({ sketches }: SketchesGalleryProps) {
         onOpenChange={(open) => !open && setActive(null)}
         src={active?.src ?? null}
         alt={active?.title ?? ""}
+        caption={
+          SKETCHES_ARE_SAMPLES ? `Sample image: ${active?.title ?? ""}` : active?.title
+        }
       />
     </section>
   );
