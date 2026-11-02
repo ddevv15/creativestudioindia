@@ -123,6 +123,16 @@ components:
     backgroundColor: "{colors.linen}"
     textColor: "{colors.stone}"
     rounded: "{rounded.none}"
+  field-ruled:
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.none}"
+    padding: "0"
+    height: "44px"
+  channel-row:
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    padding: "16px 0"
 ---
 
 # Design System: Creative Studio India
@@ -189,8 +199,10 @@ washes kept for one hover effect.
 - **Drawing Paper** (`offwhite`): the page. The header turns this colour once you
   scroll, and the menu overlay uses it too.
 - **Linen** (`linen`): the one alternate surface, used for panels that need to
-  read as a separate sheet (the project intro panel, the next-project panel) and
-  as the placeholder behind images while they load.
+  read as a separate sheet (the project intro panel, the next-project panel), as
+  the placeholder behind images while they load, as the highlight on menu and
+  select rows, and as the text-selection fill (ink text on linen, never the
+  browser's blue). The text caret is ink.
 - **Graphite** (`stone`): secondary text, mono captions, muted menu sub-links,
   and placeholders.
 - **Charcoal** (`charcoal`): the fill behind full-bleed photography while it
@@ -218,7 +230,8 @@ moment per page, so it reads as the hand of the studio.
 
 ### Hierarchy
 - **Page title** (400, 64 / 112 / 136px, line-height 1, -0.03em): one per inner
-  page, set huge over its banner image ("Projects", "Studio", "Services").
+  page, set huge over its banner image ("Projects", "Studio", "Services"), or
+  in ink on the bare sheet on a task page ("Contact").
 - **Display** (400, 32px phone to 40px desktop, 1.18, -0.01em): statement
   headlines, section headlines ("Every building here begins as a sketch.") and
   service names on the Services page.
@@ -232,8 +245,9 @@ moment per page, so it reads as the hand of the studio.
 - **Title** (400, 20 to 22px, 1.3): menu rows, note tiles, service names in
   the homepage strip, card titles on large cells.
 - **Body** (400, 15 to 16px, 1.55): running prose, at most about 60ch.
-- **UI** (400 to 500, 13 to 15px): header links, controls, filter labels
-  (uppercase 12px at +0.04em), and the footer.
+- **UI** (400 to 500, 13 to 15px): header links, controls, filter and form
+  field labels (uppercase 12px at +0.04em), form hints (13px graphite), and the
+  footer.
 - **Caption** (DM Mono 400, 12px, 1.3, +0.01em, graphite): location, year,
   counts, image captions, the "Projects" or "Studio" label on a section row.
 
@@ -300,10 +314,21 @@ header, the menu and the footer.
 at 62 to 92svh. Everything else respects the gutter. Inner pages (/projects,
 /about, /services) open on the same 62svh page banner (see Components).
 
+**Task page.** A page whose job is a task rather than showing work (/contact)
+skips the banner on purpose: the page title sits in ink on the off-white sheet,
+32px under the header on phones and 48px from md, and the task starts 48 to
+64px below it. The task takes columns 1 to
+7; a pinned column of ruled channel rows sits at columns 9 to 11 from md
+(9 to 12 at md, 9 to 11 from lg), sticky at the header height plus 24px, and
+stacks under the task on phones. Columns 9 to 11 keep its links clear of the
+WhatsApp corner.
+
 ### Named Rules
 **The Clear Corner Rule.** The WhatsApp button is fixed in the bottom-right
-corner and always visible. Never put an interactive control at the far right
-edge of a section; start it at the halfway column instead.
+corner and always visible, except below md while a form field has focus: there
+the fields run full width, so it steps aside (fades out, unclickable) and
+returns on blur. Never put an interactive control at the far right edge of a
+section; start it at the halfway column instead.
 
 **The Measured Margin Rule.** Every element aligns to the gutter, a grid column
 or `--menu-x`. If something sits at an arbitrary x position, it's a mistake.
@@ -360,6 +385,9 @@ Calm and textual. Most actions are underlined words, not buttons.
 - **Text controls:** PREV / NEXT and Clear all are uppercase 12 to 13px text
   buttons, at least 44px tall, at 30% opacity when disabled.
 
+- **Form submit:** the primary button at 44px tall to match the fields, label
+  "Send enquiry →", charcoal on hover, 60% opacity while sending.
+
 ### Tag pills
 - **Style:** a 1px ink border at 25%, ink text, 11px uppercase at +0.04em,
   3×8px padding, 9999px radius.
@@ -372,6 +400,47 @@ Calm and textual. Most actions are underlined words, not buttons.
 - **Panel:** square, a 1px ink border on off-white, checklist rows at least 40px
   tall, a linen hover, a check mark for selected. Opens in 150ms (opacity plus a
   4px drop). Escape closes it and returns focus.
+
+### Ruled field (inputs)
+A form written on the drawing, not boxed in it.
+- **Style:** no box. One 1px hairline under each field (ink at 25%), a
+  transparent ground, 0px radius, no side padding, 44px tall, 15px ink text,
+  graphite placeholder. The message field is the same rule under at least 140px.
+- **Focus:** the hairline darkens to ink. No ring, no glow.
+- **Label:** above the field, 8px clear, uppercase 12px at +0.04em in ink. An
+  optional field says so after the label in graphite, lowercase and untracked:
+  "(optional)".
+- **Hint:** 13px graphite under the field it explains, tied to it with
+  aria-describedby.
+- **Error:** one 13px red line above the submit (the screen's one red mark),
+  announced as an alert. The fields at fault carry aria-invalid, and focus moves
+  to the first one to fix.
+- **Select:** the trigger is the same ruled field. Its menu is square with a 1px
+  ink border, no shadow, 15px rows at least 40px tall, and a linen highlight.
+
+### Form result
+What replaces the form once it has an answer.
+- **Style:** a 1px ink rule on top with 24px under it, one Display line (32px
+  phone, 40px desktop), a 15px body sentence at most 44ch, then the direct
+  channels (WhatsApp, phone, email) as underlined links in a row, 24px apart.
+  Announced as a status.
+- **Honesty:** "sent" only when the message really went. When no email service
+  is connected, the same layout says the message wasn't sent and points to the
+  direct channels. Never promise a reply time.
+
+### Channel rows
+The ways to reach the studio, as ruled rows beside a task.
+- **Row:** opened by a 1px hairline (ink at 20%), the last one closed by one,
+  16px top and bottom. A mono caption label, the value in 15px ink 4px below,
+  then 13px underlined actions with → (24px apart), each at least 44px tall.
+- **One number, once:** when phone and WhatsApp share a number, it is one row
+  ("Phone and WhatsApp") with both actions, not two rows.
+
+### Embedded map
+- **Style:** full gutter width at 4:3 on phones and 16:5 from md, in a 1px
+  hairline frame (ink at 15%).
+- **Colour:** greyscale until hover (500ms back to colour), so third-party
+  colour doesn't compete with red or the photographs.
 
 ### Header
 - **Style:** 90px tall (64px on phones). The logo "Creative Studio India" sits on
@@ -470,6 +539,7 @@ A service told plainly beside or under its image pair.
 - **Do** keep image frames at their fixed ratios (3:2, 4:5, 4:3, 16:9, 8:3,
   16:7) and crop with the Sanity hotspot.
 - **Do** align controls to the gutter, a column or `--menu-x`.
+- **Do** rule form fields with a single hairline that turns ink on focus.
 
 ### Don't:
 - **Don't** use shadows, rounded corners (except tag pills) or a dark page body.
@@ -481,3 +551,5 @@ A service told plainly beside or under its image pair.
 - **Don't** use the old "01 / About" numbered section labels on redesigned
   pages.
 - **Don't** put text on a photograph without the ink gradient behind it.
+- **Don't** box form fields or tell a visitor a message was sent when it
+  wasn't.

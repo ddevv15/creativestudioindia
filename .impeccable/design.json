@@ -1,50 +1,303 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-02T00:00:00Z",
+  "generatedAt": "2026-11-02T12:00:00Z",
   "title": "Design System: Creative Studio India",
   "extensions": {
     "colorMeta": {
-      "ink": { "role": "primary", "displayName": "Ink", "canonical": "#1A1A17", "tonalRamp": ["#0d0d0b", "#1a1a17", "#33332e", "#4d4d46", "#6b6b62", "#8f8f86", "#bdbdb4", "#e6e6df"] },
-      "red": { "role": "secondary", "displayName": "Signal Red", "canonical": "#C0391B", "tonalRamp": ["#3d1208", "#6b200f", "#8c2812", "#c0391b", "#d8604a", "#e68a78", "#f0b5a9", "#f9e0da"] },
-      "deepred": { "role": "secondary", "displayName": "Deep Red", "canonical": "#8C2812", "tonalRamp": ["#2e0d06", "#4f170a", "#6e1f0e", "#8c2812", "#b04a33", "#c97a68", "#e0aba0", "#f3dcd6"] },
-      "glow-blush": { "role": "tertiary", "displayName": "Glow Blush", "canonical": "#E8A598", "tonalRamp": ["#5a2a21", "#7f4135", "#a85e50", "#cc7f70", "#e8a598", "#efbfb5", "#f5d8d2", "#fbefec"] },
-      "glow-sand": { "role": "tertiary", "displayName": "Glow Sand", "canonical": "#D9B98C", "tonalRamp": ["#4f3c20", "#6f5532", "#917049", "#b59266", "#d9b98c", "#e4cba9", "#eedec8", "#f8f1e6"] },
-      "glow-sage": { "role": "tertiary", "displayName": "Glow Sage", "canonical": "#A9BFA0", "tonalRamp": ["#2e3b29", "#435440", "#5b6f57", "#7f9779", "#a9bfa0", "#c0d1b9", "#d8e3d3", "#eef3ec"] },
-      "glow-sky": { "role": "tertiary", "displayName": "Glow Sky", "canonical": "#9DB7C9", "tonalRamp": ["#22323d", "#364b5a", "#4d6678", "#6f8ba0", "#9db7c9", "#b8cbd8", "#d3e0e8", "#ecf2f6"] },
-      "glow-lilac": { "role": "tertiary", "displayName": "Glow Lilac", "canonical": "#B9A7C6", "tonalRamp": ["#33283d", "#4b3d57", "#655473", "#8b7a9b", "#b9a7c6", "#ccbfd6", "#dfd6e6", "#f2eef5"] },
-      "offwhite": { "role": "neutral", "displayName": "Drawing Paper", "canonical": "#FAFAF8", "tonalRamp": ["#2b2b29", "#5a5a56", "#8a8a85", "#b5b5b0", "#d6d6d2", "#ebebe7", "#f4f4f1", "#fafaf8"] },
-      "linen": { "role": "neutral", "displayName": "Linen", "canonical": "#F1EFE8", "tonalRamp": ["#2e2c25", "#5c5848", "#8a856e", "#b2ac95", "#d2cdbb", "#e4e1d4", "#f1efe8", "#f9f8f4"] },
-      "stone": { "role": "neutral", "displayName": "Graphite", "canonical": "#5F5E5A", "tonalRamp": ["#1c1c1a", "#33322f", "#4a4946", "#5f5e5a", "#7d7c77", "#a09f9a", "#c6c5c1", "#e9e8e5"] },
-      "charcoal": { "role": "neutral", "displayName": "Charcoal", "canonical": "#2C2C2A", "tonalRamp": ["#121211", "#1f1f1d", "#2c2c2a", "#454542", "#61615d", "#83837e", "#b0b0ab", "#dededa"] }
+      "ink": {
+        "role": "primary",
+        "displayName": "Ink",
+        "canonical": "#1A1A17",
+        "tonalRamp": [
+          "#0d0d0b",
+          "#1a1a17",
+          "#33332e",
+          "#4d4d46",
+          "#6b6b62",
+          "#8f8f86",
+          "#bdbdb4",
+          "#e6e6df"
+        ]
+      },
+      "red": {
+        "role": "secondary",
+        "displayName": "Signal Red",
+        "canonical": "#C0391B",
+        "tonalRamp": [
+          "#3d1208",
+          "#6b200f",
+          "#8c2812",
+          "#c0391b",
+          "#d8604a",
+          "#e68a78",
+          "#f0b5a9",
+          "#f9e0da"
+        ]
+      },
+      "deepred": {
+        "role": "secondary",
+        "displayName": "Deep Red",
+        "canonical": "#8C2812",
+        "tonalRamp": [
+          "#2e0d06",
+          "#4f170a",
+          "#6e1f0e",
+          "#8c2812",
+          "#b04a33",
+          "#c97a68",
+          "#e0aba0",
+          "#f3dcd6"
+        ]
+      },
+      "glow-blush": {
+        "role": "tertiary",
+        "displayName": "Glow Blush",
+        "canonical": "#E8A598",
+        "tonalRamp": [
+          "#5a2a21",
+          "#7f4135",
+          "#a85e50",
+          "#cc7f70",
+          "#e8a598",
+          "#efbfb5",
+          "#f5d8d2",
+          "#fbefec"
+        ]
+      },
+      "glow-sand": {
+        "role": "tertiary",
+        "displayName": "Glow Sand",
+        "canonical": "#D9B98C",
+        "tonalRamp": [
+          "#4f3c20",
+          "#6f5532",
+          "#917049",
+          "#b59266",
+          "#d9b98c",
+          "#e4cba9",
+          "#eedec8",
+          "#f8f1e6"
+        ]
+      },
+      "glow-sage": {
+        "role": "tertiary",
+        "displayName": "Glow Sage",
+        "canonical": "#A9BFA0",
+        "tonalRamp": [
+          "#2e3b29",
+          "#435440",
+          "#5b6f57",
+          "#7f9779",
+          "#a9bfa0",
+          "#c0d1b9",
+          "#d8e3d3",
+          "#eef3ec"
+        ]
+      },
+      "glow-sky": {
+        "role": "tertiary",
+        "displayName": "Glow Sky",
+        "canonical": "#9DB7C9",
+        "tonalRamp": [
+          "#22323d",
+          "#364b5a",
+          "#4d6678",
+          "#6f8ba0",
+          "#9db7c9",
+          "#b8cbd8",
+          "#d3e0e8",
+          "#ecf2f6"
+        ]
+      },
+      "glow-lilac": {
+        "role": "tertiary",
+        "displayName": "Glow Lilac",
+        "canonical": "#B9A7C6",
+        "tonalRamp": [
+          "#33283d",
+          "#4b3d57",
+          "#655473",
+          "#8b7a9b",
+          "#b9a7c6",
+          "#ccbfd6",
+          "#dfd6e6",
+          "#f2eef5"
+        ]
+      },
+      "offwhite": {
+        "role": "neutral",
+        "displayName": "Drawing Paper",
+        "canonical": "#FAFAF8",
+        "tonalRamp": [
+          "#2b2b29",
+          "#5a5a56",
+          "#8a8a85",
+          "#b5b5b0",
+          "#d6d6d2",
+          "#ebebe7",
+          "#f4f4f1",
+          "#fafaf8"
+        ]
+      },
+      "linen": {
+        "role": "neutral",
+        "displayName": "Linen",
+        "canonical": "#F1EFE8",
+        "tonalRamp": [
+          "#2e2c25",
+          "#5c5848",
+          "#8a856e",
+          "#b2ac95",
+          "#d2cdbb",
+          "#e4e1d4",
+          "#f1efe8",
+          "#f9f8f4"
+        ]
+      },
+      "stone": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#5F5E5A",
+        "tonalRamp": [
+          "#1c1c1a",
+          "#33322f",
+          "#4a4946",
+          "#5f5e5a",
+          "#7d7c77",
+          "#a09f9a",
+          "#c6c5c1",
+          "#e9e8e5"
+        ]
+      },
+      "charcoal": {
+        "role": "neutral",
+        "displayName": "Charcoal",
+        "canonical": "#2C2C2A",
+        "tonalRamp": [
+          "#121211",
+          "#1f1f1d",
+          "#2c2c2a",
+          "#454542",
+          "#61615d",
+          "#83837e",
+          "#b0b0ab",
+          "#dededa"
+        ]
+      }
     },
     "typographyMeta": {
-      "page-title": { "displayName": "Page Title", "purpose": "One huge title per inner page, over its banner image." },
-      "display": { "displayName": "Display", "purpose": "Statement and section headlines; service names on the Services page." },
-      "display-serif": { "displayName": "Display Serif", "purpose": "Cormorant Garamond, at most one moment per page, 40px and up." },
-      "headline": { "displayName": "Headline", "purpose": "Uppercase project names as titles." },
-      "lead": { "displayName": "Lead", "purpose": "Statement body and project introductions, about 30ch." },
-      "title": { "displayName": "Title", "purpose": "Menu rows, notes, service names in the homepage strip, large card titles." },
-      "body": { "displayName": "Body", "purpose": "Running prose, max about 60ch." },
-      "ui": { "displayName": "UI", "purpose": "Header links, controls, filters, footer." },
-      "caption": { "displayName": "Caption", "purpose": "DM Mono annotations: location, year, counts, captions." }
+      "page-title": {
+        "displayName": "Page Title",
+        "purpose": "One huge title per inner page, over its banner image."
+      },
+      "display": {
+        "displayName": "Display",
+        "purpose": "Statement and section headlines; service names on the Services page."
+      },
+      "display-serif": {
+        "displayName": "Display Serif",
+        "purpose": "Cormorant Garamond, at most one moment per page, 40px and up."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Uppercase project names as titles."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Statement body and project introductions, about 30ch."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Menu rows, notes, service names in the homepage strip, large card titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running prose, max about 60ch."
+      },
+      "ui": {
+        "displayName": "UI",
+        "purpose": "Header links, controls, filters, footer."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "DM Mono annotations: location, year, counts, captions."
+      }
     },
     "shadows": [],
     "motion": [
-      { "name": "ease-out-strong", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Entrances, reveals, image hover scale, menu rows." },
-      { "name": "ease-in-out-strong", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "On-screen movement: slider and carousel slides (900ms), menu wipe, toggle lines." },
-      { "name": "reveal", "value": "opacity 700ms cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Scroll reveal of [data-reveal] blocks from 25% opacity." },
-      { "name": "header", "value": "transform, background-color, color 300ms ease-in-out", "purpose": "Header hide and show, and its colour change over hero images." },
-      { "name": "ken-burns", "value": "scale 1 to 1.08 with a 2% drift, 8000ms linear", "purpose": "Slow zoom on hero slider photos." },
-      { "name": "menu", "value": "drop 300ms, wipe from 150ms, rows from 350ms at 40ms stagger", "purpose": "Menu overlay open choreography." },
-      { "name": "press", "value": "scale(0.97) 150ms ease-out", "purpose": "Press feedback on controls." },
-      { "name": "scroll-zoom", "value": "scale 1 to 1.15, scrubbed to scroll, ease none, transform-origin top", "purpose": "The Monograph's pinned portrait zooming as its column scrolls past (GSAP ScrollTrigger). Still under reduced motion." },
-      { "name": "team-reveal", "value": "filter grayscale(100%) to grayscale(0%) 300ms", "purpose": "Team card colour reveal on hover (Framer Motion)." }
+      {
+        "name": "ease-out-strong",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Entrances, reveals, image hover scale, menu rows."
+      },
+      {
+        "name": "ease-in-out-strong",
+        "value": "cubic-bezier(0.77, 0, 0.175, 1)",
+        "purpose": "On-screen movement: slider and carousel slides (900ms), menu wipe, toggle lines."
+      },
+      {
+        "name": "reveal",
+        "value": "opacity 700ms cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Scroll reveal of [data-reveal] blocks from 25% opacity."
+      },
+      {
+        "name": "header",
+        "value": "transform, background-color, color 300ms ease-in-out",
+        "purpose": "Header hide and show, and its colour change over hero images."
+      },
+      {
+        "name": "ken-burns",
+        "value": "scale 1 to 1.08 with a 2% drift, 8000ms linear",
+        "purpose": "Slow zoom on hero slider photos."
+      },
+      {
+        "name": "menu",
+        "value": "drop 300ms, wipe from 150ms, rows from 350ms at 40ms stagger",
+        "purpose": "Menu overlay open choreography."
+      },
+      {
+        "name": "press",
+        "value": "scale(0.97) 150ms ease-out",
+        "purpose": "Press feedback on controls."
+      },
+      {
+        "name": "scroll-zoom",
+        "value": "scale 1 to 1.15, scrubbed to scroll, ease none, transform-origin top",
+        "purpose": "The Monograph's pinned portrait zooming as its column scrolls past (GSAP ScrollTrigger). Still under reduced motion."
+      },
+      {
+        "name": "team-reveal",
+        "value": "filter grayscale(100%) to grayscale(0%) 300ms",
+        "purpose": "Team card colour reveal on hover (Framer Motion)."
+      },
+      {
+        "name": "map-colour",
+        "value": "filter grayscale(100%) to none 500ms",
+        "purpose": "The embedded map returns to colour on hover."
+      },
+      {
+        "name": "corner-step-aside",
+        "value": "opacity 300ms",
+        "purpose": "The WhatsApp button fades out below md while a form field has focus, and back on blur."
+      }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" },
-      { "name": "xl", "value": "1280px" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
     ]
   },
   "components": [
@@ -104,9 +357,52 @@
       "html": "<a class=\"ds-card\" href=\"#\"><div class=\"ds-card-img\"></div><div class=\"ds-card-head\"><span>The Retreat at Pipan</span><svg class=\"ds-card-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></div><p class=\"ds-card-ex\">A weekend retreat at Pipan, completed.</p><div class=\"ds-card-tags\"><span class=\"ds-pill\">Weekend Villa</span><span class=\"ds-pill\">Completed</span></div></a>",
       "css": ".ds-card { display: flex; flex-direction: column; width: 300px; padding: 16px; border: 1px solid rgba(26,26,23,0.15); color: var(--color-ink, #1a1a17); text-decoration: none; font-family: var(--font-sans, 'DM Sans', sans-serif); transition: background 300ms; } .ds-card:hover { background: color-mix(in srgb, #d9b98c 35%, transparent); } .ds-card-img { aspect-ratio: 3 / 2; background: var(--color-linen, #f1efe8); } .ds-card-head { display: flex; justify-content: space-between; gap: 16px; margin-top: 16px; font-size: 17px; line-height: 1.25; } .ds-card-arrow { flex-shrink: 0; margin-top: 3px; transition: transform 300ms ease-out; } .ds-card:hover .ds-card-arrow { transform: rotate(-45deg); } .ds-card-ex { margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: var(--color-stone, #5f5e5a); } .ds-card-tags { display: flex; gap: 8px; padding-top: 24px; } .ds-pill { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid rgba(26,26,23,0.25); border-radius: 9999px; padding: 3px 8px; } .ds-card:focus-visible { outline: 1px solid var(--color-ink, #1a1a17); outline-offset: -1px; }"
     },
-    {"name": "Image Pair", "kind": "custom", "description": "One project per row: its cover in a narrow 4:5 frame beside its widest gallery image (never the cover's asset) in a 16:7 frame, bottom-aligned, mirrored on alternate rows; both frames link to the project, only the wide one is focusable; one honest mono caption under the wide frame; text follows on the wide frame's columns.", "html": "<section class=\"ds-pair\"><a class=\"ds-pair-frame ds-pair-narrow\" href=\"#\" tabindex=\"-1\" aria-hidden=\"true\"><span class=\"ds-pair-img\"></span></a><figure class=\"ds-pair-fig\"><a class=\"ds-pair-frame ds-pair-wide\" href=\"#\" aria-label=\"Times Square 2, completed. View the project.\"><span class=\"ds-pair-img\"></span></a><figcaption class=\"ds-pair-cap\">Times Square 2, completed</figcaption></figure><div class=\"ds-pair-text\"><h2 class=\"ds-pair-name\">Architecture</h2><div><p class=\"ds-pair-body\">Commercial, residential, and mixed-use design from concept to completion.</p><ul class=\"ds-pair-list\"><li>Site analysis and feasibility</li><li>Concept design and development</li></ul></div></div></section>", "css": ".ds-pair { display: grid; grid-template-columns: 4fr 8fr; column-gap: 10px; align-items: end; width: 640px; font-family: var(--font-sans, 'DM Sans', sans-serif); color: var(--color-ink, #1a1a17); } .ds-pair-fig { margin: 0; } .ds-pair-frame { display: block; position: relative; overflow: hidden; background: var(--color-linen, #f1efe8); } .ds-pair-narrow { aspect-ratio: 4 / 5; } .ds-pair-wide { aspect-ratio: 16 / 7; } .ds-pair-img { position: absolute; inset: 0; background: linear-gradient(160deg, #b9b3a3, #5f5e5a); transition: transform 700ms; } .ds-pair-frame:hover .ds-pair-img { transform: scale(1.03); } .ds-pair-cap { margin-top: 8px; font-family: var(--font-mono, 'DM Mono', monospace); font-size: 12px; line-height: 1.3; letter-spacing: 0.01em; color: var(--color-stone, #5f5e5a); } .ds-pair-text { grid-column: 2; display: grid; grid-template-columns: 1fr 1fr; column-gap: 10px; margin-top: 24px; } .ds-pair-name { margin: 0; font-size: 40px; font-weight: 400; line-height: 1.18; letter-spacing: -0.01em; } .ds-pair-body { margin: 0; font-size: 15px; line-height: 1.55; } .ds-pair-list { margin: 24px 0 0; padding: 0; list-style: none; font-size: 13px; } .ds-pair-list li { padding: 8px 0; border-top: 1px solid rgba(26,26,23,0.2); } .ds-pair-list li:last-child { border-bottom: 1px solid rgba(26,26,23,0.2); }"},
-    {"name": "Inner-page Banner", "kind": "custom", "refersTo": "page-banner", "description": "Full-bleed 62svh photograph under an ink gradient, the page title bottom left on the gutter; the header is transparent over it. The cover comes from bannerProject() in lib/banner.ts, a fixed featured slot per inner page, so no two inner pages share a banner.", "html": "<section class=\"ds-banner\"><div class=\"ds-banner-shade\"></div><h1 class=\"ds-banner-title\">Studio</h1></section>", "css": ".ds-banner { position: relative; height: 320px; overflow: hidden; background: var(--color-charcoal, #2c2c2a); } .ds-banner-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,26,23,0.6), rgba(26,26,23,0.1), rgba(26,26,23,0.3)); } .ds-banner-title { position: absolute; left: 48px; bottom: 48px; margin: 0; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 112px; font-weight: 400; line-height: 1; letter-spacing: -0.03em; color: var(--color-offwhite, #fafaf8); }"},
-    {"name": "Team Card", "kind": "card", "refersTo": "team-card-fallback", "description": "4:5 portrait, greyscale until hover, name and role below; a linen frame with DM Sans initials when the photo is missing.", "html": "<div class=\"ds-team\"><figure class=\"ds-team-card\"><div class=\"ds-team-img\"></div><figcaption><p class=\"ds-team-name\">Riya Shah</p><p class=\"ds-team-role\">Architect</p></figcaption></figure><figure class=\"ds-team-card\"><div class=\"ds-team-fallback\" aria-hidden=\"true\">KM</div><figcaption><p class=\"ds-team-name\">Kunal Mehta</p><p class=\"ds-team-role\">3D Visualiser</p></figcaption></figure></div>", "css": ".ds-team { display: grid; grid-template-columns: repeat(2, 180px); column-gap: 10px; row-gap: 32px; font-family: var(--font-sans, 'DM Sans', sans-serif); } .ds-team-card { margin: 0; } .ds-team-img { aspect-ratio: 4 / 5; background: linear-gradient(160deg, #8f8f86, #33332e); filter: grayscale(100%); transition: filter 300ms; } .ds-team-card:hover .ds-team-img { filter: grayscale(0%); background: linear-gradient(160deg, #d9b98c, #6b4f2e); } .ds-team-fallback { display: flex; align-items: center; justify-content: center; aspect-ratio: 4 / 5; background: var(--color-linen, #f1efe8); color: var(--color-stone, #5f5e5a); font-size: 32px; } .ds-team-card figcaption { margin-top: 16px; } .ds-team-name { margin: 0; font-size: 15px; font-weight: 500; color: var(--color-ink, #1a1a17); } .ds-team-role { margin: 4px 0 0; font-size: 13px; color: var(--color-stone, #5f5e5a); }"}
+    {
+      "name": "Image Pair",
+      "kind": "custom",
+      "description": "One project per row: its cover in a narrow 4:5 frame beside its widest gallery image (never the cover's asset) in a 16:7 frame, bottom-aligned, mirrored on alternate rows; both frames link to the project, only the wide one is focusable; one honest mono caption under the wide frame; text follows on the wide frame's columns.",
+      "html": "<section class=\"ds-pair\"><a class=\"ds-pair-frame ds-pair-narrow\" href=\"#\" tabindex=\"-1\" aria-hidden=\"true\"><span class=\"ds-pair-img\"></span></a><figure class=\"ds-pair-fig\"><a class=\"ds-pair-frame ds-pair-wide\" href=\"#\" aria-label=\"Times Square 2, completed. View the project.\"><span class=\"ds-pair-img\"></span></a><figcaption class=\"ds-pair-cap\">Times Square 2, completed</figcaption></figure><div class=\"ds-pair-text\"><h2 class=\"ds-pair-name\">Architecture</h2><div><p class=\"ds-pair-body\">Commercial, residential, and mixed-use design from concept to completion.</p><ul class=\"ds-pair-list\"><li>Site analysis and feasibility</li><li>Concept design and development</li></ul></div></div></section>",
+      "css": ".ds-pair { display: grid; grid-template-columns: 4fr 8fr; column-gap: 10px; align-items: end; width: 640px; font-family: var(--font-sans, 'DM Sans', sans-serif); color: var(--color-ink, #1a1a17); } .ds-pair-fig { margin: 0; } .ds-pair-frame { display: block; position: relative; overflow: hidden; background: var(--color-linen, #f1efe8); } .ds-pair-narrow { aspect-ratio: 4 / 5; } .ds-pair-wide { aspect-ratio: 16 / 7; } .ds-pair-img { position: absolute; inset: 0; background: linear-gradient(160deg, #b9b3a3, #5f5e5a); transition: transform 700ms; } .ds-pair-frame:hover .ds-pair-img { transform: scale(1.03); } .ds-pair-cap { margin-top: 8px; font-family: var(--font-mono, 'DM Mono', monospace); font-size: 12px; line-height: 1.3; letter-spacing: 0.01em; color: var(--color-stone, #5f5e5a); } .ds-pair-text { grid-column: 2; display: grid; grid-template-columns: 1fr 1fr; column-gap: 10px; margin-top: 24px; } .ds-pair-name { margin: 0; font-size: 40px; font-weight: 400; line-height: 1.18; letter-spacing: -0.01em; } .ds-pair-body { margin: 0; font-size: 15px; line-height: 1.55; } .ds-pair-list { margin: 24px 0 0; padding: 0; list-style: none; font-size: 13px; } .ds-pair-list li { padding: 8px 0; border-top: 1px solid rgba(26,26,23,0.2); } .ds-pair-list li:last-child { border-bottom: 1px solid rgba(26,26,23,0.2); }"
+    },
+    {
+      "name": "Inner-page Banner",
+      "kind": "custom",
+      "refersTo": "page-banner",
+      "description": "Full-bleed 62svh photograph under an ink gradient, the page title bottom left on the gutter; the header is transparent over it. The cover comes from bannerProject() in lib/banner.ts, a fixed featured slot per inner page, so no two inner pages share a banner.",
+      "html": "<section class=\"ds-banner\"><div class=\"ds-banner-shade\"></div><h1 class=\"ds-banner-title\">Studio</h1></section>",
+      "css": ".ds-banner { position: relative; height: 320px; overflow: hidden; background: var(--color-charcoal, #2c2c2a); } .ds-banner-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,26,23,0.6), rgba(26,26,23,0.1), rgba(26,26,23,0.3)); } .ds-banner-title { position: absolute; left: 48px; bottom: 48px; margin: 0; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 112px; font-weight: 400; line-height: 1; letter-spacing: -0.03em; color: var(--color-offwhite, #fafaf8); }"
+    },
+    {
+      "name": "Team Card",
+      "kind": "card",
+      "refersTo": "team-card-fallback",
+      "description": "4:5 portrait, greyscale until hover, name and role below; a linen frame with DM Sans initials when the photo is missing.",
+      "html": "<div class=\"ds-team\"><figure class=\"ds-team-card\"><div class=\"ds-team-img\"></div><figcaption><p class=\"ds-team-name\">Riya Shah</p><p class=\"ds-team-role\">Architect</p></figcaption></figure><figure class=\"ds-team-card\"><div class=\"ds-team-fallback\" aria-hidden=\"true\">KM</div><figcaption><p class=\"ds-team-name\">Kunal Mehta</p><p class=\"ds-team-role\">3D Visualiser</p></figcaption></figure></div>",
+      "css": ".ds-team { display: grid; grid-template-columns: repeat(2, 180px); column-gap: 10px; row-gap: 32px; font-family: var(--font-sans, 'DM Sans', sans-serif); } .ds-team-card { margin: 0; } .ds-team-img { aspect-ratio: 4 / 5; background: linear-gradient(160deg, #8f8f86, #33332e); filter: grayscale(100%); transition: filter 300ms; } .ds-team-card:hover .ds-team-img { filter: grayscale(0%); background: linear-gradient(160deg, #d9b98c, #6b4f2e); } .ds-team-fallback { display: flex; align-items: center; justify-content: center; aspect-ratio: 4 / 5; background: var(--color-linen, #f1efe8); color: var(--color-stone, #5f5e5a); font-size: 32px; } .ds-team-card figcaption { margin-top: 16px; } .ds-team-name { margin: 0; font-size: 15px; font-weight: 500; color: var(--color-ink, #1a1a17); } .ds-team-role { margin: 4px 0 0; font-size: 13px; color: var(--color-stone, #5f5e5a); }"
+    },
+    {
+      "name": "Ruled Field",
+      "kind": "input",
+      "refersTo": "field-ruled",
+      "description": "No box: one hairline under each field at ink/25 that turns ink on focus, 44px, square, transparent; uppercase 12px label, '(optional)' in graphite, 13px graphite hint, one 13px red error line.",
+      "html": "<div class=\"ds-form\"><div><label class=\"ds-label\" for=\"ds-f1\">Phone</label><input class=\"ds-field\" id=\"ds-f1\" type=\"tel\" aria-describedby=\"ds-hint\" aria-invalid=\"true\"></div><div><label class=\"ds-label\" for=\"ds-f2\">Company <span class=\"ds-opt\">(optional)</span></label><input class=\"ds-field\" id=\"ds-f2\"></div><p class=\"ds-hint\" id=\"ds-hint\">A phone number or an email, whichever suits you.</p><p class=\"ds-error\" role=\"alert\">Please add a phone number or an email address so the studio can reply.</p></div>",
+      "css": ".ds-form { display: grid; gap: 24px; width: 360px; font-family: var(--font-sans, 'DM Sans', sans-serif); } .ds-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink, #1a1a17); } .ds-opt { text-transform: none; letter-spacing: normal; color: var(--color-stone, #5f5e5a); } .ds-field { display: block; width: 100%; margin-top: 8px; height: 44px; padding: 0; border: 0; border-bottom: 1px solid rgba(26,26,23,0.25); border-radius: 0; background: transparent; font: inherit; font-size: 15px; color: var(--color-ink, #1a1a17); outline: none; transition: border-color 150ms; } .ds-field::placeholder { color: var(--color-stone, #5f5e5a); } .ds-field:focus-visible { border-bottom-color: var(--color-ink, #1a1a17); } .ds-hint { margin: -16px 0 0; font-size: 13px; color: var(--color-stone, #5f5e5a); } .ds-error { margin: 0; font-size: 13px; color: var(--color-red, #c0391b); }"
+    },
+    {
+      "name": "Form Result",
+      "kind": "custom",
+      "description": "Replaces the form once it has an answer: a top ink rule, a Display line, one honest sentence, the direct channels. Never claims a send that didn't happen or promises a reply time.",
+      "html": "<div class=\"ds-result\" role=\"status\"><p class=\"ds-result-title\">Online enquiries aren't connected yet.</p><p class=\"ds-result-body\">Your message wasn't sent. Please reach the studio directly instead:</p><span class=\"ds-result-links\"><a href=\"#\">WhatsApp</a><a href=\"#\">+91 00000 00000</a><a href=\"#\">studio@example.com</a></span></div>",
+      "css": ".ds-result { width: 520px; border-top: 1px solid var(--color-ink, #1a1a17); padding-top: 24px; font-family: var(--font-sans, 'DM Sans', sans-serif); color: var(--color-ink, #1a1a17); } .ds-result-title { margin: 0; font-size: 40px; line-height: 1.18; letter-spacing: -0.01em; } .ds-result-body { margin: 16px 0 0; max-width: 44ch; font-size: 15px; line-height: 1.55; } .ds-result-links { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 16px; font-size: 15px; } .ds-result-links a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color 200ms; } .ds-result-links a:hover { color: var(--color-stone, #5f5e5a); }"
+    },
+    {
+      "name": "Channel Rows",
+      "kind": "custom",
+      "refersTo": "channel-row",
+      "description": "Ruled rows beside a task: mono label, 15px value, 13px underlined actions with an arrow, each at least 44px tall; a shared number is one row with both actions.",
+      "html": "<ul class=\"ds-channels\"><li><p class=\"ds-ch-label\">Phone and WhatsApp</p><p class=\"ds-ch-value\">+91 00000 00000</p><div class=\"ds-ch-actions\"><a href=\"#\">Start a chat →</a><a href=\"#\">Call the studio →</a></div></li><li><p class=\"ds-ch-label\">Email</p><p class=\"ds-ch-value\">studio@example.com</p><div class=\"ds-ch-actions\"><a href=\"#\">Write an email →</a></div></li></ul>",
+      "css": ".ds-channels { width: 280px; margin: 0; padding: 0; list-style: none; font-family: var(--font-sans, 'DM Sans', sans-serif); color: var(--color-ink, #1a1a17); } .ds-channels li { padding: 16px 0; border-top: 1px solid rgba(26,26,23,0.2); } .ds-channels li:last-child { border-bottom: 1px solid rgba(26,26,23,0.2); } .ds-ch-label { margin: 0; font-family: var(--font-mono, 'DM Mono', monospace); font-size: 12px; line-height: 1.3; letter-spacing: 0.01em; color: var(--color-stone, #5f5e5a); } .ds-ch-value { margin: 4px 0 0; font-size: 15px; line-height: 1.55; } .ds-ch-actions { display: flex; flex-wrap: wrap; column-gap: 24px; margin-top: 4px; } .ds-ch-actions a { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color 200ms; } .ds-ch-actions a:hover { color: var(--color-stone, #5f5e5a); }"
+    }
   ],
   "narrative": {
     "northStar": "The Drawing Board",
@@ -120,14 +416,46 @@
       "Slow, physical, interruptible motion with a still alternative for every animation."
     ],
     "rules": [
-      { "name": "The One Red Mark Rule", "body": "Red appears at most once per screen, and only where something must be noticed or acted on. If two things on screen are red, one of them is wrong.", "section": "colors" },
-      { "name": "The Photographs Are The Colour Rule", "body": "Large areas of colour come from real photographs of the work. The interface never paints a large coloured surface of its own.", "section": "colors" },
-      { "name": "The One Serif Moment Rule", "body": "Cormorant Garamond appears at most once per page, at 40px or larger. A page with two serif moments has lost its focus.", "section": "typography" },
-      { "name": "The Annotation Rule", "body": "DM Mono is for facts about the work (place, date, number, caption), never for prose or headings. If it isn't something you'd letter on a drawing, it isn't mono.", "section": "typography" },
-      { "name": "The Clear Corner Rule", "body": "The WhatsApp button is fixed in the bottom-right corner and always visible. Never put an interactive control at the far right edge of a section; start it at the halfway column instead.", "section": "layout" },
-      { "name": "The Measured Margin Rule", "body": "Every element aligns to the gutter, a grid column or --menu-x. If something sits at an arbitrary x position, it's a mistake.", "section": "layout" },
-      { "name": "The Ruled Not Raised Rule", "body": "Separate things with a hairline or a change of paper, never a shadow. Hairlines use ink at 15 to 20% at 1px. The header rule is the only 2px line.", "section": "elevation" },
-      { "name": "The Square Corner Rule", "body": "Radius 0 on everything except tag pills. A rounded button or card is off-system.", "section": "shapes" }
+      {
+        "name": "The One Red Mark Rule",
+        "body": "Red appears at most once per screen, and only where something must be noticed or acted on. If two things on screen are red, one of them is wrong.",
+        "section": "colors"
+      },
+      {
+        "name": "The Photographs Are The Colour Rule",
+        "body": "Large areas of colour come from real photographs of the work. The interface never paints a large coloured surface of its own.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Serif Moment Rule",
+        "body": "Cormorant Garamond appears at most once per page, at 40px or larger. A page with two serif moments has lost its focus.",
+        "section": "typography"
+      },
+      {
+        "name": "The Annotation Rule",
+        "body": "DM Mono is for facts about the work (place, date, number, caption), never for prose or headings. If it isn't something you'd letter on a drawing, it isn't mono.",
+        "section": "typography"
+      },
+      {
+        "name": "The Clear Corner Rule",
+        "body": "The WhatsApp button is fixed in the bottom-right corner and always visible, except below md while a form field has focus: there the fields run full width, so it steps aside (fades out, unclickable) and returns on blur. Never put an interactive control at the far right edge of a section; start it at the halfway column instead.",
+        "section": "layout"
+      },
+      {
+        "name": "The Measured Margin Rule",
+        "body": "Every element aligns to the gutter, a grid column or --menu-x. If something sits at an arbitrary x position, it's a mistake.",
+        "section": "layout"
+      },
+      {
+        "name": "The Ruled Not Raised Rule",
+        "body": "Separate things with a hairline or a change of paper, never a shadow. Hairlines use ink at 15 to 20% at 1px. The header rule is the only 2px line.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Corner Rule",
+        "body": "Radius 0 on everything except tag pills. A rounded button or card is off-system.",
+        "section": "shapes"
+      }
     ],
     "dos": [
       "Do build every page on the 12-column, 10px-gutter grid inside the 24 / 48 / 60px margins.",
@@ -136,7 +464,8 @@
       "Do separate with 1px hairlines (ink at 15 to 20%) or a linen panel.",
       "Do give every animation a reduced-motion fallback and pause controls on anything that runs longer than 5 seconds.",
       "Do keep image frames at their fixed ratios (3:2, 4:5, 4:3, 16:9, 8:3, 16:7) and crop with the Sanity hotspot.",
-      "Do align controls to the gutter, a column or --menu-x."
+      "Do align controls to the gutter, a column or --menu-x.",
+      "Do rule form fields with a single hairline that turns ink on focus."
     ],
     "donts": [
       "Don't use shadows, rounded corners (except tag pills) or a dark page body.",
@@ -145,7 +474,8 @@
       "Don't put buttons or links at the far right edge where the WhatsApp button sits.",
       "Don't use the glow pastels anywhere except the /projects hover fill.",
       "Don't use the old \"01 / About\" numbered section labels on redesigned pages.",
-      "Don't put text on a photograph without the ink gradient behind it."
+      "Don't put text on a photograph without the ink gradient behind it.",
+      "Don't box form fields or tell a visitor a message was sent when it wasn't."
     ]
   }
 }

@@ -266,7 +266,8 @@ Sixteen projects are on the site now. Every project is missing the items in
 - [ ] **8.2 Before launch: Enquiry emails.** Which email address should receive
   messages sent through the website's contact form? To send those emails from
   your own domain, Bink Infotech will also need to add a few DNS records,
-  which we'll supply.
+  which we'll supply. Until this is set up, the form tells visitors it can't
+  send yet and points them to WhatsApp, phone and email instead.
 
 - [ ] **8.3 Before launch: Privacy policy.** The contact form collects names,
   phone numbers and emails, and the site will use Google Analytics. Do you have
@@ -282,3 +283,7 @@ Sixteen projects are on the site now. Every project is missing the items in
 - [ ] **8.6 Google Business Profile.** Do you manage the studio's Google Maps
   listing? Its address and phone number should match the website's
   (see 1.4).
+
+- [ ] **8.7 Reply time.** After someone sends an enquiry, the site thanks them
+  and says the studio will be in touch. Would you like it to promise a reply
+  time, such as "within two working days"? Only if the studio can keep it.

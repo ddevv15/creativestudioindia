@@ -22,3 +22,5 @@ FIRST VIEWPORT: a full-bleed banner at 62svh with "Services" at page-title scale
 FORM: Image pairs, position 5 of 7 on the ranked list. seed:7b1b3f1bca65ec5d. Pairs mirror on alternate rows; the text-only service keeps the same columns over a hairline. Signature motion: each pair's two frames reveal together, with the slow 1.03 image scale on hover.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+BUILD PATH: code-led, not a skipped comp round. The config default is comp, but no image generation was available in the 2026-11-02 session (no OPENAI_API_KEY, no harness image tool), so the decision round served HTML sketches with the build-path toggle off, as new-work.md prescribes. The chosen sketch is the critique reference.

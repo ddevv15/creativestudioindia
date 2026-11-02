@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SITE } from "@/constants/site";
 import { useNavCloak } from "@/lib/useNavCloak";
@@ -19,10 +20,35 @@ function WhatsAppIcon() {
   );
 }
 
+const FIELD_SELECTOR = "input, textarea, select, [role=combobox]";
+
+/**
+ * True while a form field has focus. On phones the fields run full width, so
+ * the button would sit on top of the one being typed into (DESIGN.md, Clear
+ * Corner Rule); it steps aside until the field loses focus.
+ */
+function useFieldFocused() {
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    const update = () =>
+      setFocused(document.activeElement?.matches(FIELD_SELECTOR) ?? false);
+    document.addEventListener("focusin", update);
+    document.addEventListener("focusout", update);
+    return () => {
+      document.removeEventListener("focusin", update);
+      document.removeEventListener("focusout", update);
+    };
+  }, []);
+
+  return focused;
+}
+
 export default function WhatsAppButton() {
   // Hides for a route's opening moment alongside the nav, so the homepage
   // really does land on nothing but the hero frame.
   const cloaked = useNavCloak();
+  const typing = useFieldFocused();
 
   return (
     <motion.a
@@ -34,7 +60,8 @@ export default function WhatsAppButton() {
       whileHover={{ scale: 1.05 }}
       className={cn(
         "fixed bottom-24 right-24 z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#25D366] shadow-lg transition-opacity duration-300",
-        cloaked && "pointer-events-none opacity-0"
+        cloaked && "pointer-events-none opacity-0",
+        typing && "max-md:pointer-events-none max-md:opacity-0"
       )}
     >
       <WhatsAppIcon />

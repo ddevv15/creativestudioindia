@@ -117,6 +117,13 @@
      the scrollbar's space keeps the page from shifting sideways when it does. */
   html {
     scrollbar-gutter: stable;
+    caret-color: var(--color-ink);
+  }
+
+  /* Browser surfaces carry the palette too: ink on linen, not the default blue. */
+  ::selection {
+    background-color: var(--color-linen);
+    color: var(--color-ink);
   }
 
   /* md — desktop Nav replaces MobileNav, so the bar gets taller. 768px must stay

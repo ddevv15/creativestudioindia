@@ -24,3 +24,5 @@ FIRST VIEWPORT: a full-bleed banner at 62svh with "Studio" at page-title scale, 
 FORM: Principal monograph, position 4 of 7 on the ranked list. seed:037e6aabd9417b97. Signature interaction: the pinned portrait zooms slowly as the right column scrolls past it (GSAP scrub, still under reduced motion).
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+BUILD PATH: code-led, not a skipped comp round. The config default is comp, but no image generation was available in the 2026-11-02 session (no OPENAI_API_KEY, no harness image tool), so the decision round served HTML sketches with the build-path toggle off, as new-work.md prescribes. The chosen sketch is the critique reference.
