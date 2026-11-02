@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-01T00:00:00Z",
+  "generatedAt": "2026-11-02T00:00:00Z",
   "title": "Design System: Creative Studio India",
   "extensions": {
     "colorMeta": {
@@ -36,7 +36,9 @@
       { "name": "header", "value": "transform, background-color, color 300ms ease-in-out", "purpose": "Header hide and show, and its colour change over hero images." },
       { "name": "ken-burns", "value": "scale 1 to 1.08 with a 2% drift, 8000ms linear", "purpose": "Slow zoom on hero slider photos." },
       { "name": "menu", "value": "drop 300ms, wipe from 150ms, rows from 350ms at 40ms stagger", "purpose": "Menu overlay open choreography." },
-      { "name": "press", "value": "scale(0.97) 150ms ease-out", "purpose": "Press feedback on controls." }
+      { "name": "press", "value": "scale(0.97) 150ms ease-out", "purpose": "Press feedback on controls." },
+      { "name": "scroll-zoom", "value": "scale 1 to 1.15, scrubbed to scroll, ease none, transform-origin top", "purpose": "The Monograph's pinned portrait zooming as its column scrolls past (GSAP ScrollTrigger). Still under reduced motion." },
+      { "name": "team-reveal", "value": "filter grayscale(100%) to grayscale(0%) 300ms", "purpose": "Team card colour reveal on hover (Framer Motion)." }
     ],
     "breakpoints": [
       { "name": "sm", "value": "640px" },
@@ -101,7 +103,9 @@
       "description": "Ruled cell: 3:2 image, title with an arrow that turns to ↗ on hover, excerpt, tag pills.",
       "html": "<a class=\"ds-card\" href=\"#\"><div class=\"ds-card-img\"></div><div class=\"ds-card-head\"><span>The Retreat at Pipan</span><svg class=\"ds-card-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></div><p class=\"ds-card-ex\">A weekend retreat at Pipan, completed.</p><div class=\"ds-card-tags\"><span class=\"ds-pill\">Weekend Villa</span><span class=\"ds-pill\">Completed</span></div></a>",
       "css": ".ds-card { display: flex; flex-direction: column; width: 300px; padding: 16px; border: 1px solid rgba(26,26,23,0.15); color: var(--color-ink, #1a1a17); text-decoration: none; font-family: var(--font-sans, 'DM Sans', sans-serif); transition: background 300ms; } .ds-card:hover { background: color-mix(in srgb, #d9b98c 35%, transparent); } .ds-card-img { aspect-ratio: 3 / 2; background: var(--color-linen, #f1efe8); } .ds-card-head { display: flex; justify-content: space-between; gap: 16px; margin-top: 16px; font-size: 17px; line-height: 1.25; } .ds-card-arrow { flex-shrink: 0; margin-top: 3px; transition: transform 300ms ease-out; } .ds-card:hover .ds-card-arrow { transform: rotate(-45deg); } .ds-card-ex { margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: var(--color-stone, #5f5e5a); } .ds-card-tags { display: flex; gap: 8px; padding-top: 24px; } .ds-pill { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid rgba(26,26,23,0.25); border-radius: 9999px; padding: 3px 8px; } .ds-card:focus-visible { outline: 1px solid var(--color-ink, #1a1a17); outline-offset: -1px; }"
-    }
+    },
+    {"name": "Inner-page Banner", "kind": "custom", "refersTo": "page-banner", "description": "Full-bleed 62svh photograph under an ink gradient, the page title bottom left on the gutter; the header is transparent over it.", "html": "<section class=\"ds-banner\"><div class=\"ds-banner-shade\"></div><h1 class=\"ds-banner-title\">Studio</h1></section>", "css": ".ds-banner { position: relative; height: 320px; overflow: hidden; background: var(--color-charcoal, #2c2c2a); } .ds-banner-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,26,23,0.6), rgba(26,26,23,0.1), rgba(26,26,23,0.3)); } .ds-banner-title { position: absolute; left: 48px; bottom: 48px; margin: 0; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 112px; font-weight: 400; line-height: 1; letter-spacing: -0.03em; color: var(--color-offwhite, #fafaf8); }"},
+    {"name": "Team Card", "kind": "card", "refersTo": "team-card-fallback", "description": "4:5 portrait, greyscale until hover, name and role below; a linen frame with DM Sans initials when the photo is missing.", "html": "<div class=\"ds-team\"><figure class=\"ds-team-card\"><div class=\"ds-team-img\"></div><figcaption><p class=\"ds-team-name\">Riya Shah</p><p class=\"ds-team-role\">Architect</p></figcaption></figure><figure class=\"ds-team-card\"><div class=\"ds-team-fallback\" aria-hidden=\"true\">KM</div><figcaption><p class=\"ds-team-name\">Kunal Mehta</p><p class=\"ds-team-role\">3D Visualiser</p></figcaption></figure></div>", "css": ".ds-team { display: grid; grid-template-columns: repeat(2, 180px); column-gap: 10px; row-gap: 32px; font-family: var(--font-sans, 'DM Sans', sans-serif); } .ds-team-card { margin: 0; } .ds-team-img { aspect-ratio: 4 / 5; background: linear-gradient(160deg, #8f8f86, #33332e); filter: grayscale(100%); transition: filter 300ms; } .ds-team-card:hover .ds-team-img { filter: grayscale(0%); background: linear-gradient(160deg, #d9b98c, #6b4f2e); } .ds-team-fallback { display: flex; align-items: center; justify-content: center; aspect-ratio: 4 / 5; background: var(--color-linen, #f1efe8); color: var(--color-stone, #5f5e5a); font-size: 32px; } .ds-team-card figcaption { margin-top: 16px; } .ds-team-name { margin: 0; font-size: 15px; font-weight: 500; color: var(--color-ink, #1a1a17); } .ds-team-role { margin: 4px 0 0; font-size: 13px; color: var(--color-stone, #5f5e5a); }"}
   ],
   "narrative": {
     "northStar": "The Drawing Board",

@@ -114,6 +114,15 @@ components:
     backgroundColor: "{colors.offwhite}"
     textColor: "{colors.ink}"
     typography: "{typography.title}"
+  page-banner:
+    backgroundColor: "{colors.charcoal}"
+    textColor: "{colors.offwhite}"
+    typography: "{typography.page-title}"
+    height: "62svh"
+  team-card-fallback:
+    backgroundColor: "{colors.linen}"
+    textColor: "{colors.stone}"
+    rounded: "{rounded.none}"
 ---
 
 # Design System: Creative Studio India
@@ -209,7 +218,7 @@ moment per page, so it reads as the hand of the studio.
 
 ### Hierarchy
 - **Page title** (400, 64 / 112 / 136px, line-height 1, -0.03em): one per inner
-  page, set huge over its banner image ("Projects").
+  page, set huge over its banner image ("Projects", "Studio").
 - **Display** (400, 32px phone to 40px desktop, 1.18, -0.01em): statement
   headlines and section headlines ("Every building here begins as a sketch.").
 - **Display serif** (Cormorant 500, 1.1, -0.02em): one oversized moment per
@@ -254,6 +263,20 @@ at every width from md up. Phones collapse to 2 or 1 columns.
   2×2 cell beside four small ones, alternating sides.
 - **Image pair:** a narrow 4:5 frame beside a wide 16:7 one, mirrored on
   alternate rows.
+- **Monograph:** one subject held in view while its story scrolls (the Studio
+  page). A 4:5 portrait in a 1px hairline frame (ink at 15%) spans columns 1 to
+  5 and is sticky from md up, pinned at the header height plus 24px. Its width
+  is capped so the whole frame fits the viewport under the header. A single
+  reading column runs at columns 7 to 12 beside it, carrying the heading, body,
+  the page's serif moment and any ruled rows. The portrait zooms slowly as that
+  column scrolls (see Elevation & Depth). A cut-out photo shot on white sits on
+  an off-white frame with a multiply blend, so its backdrop becomes the sheet.
+  Phones stack the portrait above the column, unpinned.
+- **Ruled rows:** a list of steps or entries, each opened by a 1px hairline
+  (ink at 20%) with 24px above and below. Inside a half-width column, the text
+  (a title-size name and body) takes the first half, and an optional 4:3
+  captioned image takes the second half. A row without an image stays
+  text-only; never fill the gap with a placeholder.
 
 **Vertical rhythm:** sections are 64px apart on phones and 96px from lg. Mosaic
 rows are 64px apart, then 96px. The footer has 96 to 128px above it.
@@ -264,7 +287,8 @@ width of the footer's first column. Anything aligned to it lines up across the
 header, the menu and the footer.
 
 **Full bleed.** Hero sliders, project covers and page banners run edge to edge
-at 62 to 92svh. Everything else respects the gutter.
+at 62 to 92svh. Everything else respects the gutter. Inner pages (/projects,
+/about) open on the same 62svh page banner (see Components).
 
 ### Named Rules
 **The Clear Corner Rule.** The WhatsApp button is fixed in the bottom-right
@@ -285,7 +309,9 @@ things:
   hero images.
 
 Hover depth on images is a slow 1.03 scale inside a clipped frame, never a lift
-or a shadow.
+or a shadow. A pinned portrait may instead zoom with the scroll: scrubbed to the
+page from 1 to 1.15, anchored at the top so the head stays in frame, and still
+under reduced motion.
 
 ### Named Rules
 **The Ruled Not Raised Rule.** Separate things with a hairline or a change of
@@ -364,6 +390,32 @@ on hover, a 2 to 3 line graphite excerpt, and tag pills pinned to the bottom.
 - **Hover:** the image scales to 1.03 over 700ms, and a WebGL liquid fill floods
   the cell behind the content in a random glow pastel. It drains on exit.
 - **Fallback:** touch screens and reduced motion get a static CSS glow.
+
+### Inner-page banner
+The opening of an inner page.
+- **Style:** a full-bleed photograph at 62svh (at least 420px) on a charcoal
+  fill, under an ink gradient (60% at the foot, 10% mid, 30% at the head). The
+  page title sits bottom left on the gutter, 32px up on phones and 48px from md.
+- **Header:** the header is transparent with off-white text over it at scroll 0.
+- **Image:** a project cover, never the same one as another inner page's banner.
+
+### Team card
+A portrait and a name, quiet until touched.
+- **Frame:** 4:5, square corners, linen behind the image while it loads.
+- **Colour:** greyscale at rest, full colour on hover over 300ms (Framer Motion).
+- **Text:** the name in 15px medium ink, the role 4px below in 13px graphite,
+  16px under the frame.
+- **No photo:** a linen 4:5 frame with the initials in 32px DM Sans graphite.
+  No serif and no red.
+- **Grid:** two across, 10px apart, with 32px between rows.
+
+### Draft marker
+How unconfirmed content stays visible without reading as a claim.
+- **Entries:** each placeholder entry carries a mono label naming it a sample
+  ("Sample award", "Sample press") in place of its type.
+- **Section note:** one mono line under the section heading, starting "Draft:",
+  saying what is unconfirmed. Never above the heading.
+- **Removal:** both go when the studio sends the real content.
 
 ### Captioned image
 Any photograph with a mono graphite caption 8 to 16px below it. Captions come

@@ -1,6 +1,6 @@
 # Creative Studio India website: what we need from you
 
-Last updated: 1 November 2026
+Last updated: 2 November 2026
 
 This is everything we still need to finish the new website. Each item says what
 we need and where it appears on the site. Tick items off as they're answered.
@@ -16,7 +16,8 @@ makes it better and can follow.
 These are things the site currently says that may not be true.
 
 - [ ] **1.1 Before launch: News and awards on the Studio page.** The Studio
-  page shows four sample entries we used while building the page:
+  page shows sample award and press entries, clearly labelled "Sample", from
+  these four placeholders we used while building the site:
   - "IIA Gujarat Chapter — Merit Award for Residential Design" (Mar 2025)
   - "Riverside Bungalow featured in Architectural Digest India" (Nov 2024)
   - "Riverside Bungalow handed over" (Aug 2024)
@@ -132,6 +133,10 @@ Sixteen projects are on the site now. Every project is missing the items in
 - [ ] **2.12 Anything to remove.** Is there any project, or any photo, that a
   client would not want on a public website?
 
+- [ ] **2.13 Project name capitals.** "ANANTA ARENA" is entered in all capitals,
+  while every other project uses normal capitals ("The Retreat at Pipan"). Is
+  "Ananta Arena" fine?
+
 ---
 
 ## 3. Choosing what to show
@@ -190,13 +195,20 @@ Sixteen projects are on the site now. Every project is missing the items in
 
 - [ ] **5.3 How you work.** The Studio page has a short "Process" section. Please
   describe your steps from first meeting to handover, in your own words, even
-  rough notes.
+  rough notes. One thing to fix while you're at it: Jignesh's bio and the
+  "Sketch" step currently say almost the same sentence ("Every project begins
+  by hand — a sketch, a section, a study of light…"). Which one should keep it?
 
 - [ ] **5.4 Recognition (optional).** Awards, publications, talks, and notable
   clients you're allowed to name.
 
 - [ ] **5.5 Testimonials (optional).** Two or three short quotes from clients, with
   their name and the project.
+
+- [ ] **5.6 Before launch: A sharper portrait of Jignesh.** The Studio page
+  shows his photo large, and the one we have is a small cut-out on a white
+  background, so it looks soft. Please send the original photo file (at least
+  1400px wide), or a new portrait taken in natural light.
 
 ---
 
@@ -222,8 +234,8 @@ Sixteen projects are on the site now. Every project is missing the items in
 
 ## 7. Brand
 
-- [ ] **7.1 Logo.** The site uses the words "CREATIVE STUDIO" in plain type for
-  now. Do you have a logo? Please send the original files (SVG, AI or PDF),
+- [ ] **7.1 Logo.** The site uses the words "CREATIVE STUDIO INDIA" in plain type
+  for now. Do you have a logo? Please send the original files (SVG, AI or PDF),
   not a screenshot.
 
 - [x] **7.2 Name.** Should the site say "Creative Studio" or "Creative Studio

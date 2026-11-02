@@ -8,7 +8,6 @@ import { SITE } from "@/constants/site";
 import {
   getAllNowItems,
   getAllProjects,
-  getAllSketches,
   getAllTeamMembers,
   getSiteSettings,
 } from "@/lib/content";
@@ -42,9 +41,10 @@ const PROCESS_STEPS = [
 
 const RECOGNITION_TYPES: NowType[] = ["award", "press"];
 
+// "Sample" on every row, so no single entry reads as a real claim (client question 1.1).
 const NOW_TYPE_LABELS: Partial<Record<NowType, string>> = {
-  award: "Award",
-  press: "Press",
+  award: "Sample award",
+  press: "Sample press",
 };
 
 const HEADING = "text-[32px] font-normal leading-[1.18] tracking-[-0.01em] text-ink md:text-[40px]";
@@ -56,26 +56,28 @@ const HEADING = "text-[32px] font-normal leading-[1.18] tracking-[-0.01em] text-
  * the right. The portrait zooms slowly as that column scrolls.
  */
 export default async function AboutPage() {
-  const [siteSettings, teamMembers, nowItems, projects, sketches] = await Promise.all([
+  const [siteSettings, teamMembers, nowItems, projects] = await Promise.all([
     getSiteSettings(),
     getAllTeamMembers(),
     getAllNowItems(),
     getAllProjects(),
-    getAllSketches(),
   ]);
 
-  // A different photograph from the /projects banner, so the two pages don't open identically.
-  const featured = projects.filter((project) => project.featured);
-  const banner = featured[1] ?? projects[1] ?? projects[0];
+  // projects[0] and [1] illustrate the process below, so the banner comes from
+  // later in the list; it also differs from the /projects banner (the first featured).
+  const banner =
+    projects.slice(2).find((project) => project.featured) ?? projects[2] ?? projects[0];
 
   // The principal has the left column to himself; the team grid is everyone else.
   const team = teamMembers.filter((member) => member.department !== "leadership");
 
   const recognition = nowItems.filter((item) => RECOGNITION_TYPES.includes(item.type));
 
-  // A sketch for the first step, then two project photographs for render and build.
+  // Two project photographs for render and build. The sketch step stays
+  // text-only: the sketches in Sanity are still sample photos, not drawings
+  // (client question 4.1). Restore `sketches[0]` here once real ones land.
   const processImages: ({ source: SanityImageObject; caption: string } | null)[] = [
-    sketches[0] ? { source: sketches[0].image, caption: sketches[0].title } : null,
+    null,
     projects[0] ? { source: projects[0].coverImage, caption: projects[0].title } : null,
     projects[1] ? { source: projects[1].coverImage, caption: projects[1].title } : null,
   ];
@@ -106,8 +108,10 @@ export default async function AboutPage() {
           <div className="col-span-12 md:col-span-5">
             {/* Capped so the pinned frame always fits the viewport under the header. */}
             <figure className="md:sticky md:top-[calc(var(--nav-h)+24px)] md:max-w-[calc((100svh-var(--nav-h)-80px)*0.8)]">
-              <div className="relative aspect-[4/5] overflow-hidden bg-linen">
-                <ScrollZoom className="absolute inset-0">
+              {/* Multiply blends the photo's white backdrop into the sheet colour; the
+                  hairline keeps it a framed plate. Zooming from the top keeps the head in frame. */}
+              <div className="relative aspect-[4/5] overflow-hidden border border-ink/15 bg-offwhite">
+                <ScrollZoom to={1.15} className="absolute inset-0 origin-top mix-blend-multiply">
                   <Image
                     src={photoUrl}
                     alt="Jignesh Patel, principal designer"
@@ -128,7 +132,7 @@ export default async function AboutPage() {
           <p className="mt-8 text-[15px] text-stone">Principal Designer</p>
 
           {siteSettings.principalBio?.length > 0 && (
-            <div className="mt-48 max-w-[60ch] text-[16px] leading-[1.6] text-ink [&>p+p]:mt-16">
+            <div className="mt-48 max-w-[560px] text-[16px] leading-[1.6] text-ink [&>p+p]:mt-16">
               <PortableText value={siteSettings.principalBio} />
             </div>
           )}
@@ -151,10 +155,18 @@ export default async function AboutPage() {
                 return (
                   <li
                     key={step.label}
-                    className="grid grid-cols-1 gap-x-[10px] gap-y-16 border-t border-ink/20 py-24 sm:grid-cols-2"
+                    className="grid grid-cols-1 gap-x-[10px] gap-y-16 border-t border-ink/20 py-24 sm:grid-cols-6"
                   >
+                    {/* Every step's text on one reading line at the column's left edge,
+                        held well clear of the image beside it. */}
+                    <div className="sm:col-span-3 sm:pr-48">
+                      <h3 className="text-[22px] leading-[1.3] text-ink">{step.label}</h3>
+                      <p className="mt-8 text-[15px] leading-[1.55] text-ink">
+                        {step.description}
+                      </p>
+                    </div>
                     {image && (
-                      <figure>
+                      <figure className="sm:col-span-3 sm:col-start-4">
                         <div className="relative aspect-[4/3] overflow-hidden bg-linen">
                           <SanityImage
                             source={image.source}
@@ -168,12 +180,6 @@ export default async function AboutPage() {
                         <figcaption className="caption-mono mt-8">{image.caption}</figcaption>
                       </figure>
                     )}
-                    <div className={image ? undefined : "sm:col-start-2"}>
-                      <h3 className="text-[22px] leading-[1.3] text-ink">{step.label}</h3>
-                      <p className="mt-8 max-w-[40ch] text-[15px] leading-[1.55] text-ink">
-                        {step.description}
-                      </p>
-                    </div>
                   </li>
                 );
               })}
