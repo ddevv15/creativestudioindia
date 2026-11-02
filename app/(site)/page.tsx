@@ -61,7 +61,7 @@ export default async function HomePage() {
         principalBio={siteSettings.principalBio}
       />
 
-      <ServicesStrip />
+      <ServicesStrip projects={projects} />
 
       <Statement
         heading="Have a project in mind?"

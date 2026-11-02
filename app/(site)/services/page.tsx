@@ -7,6 +7,7 @@ import { SITE } from "@/constants/site";
 import { bannerProject } from "@/lib/banner";
 import { getAllProjects } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
+import { serviceProjects, widestGalleryImage } from "@/lib/serviceProjects";
 import { cn } from "@/lib/utils";
 import type { GalleryImage, Project } from "@/types/sanity";
 
@@ -25,21 +26,13 @@ type Pair = {
   label: string;
 };
 
-function assetRef(image: SanityImageObject): string | undefined {
-  return image.asset && "_ref" in image.asset ? image.asset._ref : undefined;
-}
-
 /**
  * The project's widest gallery image fills the 16:7 frame, so a tall subject
  * (a tower) is never sliced; the cover takes the 4:5 frame.
  */
 function pairFrom(project: Project | undefined, label: string): Pair | null {
   if (!project) return null;
-  // The cover is often also in the gallery; skip it so the pair never shows one photo twice.
-  const coverRef = assetRef(project.coverImage);
-  const wide = (project.gallery ?? [])
-    .filter((image) => assetRef(image) !== coverRef)
-    .sort((a, b) => (b.aspectRatio ?? 0) - (a.aspectRatio ?? 0))[0];
+  const wide = widestGalleryImage(project);
   if (!wide) return null;
   return { narrow: project.coverImage, wide, title: project.title, slug: project.slug, label };
 }
@@ -58,12 +51,7 @@ const IMAGE = "object-cover transition-transform duration-700 group-hover:scale-
  */
 export default async function ServicesPage() {
   const projects = await getAllProjects();
-  const withGallery = projects.filter((project) => (project.gallery?.length ?? 0) >= 2);
-
-  const built = withGallery.find((p) => p.status === "completed" && p.featured)
-    ?? withGallery.find((p) => p.status === "completed");
-  const visualized = withGallery.find((p) => p.status === "under-construction" && p.featured)
-    ?? withGallery.find((p) => p.status === "under-construction");
+  const { built, visualized } = serviceProjects(projects);
   const pairs = [
     pairFrom(built, "completed"),
     // An unbuilt project's images are renders, so the caption says so.
