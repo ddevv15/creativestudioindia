@@ -127,12 +127,12 @@ export default function MenuOverlay({
                   <Link
                     href={feature.href}
                     onClick={onClose}
-                    className="mt-4 block text-[17px] uppercase leading-[1.3]"
+                    className="mt-4 block text-[20px] uppercase leading-[1.3]"
                   >
                     {feature.title}
                   </Link>
                 ) : (
-                  <p className="mt-4 text-[17px] uppercase leading-[1.3]">{feature.title}</p>
+                  <p className="mt-4 text-[20px] uppercase leading-[1.3]">{feature.title}</p>
                 )}
               </motion.div>
 

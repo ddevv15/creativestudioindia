@@ -9,9 +9,11 @@ import type { Sketch } from "@/types/sanity";
 type SketchCardProps = {
   sketch: Sketch;
   onImageClick: (src: string, title: string) => void;
+  /** The first card is the page's largest paint, so it loads ahead of the rest. */
+  priority?: boolean;
 };
 
-export default function SketchCard({ sketch, onImageClick }: SketchCardProps) {
+export default function SketchCard({ sketch, onImageClick, priority = false }: SketchCardProps) {
   const src = urlFor(sketch.image).width(900).url();
 
   return (
@@ -28,6 +30,7 @@ export default function SketchCard({ sketch, onImageClick }: SketchCardProps) {
           alt={sketch.title}
           width={560}
           height={420}
+          priority={priority}
           sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
           className="h-auto w-full object-contain"
         />

@@ -201,14 +201,6 @@
     transform: translate(-50%, -50%);
   }
 
-  .section-label {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--color-stone);
-  }
-
   /* Mono meta line above a title: location, year, "Sketch" (spec 0002). */
   .caption-mono {
     font-family: var(--font-mono);

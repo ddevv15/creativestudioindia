@@ -80,7 +80,7 @@ export default function ProjectGridCard({
       </div>
 
       <div className={cn("relative mt-16 flex items-start justify-between gap-16", wideMd && "md:mt-0", wideMd && !wideLg && "lg:mt-16", wideLg && "lg:mt-0")}>
-        <h2 className={cn("leading-[1.25] text-ink", large ? "text-[20px] lg:text-[24px]" : "text-[17px]")}>
+        <h2 className={cn("leading-[1.25] text-ink", large ? "text-[20px] lg:text-[24px]" : "text-[16px]")}>
           {project.title}
         </h2>
         <ArrowRight

@@ -130,7 +130,7 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
                   "absolute inset-0",
                   !reduce &&
                     (index === active || index === zoomed.leaving) &&
-                    "animate-ken-burns will-change-transform"
+                    "animate-ken-burns will-change-transform motion-reduce:animate-none"
                 )}
                 style={{ "--kb-x": DRIFTS[index % DRIFTS.length][0], "--kb-y": DRIFTS[index % DRIFTS.length][1] } as React.CSSProperties}
               >
@@ -208,7 +208,7 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
                         key={active}
                         className={cn(
                           "absolute inset-0 origin-left bg-offwhite",
-                          !reduce && "animate-slide-progress",
+                          !reduce && "animate-slide-progress motion-reduce:animate-none",
                           (paused || dragging) && "[animation-play-state:paused]"
                         )}
                       />

@@ -166,7 +166,7 @@ export default function ProjectsBrowser({ projects }: { projects: ProjectGridIte
 
         {filtered.length === 0 && (
           <div className="border border-ink/15 px-24 py-64 text-center">
-            <p className="text-[17px] text-ink">No projects match these filters.</p>
+            <p className="text-[20px] text-ink">No projects match these filters.</p>
             <button
               type="button"
               onClick={clearAll}

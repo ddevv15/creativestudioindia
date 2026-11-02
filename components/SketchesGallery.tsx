@@ -16,15 +16,16 @@ export default function SketchesGallery({ sketches }: SketchesGalleryProps) {
   const [active, setActive] = useState<ActiveSketch | null>(null);
 
   return (
-    <section className="bg-offwhite px-24 py-96 md:px-48">
+    <section className="bg-offwhite px-gutter py-96">
       {/* CSS columns masonry — 3 / 2 / 1 with a 12px gutter per spec 20. */}
       <div className="columns-1 [column-gap:12px] md:columns-2 lg:columns-3">
-        {sketches.map((sketch) => (
+        {sketches.map((sketch, index) => (
           <div
             key={sketch._id}
             className="mb-[12px] break-inside-avoid-column"
           >
             <SketchCard
+              priority={index === 0}
               sketch={sketch}
               onImageClick={(src, title) => setActive({ src, title })}
             />

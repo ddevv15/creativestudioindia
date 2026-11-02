@@ -20,14 +20,12 @@ export default async function SketchesPage() {
 
           pt-nav-80 keeps the transparent nav from overlapping the label: the bar
           is see-through here, but its logo and links still occupy that space. */}
-      <section data-nav-overlay className="bg-charcoal px-24 pb-[80px] pt-nav-80 md:px-48">
-        <p className="section-label !text-white/40">Process</p>
-
-        <h1 className="display-headline mt-16 text-[52px] text-white">
+      <section data-nav-overlay className="bg-charcoal px-gutter pb-[80px] pt-nav-80">
+        <h1 className="display-headline text-[52px] text-offwhite">
           Design begins by hand.
         </h1>
 
-        <p className="mt-24 max-w-[60ch] font-sans text-[17px] leading-[1.75] text-white/60">
+        <p className="mt-24 max-w-[60ch] font-sans text-[16px] leading-[1.6] text-offwhite/80">
           Every building we have designed started as a sketch. This is where
           ideas become architecture.
         </p>
