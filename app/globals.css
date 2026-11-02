@@ -246,20 +246,4 @@
     letter-spacing: -0.02em;
   }
 
-  /*
-   * The homepage hero has no CSS of its own. It is a clip-path animation driven
-   * from JavaScript in components/ScrollExpand.tsx, so its shape — including
-   * the corner radius — lives in the `startRadius` prop that
-   * components/sections/HeroScrollExpand.tsx passes, not here.
-   *
-   * That radius is a deliberate exception to the `border-radius: 0` rule locked
-   * in `AGENTS.md`. The rule still governs buttons, inputs and cards
-   * everywhere; the curve is the hero aperture's shape language only.
-   * `/sync` should record the exception.
-   *
-   * The carve that used to live here — the void cut from the picture's top left
-   * corner, stepping in line by line, from docs/specs/0001-hero-media-delivery —
-   * is gone along with the hero that used it. See git history for `.hero-carve`
-   * and `lib/heroCarve.ts` if that technique is ever wanted again.
-   */
 }

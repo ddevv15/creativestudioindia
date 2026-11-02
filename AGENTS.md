@@ -107,21 +107,15 @@ components/
     HomeFeed.tsx                 — Homepage editorial mosaic + feature rows, capped to a taste of the work
     StudioBlock.tsx              — Principal photo + bio (homepage)
     ServicesStrip.tsx            — Three services in a row (homepage); copy in constants/services.ts
-    HeroScrollExpand.tsx         — Homepage hero: opens on Ink + headline only, scroll expands an aperture to a full-bleed image
-    CredentialBar.tsx            — Horizontal credential strip
-    FeaturedProjects.tsx         — Homepage 3-card project grid (Sanity: featured: true)
-    FounderBlock.tsx             — 2-col layout: Jignesh photo left, copy right
-    SketchesStrip.tsx            — Horizontal scroll sketch strip (dark panel)
-    ServicesOverview.tsx         — 3-card services overview (homepage)
-    ContactCTA.tsx               — Pre-footer CTA block
 
-  ProjectCard.tsx                — 3:2 ratio card with gradient overlay, hover state
-  FilterTabs.tsx                 — Category filter pills (unused since the zha-style /projects page)
+  ProjectsBrowser.tsx            — /projects: filter dropdowns + bento grid of ProjectGridCards
   FilterDropdown.tsx             — Multi-select checklist dropdown (projects page filters)
   ProjectGridCard.tsx            — /projects grid cell: image, title + arrow, excerpt, pill tags, CSS glow fallback
   CardGlow.tsx                   — WebGL (ogl) fluid glow behind the hovered /projects card; one shared canvas
-  TeamCard.tsx                   — Greyscale portrait, colour on hover
+  TeamCard.tsx                   — 4:5 greyscale portrait, colour on hover
   SketchCard.tsx                 — Sketch image with caption
+  SketchesGallery.tsx            — /sketches masonry grid with Lightbox
+  ContactForm.tsx                — /contact enquiry form: ruled fields, success / error / not-connected states
   SanityImage.tsx                — next/image fed from Sanity's CDN (client component; caps requests at 2560px)
   ScrollReveal.tsx               — Drives every [data-reveal] element via ScrollTrigger.batch (mounted once in the site layout)
   ScrollZoom.tsx                 — Scroll-scrubbed slow zoom inside a [data-zoom-track] (Studio page's pinned portrait)
