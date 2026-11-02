@@ -226,8 +226,9 @@ Sixteen projects are on the site now. Every project is missing the items in
   now. Do you have a logo? Please send the original files (SVG, AI or PDF),
   not a screenshot.
 
-- [ ] **7.2 Name.** Should the site say "Creative Studio" or "Creative Studio
+- [x] **7.2 Name.** Should the site say "Creative Studio" or "Creative Studio
   India" in the header and footer?
+  **Answered (1 Nov 2026): "Creative Studio India" everywhere.**
 
 ---
 

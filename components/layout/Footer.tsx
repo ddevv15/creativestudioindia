@@ -22,6 +22,8 @@ export default function Footer() {
             Creative
             <br />
             Studio
+            <br />
+            India
           </Link>
         </div>
 

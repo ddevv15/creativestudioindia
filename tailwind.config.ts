@@ -55,10 +55,20 @@ const config: Config = {
   			'slide-progress': {
   				from: { transform: 'scaleX(0)' },
   				to: { transform: 'scaleX(1)' }
+  			},
+  			/* Hero slow zoom (HeroSlider). Each slide sets --kb-x / --kb-y so the
+  			   drift differs per slide. At 1.08 there's 4% of spare image on each
+  			   side, and a 2% drift (2.16% once scaled) stays well inside it. */
+  			'ken-burns': {
+  				from: { transform: 'scale(1) translate(0, 0)' },
+  				to: { transform: 'scale(1.08) translate(var(--kb-x, 0), var(--kb-y, 0))' }
   			}
   		},
   		animation: {
-  			'slide-progress': 'slide-progress 6000ms linear forwards'
+  			'slide-progress': 'slide-progress 6000ms linear forwards',
+  			/* Outlasts one autoplay interval plus the 900ms slide, so the photo
+  			   is still moving as it leaves. */
+  			'ken-burns': 'ken-burns 8000ms linear forwards'
   		},
   		colors: {
   			ink: '#1A1A17',

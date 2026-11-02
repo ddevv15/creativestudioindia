@@ -124,6 +124,7 @@ components/
   SketchCard.tsx                 — Sketch image with caption
   SanityImage.tsx                — next/image fed from Sanity's CDN (client component; caps requests at 2560px)
   ScrollReveal.tsx               — Drives every [data-reveal] element via ScrollTrigger.batch (mounted once in the site layout)
+  ScrollZoom.tsx                 — Scroll-scrubbed slow zoom inside a [data-zoom-track] (Studio page's pinned portrait)
   ProjectCarousel.tsx            — Project page gallery carousel: drag (touch + mouse), counter, PREV / NEXT
 
   ui/                            — shadcn/ui components (Button, Input, Dialog, etc.)
@@ -166,6 +167,10 @@ public/
 ## UI Rules
 
 There are no Figma files for this project. The written spec in `filesCreative/` is the design source of truth.
+
+Product truth (who the site is for, what success means, what must never be invented) lives in `PRODUCT.md`. Read it before design work.
+
+- Design system: build all UI to `DESIGN.md` ("The Drawing Board": tokens, type roles, grid, components, named rules); token values live in CSS (`app/globals.css`, `tailwind.config.ts`). It supersedes `filesCreative/` wherever the two disagree.
 
 For any UI task:
 

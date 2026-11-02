@@ -1,7 +1,10 @@
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
+import SanityImage from "@/components/SanityImage";
+import ScrollZoom from "@/components/ScrollZoom";
 import TeamCard from "@/components/TeamCard";
-import StudioHero from "@/components/sections/StudioHero";
+import Statement from "@/components/sections/Statement";
+import { SITE } from "@/constants/site";
 import {
   getAllNowItems,
   getAllProjects,
@@ -9,31 +12,28 @@ import {
   getAllTeamMembers,
   getSiteSettings,
 } from "@/lib/content";
-import { urlFor } from "@/lib/sanity/image";
 import { pageMetadata } from "@/lib/seo";
+import type { SanityImageObject } from "@sanity/image-url";
 import type { NowType } from "@/types/sanity";
 
 export const metadata = pageMetadata({
   title: "Studio | Creative Studio India",
   description:
-    "Creative Studio India — 35 years of intentional architecture in Ahmedabad, led by principal designer Jignesh Patel.",
+    "Creative Studio India, an architecture studio in Ahmedabad led by principal designer Jignesh Patel.",
 });
 
 const PROCESS_STEPS = [
   {
-    number: "01",
     label: "Sketch",
     description:
       "Every project starts by hand — studies of light, section, and site long before anything is drawn to scale.",
   },
   {
-    number: "02",
     label: "Render",
     description:
       "The design is tested in three dimensions so the client sees the building before it is committed to.",
   },
   {
-    number: "03",
     label: "Build",
     description:
       "Documentation and site oversight carry the drawing through to a building that matches the intent.",
@@ -47,173 +47,187 @@ const NOW_TYPE_LABELS: Partial<Record<NowType, string>> = {
   press: "Press",
 };
 
+const HEADING = "text-[32px] font-normal leading-[1.18] tracking-[-0.01em] text-ink md:text-[40px]";
+
+/**
+ * The Studio page as a monograph (direction in .impeccable/surfaces): a banner
+ * with the page title, then the principal's portrait pinned in the left five
+ * columns while his bio, his words, the process and the team scroll past on
+ * the right. The portrait zooms slowly as that column scrolls.
+ */
 export default async function AboutPage() {
-  const [siteSettings, teamMembers, nowItems, projects, sketches] =
-    await Promise.all([
-      getSiteSettings(),
-      getAllTeamMembers(),
-      getAllNowItems(),
-      getAllProjects(),
-      getAllSketches(),
-    ]);
+  const [siteSettings, teamMembers, nowItems, projects, sketches] = await Promise.all([
+    getSiteSettings(),
+    getAllTeamMembers(),
+    getAllNowItems(),
+    getAllProjects(),
+    getAllSketches(),
+  ]);
 
-  const recognition = nowItems.filter((item) =>
-    RECOGNITION_TYPES.includes(item.type),
-  );
+  // A different photograph from the /projects banner, so the two pages don't open identically.
+  const featured = projects.filter((project) => project.featured);
+  const banner = featured[1] ?? projects[1] ?? projects[0];
 
-  // Process imagery: a sketch, then two project photographs standing in for the
-  // render and build stages. Falls back to a linen block when unavailable.
-  const processImages = [
-    sketches[0] ? urlFor(sketches[0].image).width(800).height(600).fit("crop").url() : null,
-    projects[0] ? urlFor(projects[0].coverImage).width(800).height(600).fit("crop").url() : null,
-    projects[1] ? urlFor(projects[1].coverImage).width(800).height(600).fit("crop").url() : null,
+  // The principal has the left column to himself; the team grid is everyone else.
+  const team = teamMembers.filter((member) => member.department !== "leadership");
+
+  const recognition = nowItems.filter((item) => RECOGNITION_TYPES.includes(item.type));
+
+  // A sketch for the first step, then two project photographs for render and build.
+  const processImages: ({ source: SanityImageObject; caption: string } | null)[] = [
+    sketches[0] ? { source: sketches[0].image, caption: sketches[0].title } : null,
+    projects[0] ? { source: projects[0].coverImage, caption: projects[0].title } : null,
+    projects[1] ? { source: projects[1].coverImage, caption: projects[1].title } : null,
   ];
+
+  const photoUrl = siteSettings.principalPhoto?.asset?.url;
 
   return (
     <>
-      <StudioHero />
-
-      <section className="bg-offwhite px-24 py-96 md:px-48">
-        <div className="mx-auto max-w-[680px] text-center font-sans text-[17px] leading-[1.75] text-stone [&>p]:mb-24 [&>p:last-child]:mb-0">
-          <PortableText value={siteSettings.principalBio.slice(0, 2)} />
-        </div>
+      <section data-nav-overlay className="relative h-[62svh] min-h-[420px] overflow-hidden bg-charcoal">
+        {banner && (
+          <SanityImage
+            source={banner.coverImage}
+            alt=""
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover"
+          />
+        )}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/10 to-ink/30" />
+        <h1 className="absolute bottom-32 left-gutter text-[64px] font-normal leading-none tracking-[-0.03em] text-offwhite md:bottom-48 md:text-[112px] lg:text-[136px]">
+          Studio
+        </h1>
       </section>
 
-      <section className="bg-linen">
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          <div className="relative aspect-[4/5]">
-            <Image
-              src={siteSettings.principalPhoto.asset.url}
-              alt="Jignesh Patel, principal designer"
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </div>
-
-          <div className="flex flex-col px-24 py-64 md:px-48 lg:justify-center lg:px-64 lg:py-0">
-            <p className="section-label">Principal</p>
-
-            <h2 className="display-headline mt-16 text-[40px] text-ink">
-              Jignesh Patel
-            </h2>
-
-            <p className="mt-8 font-sans text-[13px] uppercase tracking-wider text-stone">
-              {/*
-                Was "Principal Architect · B.Arch, CEPT · Council of
-                Architecture" — invented demo data asserting a specific degree
-                and a statutory registration. "Architect" is a title protected
-                by the Architects Act in India and COA registration is a matter
-                of public record, so it must not be claimed on the studio's
-                behalf without evidence. The portfolio titles him Principal
-                Designer, and titles the other two team members Architect,
-                which reads as a deliberate distinction. Add qualifications
-                back only once the studio confirms them.
-              */}
-              Principal Designer
-            </p>
-
-            <blockquote className="mt-32 border-l-[0.5px] border-stone/40 pl-24 font-sans text-[17px] leading-[1.75] text-stone">
-              &ldquo;A building should still make sense to the people using it
-              twenty years after we have stopped thinking about it.&rdquo;
-            </blockquote>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-charcoal px-24 py-96 md:px-48">
-        <p className="section-label !text-white/40">Process</p>
-
-        <h2 className="display-headline mt-16 text-[40px] text-white">
-          Sketch, render, build.
-        </h2>
-
-        <div className="mt-48 grid grid-cols-1 gap-32 md:grid-cols-3">
-          {PROCESS_STEPS.map((step, index) => {
-            const image = processImages[index];
-
-            return (
-              <div key={step.number}>
-                <div className="relative aspect-[4/3] w-full overflow-hidden">
-                  {image ? (
-                    <Image
-                      src={image}
-                      alt={`${step.label} stage`}
-                      fill
-                      sizes="(min-width: 768px) 33vw, 100vw"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-linen/10" />
-                  )}
-                </div>
-
-                <p className="mt-24 font-sans text-[11px] uppercase tracking-[0.07em] text-white/40">
-                  {step.number}
-                </p>
-
-                <h3 className="mt-8 font-sans text-[18px] font-medium text-white">
-                  {step.label}
-                </h3>
-
-                <p className="mt-8 font-sans text-[14px] leading-[1.7] text-white/60">
-                  {step.description}
-                </p>
+      <section data-zoom-track className="grid grid-cols-12 gap-x-[10px] gap-y-48 px-gutter py-64 lg:py-96">
+        {photoUrl && (
+          <div className="col-span-12 md:col-span-5">
+            {/* Capped so the pinned frame always fits the viewport under the header. */}
+            <figure className="md:sticky md:top-[calc(var(--nav-h)+24px)] md:max-w-[calc((100svh-var(--nav-h)-80px)*0.8)]">
+              <div className="relative aspect-[4/5] overflow-hidden bg-linen">
+                <ScrollZoom className="absolute inset-0">
+                  <Image
+                    src={photoUrl}
+                    alt="Jignesh Patel, principal designer"
+                    fill
+                    priority
+                    sizes="(min-width: 768px) 42vw, 100vw"
+                    className="object-cover"
+                  />
+                </ScrollZoom>
               </div>
-            );
-          })}
-        </div>
-      </section>
+              <figcaption className="caption-mono mt-8">Jignesh Patel, principal designer</figcaption>
+            </figure>
+          </div>
+        )}
 
-      <section className="bg-offwhite px-24 py-96 md:px-48">
-        <h2 className="display-headline text-[40px] text-ink">
-          The team behind the work.
-        </h2>
+        <div className="col-span-12 md:col-span-6 md:col-start-7">
+          <h2 className={HEADING}>Jignesh Patel</h2>
+          <p className="mt-8 text-[15px] text-stone">Principal Designer</p>
 
-        <div className="mt-48 grid grid-cols-2 gap-24 md:grid-cols-3 lg:grid-cols-4">
-          {teamMembers.map((member) => (
-            <TeamCard key={member._id} member={member} />
-          ))}
+          {siteSettings.principalBio?.length > 0 && (
+            <div className="mt-48 max-w-[60ch] text-[16px] leading-[1.6] text-ink [&>p+p]:mt-16">
+              <PortableText value={siteSettings.principalBio} />
+            </div>
+          )}
+
+          {/* The page's one serif moment (DESIGN.md): the principal's own words. */}
+          <figure data-reveal className="mt-96">
+            <blockquote className="display-headline text-[40px] text-ink lg:text-[48px]">
+              &ldquo;A building should still make sense to the people using it twenty years after we
+              have stopped thinking about it.&rdquo;
+            </blockquote>
+            <figcaption className="caption-mono mt-24">Jignesh Patel</figcaption>
+          </figure>
+
+          <div data-reveal className="mt-96">
+            <h2 className={HEADING}>Sketch, render, build.</h2>
+            <ol className="mt-48">
+              {PROCESS_STEPS.map((step, index) => {
+                const image = processImages[index];
+
+                return (
+                  <li
+                    key={step.label}
+                    className="grid grid-cols-1 gap-x-[10px] gap-y-16 border-t border-ink/20 py-24 sm:grid-cols-2"
+                  >
+                    {image && (
+                      <figure>
+                        <div className="relative aspect-[4/3] overflow-hidden bg-linen">
+                          <SanityImage
+                            source={image.source}
+                            ratio={4 / 3}
+                            alt={image.caption}
+                            fill
+                            sizes="(min-width: 768px) 25vw, (min-width: 640px) 50vw, 100vw"
+                            className="object-cover"
+                          />
+                        </div>
+                        <figcaption className="caption-mono mt-8">{image.caption}</figcaption>
+                      </figure>
+                    )}
+                    <div className={image ? undefined : "sm:col-start-2"}>
+                      <h3 className="text-[22px] leading-[1.3] text-ink">{step.label}</h3>
+                      <p className="mt-8 max-w-[40ch] text-[15px] leading-[1.55] text-ink">
+                        {step.description}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+
+          {team.length > 0 && (
+            <div data-reveal className="mt-96">
+              <h2 className={HEADING}>The team</h2>
+              <div className="mt-48 grid grid-cols-2 gap-x-[10px] gap-y-32">
+                {team.map((member) => (
+                  <TeamCard key={member._id} member={member} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       {recognition.length > 0 && (
-        <section className="bg-linen px-24 py-96 md:px-48">
-          <h2 className="display-headline text-[40px] text-ink">
-            Recognition.
-          </h2>
-
-          <div className="mt-48 flex flex-col gap-16">
-            {recognition.map((item) => (
-              <article
-                key={item._id}
-                className="border-[0.5px] border-stone/20 bg-offwhite p-24"
-              >
-                <div className="flex flex-wrap items-center gap-16">
-                  <span className="border-[0.5px] border-stone/40 px-8 py-4 font-sans text-[11px] uppercase tracking-wider text-stone">
-                    {NOW_TYPE_LABELS[item.type] ?? item.type}
-                  </span>
-
-                  <time
-                    dateTime={item.date}
-                    className="font-sans text-[12px] text-stone"
-                  >
-                    {new Date(item.date).toLocaleDateString("en-IN", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </time>
-                </div>
-
-                <h3 className="mt-16 font-sans text-[16px] font-medium text-ink">
-                  {item.title}
-                </h3>
-              </article>
-            ))}
+        <section data-reveal className="grid grid-cols-12 gap-x-[10px] gap-y-24 px-gutter pb-64 lg:pb-96">
+          <div className="col-span-12 md:col-span-5">
+            <h2 className={HEADING}>Recognition</h2>
+            {/* Client question 1.1: these are the build's sample entries until the studio sends real ones. */}
+            <p className="caption-mono mt-16">Draft: sample entries, not yet confirmed by the studio.</p>
           </div>
+
+          <ul className="col-span-12 md:col-span-6 md:col-start-7">
+            {recognition.map((item) => (
+              <li
+                key={item._id}
+                className="grid grid-cols-[96px_1fr] gap-x-[10px] gap-y-4 border-t border-ink/20 py-16 last:border-b"
+              >
+                <time dateTime={item.date} className="caption-mono pt-[3px]">
+                  {new Date(item.date).toLocaleDateString("en-IN", { month: "short", year: "numeric" })}
+                </time>
+                <div>
+                  <p className="text-[15px] leading-[1.55] text-ink">{item.title}</p>
+                  <p className="caption-mono mt-4">{NOW_TYPE_LABELS[item.type] ?? item.type}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
+
+      <Statement
+        heading="Have a project in mind?"
+        body="Tell us about the site, the brief and the people it is for, and the studio will take it from there."
+        links={[
+          { label: "Start a project →", href: "/contact" },
+          { label: "WhatsApp", href: `https://wa.me/${SITE.whatsappNumber}` },
+        ]}
+      />
     </>
   );
 }

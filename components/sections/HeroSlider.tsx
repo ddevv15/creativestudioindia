@@ -9,6 +9,15 @@ import SanityImage from "@/components/SanityImage";
 import type { FeatureImage } from "@/types";
 
 const AUTOPLAY_MS = 6000;
+// Where each slide's photo drifts while it zooms, cycling per slide so
+// neighbours never move the same way. Paired with the `ken-burns` keyframes in
+// tailwind.config.ts, which keep the drift inside the zoom's spare margin.
+const DRIFTS: [string, string][] = [
+  ["-2%", "-1.5%"],
+  ["2%", "-1%"],
+  ["-1.5%", "1.5%"],
+  ["1.5%", "1%"],
+];
 // On-screen movement gets the strong ease-in-out (both ends visible).
 const SLIDE_TRANSITION = "transform 900ms cubic-bezier(0.77, 0, 0.175, 1)";
 /** Signed distance from the active slide, wrapped so the loop is seamless. */
@@ -20,7 +29,7 @@ function offsetOf(index: number, active: number, count: number) {
 
 /**
  * Full-bleed homepage hero (spec 0002). Featured projects slide past on a
- * loop. Bottom-left: location and title. Bottom-right: PREV, a progress
+ * loop, each photo slowly zooming and drifting while it's shown. Bottom-left: location and title. Bottom-right: PREV, a progress
  * segment per slide, NEXT. Touch drag tracks 1:1 and a flick commits by
  * projected momentum, not by distance alone.
  */
@@ -29,6 +38,13 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
   const count = slides.length;
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+
+  // The slide that just left keeps zooming while it slides out; dropping its
+  // animation the moment it stops being active would snap it back to full
+  // size on screen. Derived during render (not in an effect) so there's no
+  // frame where the leaving slide has already lost its zoom.
+  const [zoomed, setZoomed] = useState({ active: 0, leaving: -1 });
+  if (zoomed.active !== active) setZoomed({ active, leaving: zoomed.active });
 
   // A slide wrapping from one side to the other must jump, not glide across
   // the screen. Remember where each one was to spot those jumps.
@@ -106,18 +122,30 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
             }
           >
             {mounted.has(index) && (
-              <SanityImage
-                source={slide.image}
-                alt={slide.title}
-                fill
-                sizes="100vw"
-                quality={70}
-                priority={index === 0}
-                loading={index === 0 ? undefined : "eager"}
-                fetchPriority={index === 0 ? "high" : "low"}
-                draggable={false}
-                className="object-cover"
-              />
+              // Slow zoom and drift. Restarts each time the slide comes back,
+              // because the class is only present while it's active or leaving.
+              <div
+                className={cn(
+                  "absolute inset-0",
+                  !reduce &&
+                    (index === active || index === zoomed.leaving) &&
+                    "animate-ken-burns will-change-transform"
+                )}
+                style={{ "--kb-x": DRIFTS[index % DRIFTS.length][0], "--kb-y": DRIFTS[index % DRIFTS.length][1] } as React.CSSProperties}
+              >
+                <SanityImage
+                  source={slide.image}
+                  alt={slide.title}
+                  fill
+                  sizes="100vw"
+                  quality={70}
+                  priority={index === 0}
+                  loading={index === 0 ? undefined : "eager"}
+                  fetchPriority={index === 0 ? "high" : "low"}
+                  draggable={false}
+                  className="object-cover"
+                />
+              </div>
             )}
           </div>
         );
