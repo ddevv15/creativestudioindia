@@ -19,10 +19,16 @@ const PILL = "rounded-full border border-ink/25 px-8 py-[3px] text-[11px] upperc
 export default function ProjectGridCard({
   project,
   large = false,
+  wideMd = false,
+  wideLg = false,
   priority = false,
 }: {
   project: ProjectGridItem;
   large?: boolean;
+  /** Stretched across a row's leftover columns: laid out as a feature row,
+   *  a 3:2 image beside its text, instead of one huge stretched frame. */
+  wideMd?: boolean;
+  wideLg?: boolean;
   priority?: boolean;
 }) {
   const glowRef = useRef<HTMLSpanElement>(null);
@@ -40,7 +46,13 @@ export default function ProjectGridCard({
     <Link
       href={`/projects/${project.slug}`}
       onPointerMove={onPointerMove}
-      className={cn("group relative flex h-full flex-col overflow-hidden p-16", large && "lg:p-24")}
+      className={cn(
+        "group relative flex h-full flex-col overflow-hidden p-16",
+        large && "lg:p-24",
+        wideMd && "md:grid md:grid-cols-2 md:content-start md:gap-x-24",
+        wideLg && "lg:grid lg:grid-cols-2 lg:content-start lg:gap-x-24 lg:p-24",
+        wideMd && !wideLg && "lg:flex"
+      )}
     >
       <span
         ref={glowRef}
@@ -51,7 +63,9 @@ export default function ProjectGridCard({
       <div
         className={cn(
           "relative overflow-hidden bg-linen",
-          large ? "aspect-[3/2] lg:aspect-auto lg:min-h-[320px] lg:flex-1" : "aspect-[3/2]"
+          large ? "aspect-[3/2] lg:aspect-auto lg:min-h-[320px] lg:flex-1" : "aspect-[3/2]",
+          wideMd && "md:row-span-4",
+          wideLg && "lg:row-span-4"
         )}
       >
         <SanityImage
@@ -65,7 +79,7 @@ export default function ProjectGridCard({
         />
       </div>
 
-      <div className="relative mt-16 flex items-start justify-between gap-16">
+      <div className={cn("relative mt-16 flex items-start justify-between gap-16", wideMd && "md:mt-0", wideMd && !wideLg && "lg:mt-16", wideLg && "lg:mt-0")}>
         <h2 className={cn("leading-[1.25] text-ink", large ? "text-[20px] lg:text-[24px]" : "text-[17px]")}>
           {project.title}
         </h2>

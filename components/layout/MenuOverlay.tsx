@@ -150,6 +150,31 @@ export default function MenuOverlay({
           )}
 
           <div className="flex min-w-0 flex-1 flex-col overflow-y-auto px-gutter pb-24 pt-nav md:pl-[calc(var(--menu-x)+10px)] lg:pl-[10px]">
+            {/* Below lg the image panel is gone, so the featured project sits at
+                the top of the sheet instead of leaving it empty. */}
+            {feature && (
+              <motion.figure {...stage(0)} className="mt-24 lg:hidden">
+                <div className="relative aspect-[16/9] max-h-[32svh] w-full overflow-hidden bg-linen">
+                  <SanityImage
+                    source={feature.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 768px) 70vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+                <figcaption className="mt-8">
+                  {feature.location && <span className="caption-mono block">{feature.location}</span>}
+                  {feature.href ? (
+                    <Link href={feature.href} onClick={onClose} className="hit-area mt-4 inline-block text-[15px] uppercase leading-[1.3] text-ink">
+                      {feature.title}
+                    </Link>
+                  ) : (
+                    <span className="mt-4 block text-[15px] uppercase leading-[1.3] text-ink">{feature.title}</span>
+                  )}
+                </figcaption>
+              </motion.figure>
+            )}
             <nav aria-label="Menu" className="mt-auto pt-48">
               <ul>
                 {rows.map((row, index) => (
@@ -164,16 +189,16 @@ export default function MenuOverlay({
                       className="flex min-h-[44px] items-center text-ink underline decoration-1 underline-offset-[7px] transition-colors duration-200 hover:text-stone"
                     />
                     {row.sub && (
-                      <span className="flex flex-wrap gap-x-8 text-stone">
-                        {row.sub.map((sub, subIndex, all) => (
-                          <span key={sub.href}>
-                            <MenuLink
-                              item={sub}
-                              onNavigate={onClose}
-                              className="transition-colors duration-200 hover:text-ink"
-                            />
-                            {subIndex < all.length - 1 && <span aria-hidden="true">,</span>}
-                          </span>
+                      // Small uppercase labels with space between them, not a
+                      // comma run-on: the project names arrive in mixed case.
+                      <span className="flex flex-wrap gap-x-16 gap-y-8 text-[13px] uppercase leading-[1.5] tracking-[0.04em] text-stone">
+                        {row.sub.map((sub) => (
+                          <MenuLink
+                            key={sub.href}
+                            item={sub}
+                            onNavigate={onClose}
+                            className="hit-area transition-colors duration-200 hover:text-ink"
+                          />
                         ))}
                       </span>
                     )}

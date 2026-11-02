@@ -22,6 +22,21 @@ import type { ProjectGridItem, ProjectStatus } from "@/types/sanity";
 const BLOCK = 6;
 
 /** Within a filter, any ticked value matches (OR); across filters, all must (AND). */
+/**
+ * How far the last card stretches so the grid never ends on a lone card.
+ * md is a plain two-column grid: an odd count lets the last card span both.
+ * lg packs blocks of six (one 2x2 card + five singles) into four columns:
+ * the last card spans whatever its row has left. Large cards are left alone.
+ */
+function lastRowFill(count: number, index: number): { md: boolean; lg: number } {
+  if (index !== count - 1) return { md: false, lg: 1 };
+  const md = count % 2 === 1;
+  if (index % BLOCK === 0) return { md, lg: 1 };
+  const cells = count + 3 * Math.ceil(count / BLOCK);
+  const used = cells % 4;
+  return { md, lg: used === 0 ? 1 : 5 - used };
+}
+
 function matches(project: ProjectGridItem, typeFilter: string[], statusFilter: string[]) {
   return (
     (typeFilter.length === 0 || typeFilter.includes(project.category)) &&
@@ -118,6 +133,7 @@ export default function ProjectsBrowser({ projects }: { projects: ProjectGridIte
                 {filtered.map((project, index) => {
                   const large = index % BLOCK === 0;
                   const flipped = Math.floor(index / BLOCK) % 2 === 1;
+                  const fill = lastRowFill(filtered.length, index);
                   return (
                     <motion.div
                       key={project._id}
@@ -125,11 +141,21 @@ export default function ProjectsBrowser({ projects }: { projects: ProjectGridIte
                       variants={cardVariants}
                       className={cn(
                         "border-b border-r border-ink/15",
-                        large && "md:col-span-2 lg:row-span-2",
-                        large && flipped && "lg:col-start-3"
+                        large && "lg:col-span-2 lg:row-span-2",
+                        large && flipped && "lg:col-start-3",
+                        fill.md && "md:col-span-2",
+                        fill.lg === 2 && "lg:col-span-2",
+                        fill.lg === 3 && "lg:col-span-3",
+                        fill.lg === 4 && "lg:col-span-4"
             )}
                   >
-                    <ProjectGridCard project={project} large={large} priority={index === 0} />
+                    <ProjectGridCard
+                      project={project}
+                      large={large}
+                      wideMd={fill.md}
+                      wideLg={fill.lg >= 3}
+                      priority={index === 0}
+                    />
                   </motion.div>
                 );
               })}

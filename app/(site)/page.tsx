@@ -25,6 +25,10 @@ export default async function HomePage() {
   // Featured projects lead the slider. With none flagged, the first few by
   // order stand in. With no projects at all, the studio's hero image does.
   const featured = projects.filter((project) => project.featured);
+  // Open on a completed building, not a render: a visitor's first question is
+  // whether the studio delivers. The rest keep their order.
+  const firstBuilt = featured.findIndex((project) => project.status === "completed");
+  if (firstBuilt > 0) featured.unshift(...featured.splice(firstBuilt, 1));
   const slides: FeatureImage[] = (featured.length > 0 ? featured : projects)
     .slice(0, 5)
     .map((project) => ({

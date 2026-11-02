@@ -99,7 +99,7 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="relative h-[90svh] min-h-[560px] touch-pan-y select-none overflow-hidden bg-charcoal text-offwhite"
+      className="relative h-[100svh] min-h-[560px] touch-pan-y select-none overflow-hidden bg-charcoal text-offwhite"
     >
       {slides.map((slide, index) => {
         const offset = offsets[index];
@@ -156,8 +156,11 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
       <ImageScrim edge="title" />
       <ImageScrim edge="header" />
 
-      <div className="absolute inset-x-gutter bottom-24 flex flex-col gap-24 md:bottom-32 md:flex-row md:items-end md:justify-between">
-        <div>
+      {/* Clear of the fixed WhatsApp button (DESIGN.md, Clear Corner Rule): on
+          phones the bar sits above it; from md the controls start at the
+          halfway column instead of running into the corner. */}
+      <div className="absolute inset-x-gutter bottom-[92px] flex flex-col gap-24 md:bottom-32 md:grid md:grid-cols-12 md:items-end md:gap-x-[10px]">
+        <div className="md:col-span-6">
           {/* The studio, said once in the first screen; it stays put while the
               slides change. No years or counts until the client confirms them. */}
           <p className="max-w-[44ch] border-b border-offwhite/40 pb-16 font-mono text-[12px] leading-[1.5] text-offwhite">
@@ -179,7 +182,7 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
         </div>
 
         {count > 1 && (
-          <div className="flex items-center gap-16 text-[13px] uppercase">
+          <div className="flex items-center gap-16 text-[13px] uppercase md:col-span-6 md:col-start-7">
             <button
               type="button"
               onClick={() => go(-1)}

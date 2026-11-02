@@ -4,9 +4,11 @@ import type { Project } from "@/types/sanity";
  * Which featured project each inner page's banner shows. Fixed slots, so no
  * two inner pages ever open on the same photograph (DESIGN.md, inner-page
  * banner). Studio uses projects 0 and 1 further down its page, so it starts at 2.
+ * Slots count the featured projects in their Sanity order.
  */
 const SLOTS = {
-  projects: 0,
+  // Not 0: the first featured project already leads the /projects grid.
+  projects: 4,
   about: 2,
   services: 3,
 } as const;
