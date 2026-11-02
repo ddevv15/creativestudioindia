@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
  *
  * `header`: holds ink at 60% across the header's band, then fades out by
  * 200px, so the off-white header text clears 4.5:1 even over a white sky.
- * `title`: rises from the bottom at 60%, still 50% halfway up, so a banner's
+ * `title`: holds 60% across its lower 40%, then fades, so a banner's
  * page title (and the hero caption) clear 3:1 over bright ground.
  */
 export default function ImageScrim({ edge }: { edge: "header" | "title" }) {
@@ -17,7 +17,7 @@ export default function ImageScrim({ edge }: { edge: "header" | "title" }) {
         "pointer-events-none absolute inset-x-0",
         edge === "header"
           ? "top-0 h-[200px] bg-gradient-to-b from-ink/60 via-ink/60 via-40% to-transparent"
-          : "bottom-0 h-[55%] bg-gradient-to-t from-ink/60 via-ink/50 via-50% to-transparent"
+          : "bottom-0 h-[55%] bg-gradient-to-t from-ink/60 via-ink/60 via-40% to-transparent"
       )}
     />
   );

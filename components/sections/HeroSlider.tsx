@@ -157,18 +157,25 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
       <ImageScrim edge="header" />
 
       <div className="absolute inset-x-gutter bottom-24 flex flex-col gap-24 md:bottom-32 md:flex-row md:items-end md:justify-between">
-        {/* Keyed so each new caption fades in rather than swapping hard. */}
-        <div key={active} aria-live={paused ? "polite" : "off"} className="duration-500 animate-in fade-in">
-          {current.location && (
-            <p className="font-mono text-[12px] leading-[1.3] text-offwhite/85">{current.location}</p>
-          )}
-          {current.href ? (
-            <Link href={current.href} className="mt-4 block text-[20px] uppercase leading-[1.25] md:text-[24px]">
-              {current.title}
-            </Link>
-          ) : (
-            <p className="mt-4 text-[20px] uppercase leading-[1.25] md:text-[24px]">{current.title}</p>
-          )}
+        <div>
+          {/* The studio, said once in the first screen; it stays put while the
+              slides change. No years or counts until the client confirms them. */}
+          <p className="max-w-[44ch] border-b border-offwhite/40 pb-16 font-mono text-[12px] leading-[1.5] text-offwhite">
+            Architecture and planning · Ahmedabad · principal designer Jignesh Patel
+          </p>
+          {/* Keyed so each new caption fades in rather than swapping hard. */}
+          <div key={active} aria-live={paused ? "polite" : "off"} className="mt-16 duration-500 animate-in fade-in">
+            {current.location && (
+              <p className="font-mono text-[12px] leading-[1.3] text-offwhite/85">{current.location}</p>
+            )}
+            {current.href ? (
+              <Link href={current.href} className="mt-4 block text-[20px] uppercase leading-[1.25] md:text-[24px]">
+                {current.title}
+              </Link>
+            ) : (
+              <p className="mt-4 text-[20px] uppercase leading-[1.25] md:text-[24px]">{current.title}</p>
+            )}
+          </div>
         </div>
 
         {count > 1 && (
