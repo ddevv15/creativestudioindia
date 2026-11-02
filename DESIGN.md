@@ -218,9 +218,10 @@ moment per page, so it reads as the hand of the studio.
 
 ### Hierarchy
 - **Page title** (400, 64 / 112 / 136px, line-height 1, -0.03em): one per inner
-  page, set huge over its banner image ("Projects", "Studio").
+  page, set huge over its banner image ("Projects", "Studio", "Services").
 - **Display** (400, 32px phone to 40px desktop, 1.18, -0.01em): statement
-  headlines and section headlines ("Every building here begins as a sketch.").
+  headlines, section headlines ("Every building here begins as a sketch.") and
+  service names on the Services page.
 - **Display serif** (Cormorant 500, 1.1, -0.02em): one oversized moment per
   page, at 40px and above only, such as a large numeral or a single line of
   voice. Never a running headline style.
@@ -228,8 +229,8 @@ moment per page, so it reads as the hand of the studio.
   titles (feature rows, project page title, next project).
 - **Lead** (400, 20px phone to 24px desktop, 1.35): the right-hand column of a
   statement and a project's introduction. Keep it to about 30ch.
-- **Title** (400, 20 to 22px, 1.3): menu rows, note tiles, service names, card
-  titles on large cells.
+- **Title** (400, 20 to 22px, 1.3): menu rows, note tiles, service names in
+  the homepage strip, card titles on large cells.
 - **Body** (400, 15 to 16px, 1.55): running prose, at most about 60ch.
 - **UI** (400 to 500, 13 to 15px): header links, controls, filter labels
   (uppercase 12px at +0.04em), and the footer.
@@ -261,8 +262,17 @@ at every width from md up. Phones collapse to 2 or 1 columns.
   height, then text under the image.
 - **Ruled index:** the /projects grid, with cells divided by hairlines, a large
   2×2 cell beside four small ones, alternating sides.
-- **Image pair:** a narrow 4:5 frame beside a wide 16:7 one, mirrored on
-  alternate rows.
+- **Image pair:** one project per row, shown twice. Its cover sits in a
+  narrow 4:5 frame (columns 1 to 4) and its widest gallery image in a wide 16:7
+  frame (columns 5 to 12), bottom-aligned. The wide image is picked by the
+  asset's aspect ratio and is never the cover's own asset, so a tall subject is
+  not sliced and no photo appears twice. Alternate rows mirror: the narrow frame
+  moves to columns 9 to 12 and the text follows the wide frame. Below md both
+  frames are 4:5 in a 5 / 7 column split. The row's text sits 24px below on the
+  same columns as the wide frame (heading on its first half, body on its
+  second; stacked full width below md). A row with no honest image keeps those text columns over a 1px
+  hairline (ink at 20%) with 24px above the text; never fill it with a
+  placeholder. See Components for links and captions.
 - **Monograph:** one subject held in view while its story scrolls (the Studio
   page). A 4:5 portrait in a 1px hairline frame (ink at 15%) spans columns 1 to
   5 and is sticky from md up, pinned at the header height plus 24px. Its width
@@ -288,7 +298,7 @@ header, the menu and the footer.
 
 **Full bleed.** Hero sliders, project covers and page banners run edge to edge
 at 62 to 92svh. Everything else respects the gutter. Inner pages (/projects,
-/about) open on the same 62svh page banner (see Components).
+/about, /services) open on the same 62svh page banner (see Components).
 
 ### Named Rules
 **The Clear Corner Rule.** The WhatsApp button is fixed in the bottom-right
@@ -397,7 +407,11 @@ The opening of an inner page.
   fill, under an ink gradient (60% at the foot, 10% mid, 30% at the head). The
   page title sits bottom left on the gutter, 32px up on phones and 48px from md.
 - **Header:** the header is transparent with off-white text over it at scroll 0.
-- **Image:** a project cover, never the same one as another inner page's banner.
+- **Image:** a project cover chosen by `bannerProject()` in `lib/banner.ts`.
+  Each inner page owns a fixed slot in the featured project list, so no two
+  inner pages open on the same photograph. A new inner page takes a new slot
+  there; it never picks its own cover. The image is decorative (empty alt); the
+  title carries the meaning.
 
 ### Team card
 A portrait and a name, quiet until touched.
@@ -420,6 +434,28 @@ How unconfirmed content stays visible without reading as a claim.
 ### Captioned image
 Any photograph with a mono graphite caption 8 to 16px below it. Captions come
 from Sanity. A frame without one shows no empty caption line.
+- **Honest caption:** where a project image stands in for a kind of work, the
+  caption reads: project title, then the studio's gallery caption if one was
+  supplied, then what the image is ("completed", or "visualization, under
+  construction" for renders of an unbuilt project). The alt text carries the
+  same facts. Never let a render pass as a built photograph.
+
+### Image pair frames
+- **Links:** both frames link to the project. Only the wide frame is
+  focusable and carries alt text; the narrow frame is out of the tab order,
+  hidden from assistive tech, with empty alt.
+- **Caption:** one honest caption, under the wide frame only, 8px below.
+- **Hover:** the slow 1.03 scale (700ms) on linked frames only. An image that
+  links nowhere does not scale.
+- **Fill:** linen behind each frame while the image loads.
+
+### Service row
+A service told plainly beside or under its image pair.
+- **Name:** Display (32px phone, 40px desktop) in ink.
+- **One-liner:** Body 15px ink, at 1.55.
+- **Includes list:** 24px under the one-liner, a ruled list of 13px ink rows,
+  8px top and bottom, each opened by a 1px hairline (ink at 20%) and closed by
+  one after the last row. No bullets, no icons.
 
 ## Do's and Don'ts
 

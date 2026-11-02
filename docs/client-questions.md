@@ -133,9 +133,11 @@ Sixteen projects are on the site now. Every project is missing the items in
 - [ ] **2.12 Anything to remove.** Is there any project, or any photo, that a
   client would not want on a public website?
 
-- [ ] **2.13 Project name capitals.** "ANANTA ARENA" is entered in all capitals,
-  while every other project uses normal capitals ("The Retreat at Pipan"). Is
-  "Ananta Arena" fine?
+- [ ] **2.13 Project name capitals.** Most project names are entered in all
+  capitals ("ANANTA ARENA", "TIMES SQUARE 2"), but "The Retreat at Pipan" uses
+  normal capitals. Which do you prefer? Normal capitals ("Ananta Arena") read
+  better in captions and sentences; the site can still show them in capitals
+  where the design calls for it.
 
 ---
 
@@ -225,6 +227,16 @@ Sixteen projects are on the site now. Every project is missing the items in
   Are these right? Is anything missing, such as interiors, landscape, urban
   planning, or project management? The site describes you as an "architecture
   and planning studio".
+
+  The Services page also lists what each service includes. We drafted these
+  ourselves, so please strike out anything you don't do and add what's missing:
+  - **Architecture:** site analysis and feasibility · concept design and
+    development · working drawings and documentation · local authority
+    approvals · construction oversight
+  - **3D Visualization:** exterior renders · interior renders · day and night
+    views · animated walkthroughs · virtual reality-ready files
+  - **CAD & Documentation:** AutoCAD floor plans · elevation and section
+    drawings · 3D CAD modelling · as-built documentation · coordination drawings
 
 - [ ] **6.2 Visualization for other architects.** Do you take 3D visualization or
   drafting work from other firms and developers? If so, the Services page

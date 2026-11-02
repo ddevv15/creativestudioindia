@@ -1,9 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
+import type { SanityImageObject } from "@sanity/image-url";
+import SanityImage from "@/components/SanityImage";
+import Statement from "@/components/sections/Statement";
+import { SERVICES } from "@/constants/services";
+import { SITE } from "@/constants/site";
+import { bannerProject } from "@/lib/banner";
 import { getAllProjects } from "@/lib/content";
-import { urlFor } from "@/lib/sanity/image";
 import { pageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
+import type { GalleryImage, Project } from "@/types/sanity";
 
 export const metadata = pageMetadata({
   title: "Services | Creative Studio India",
@@ -11,144 +16,174 @@ export const metadata = pageMetadata({
     "Architecture, 3D visualization, and CAD documentation from Creative Studio India, Ahmedabad.",
 });
 
-type Service = {
-  number: string;
-  name: string;
-  description: string;
-  includes: string[];
+type Pair = {
+  narrow: SanityImageObject;
+  wide: GalleryImage;
+  title: string;
+  slug: string;
+  /** Says what the images are: a built photo, or a visualization of an unbuilt project. */
+  label: string;
 };
 
-const SERVICES: Service[] = [
-  {
-    number: "01",
-    name: "Architecture",
-    description:
-      "Full-service architectural design from concept through to construction documentation. Covers bungalows, residential complexes, commercial buildings, and mixed-use developments.",
-    includes: [
-      "Site analysis and feasibility",
-      "Concept design and development",
-      "Working drawings and documentation",
-      "Local authority approvals",
-      "Construction oversight",
-    ],
-  },
-  {
-    number: "02",
-    name: "3D Visualization",
-    description:
-      "Photorealistic renders and animated walkthroughs that communicate the design before a single brick is laid. Helps clients and stakeholders visualize the finished project with confidence.",
-    includes: [
-      "Exterior renders",
-      "Interior renders",
-      "Day and night views",
-      "Animated walkthroughs",
-      "Virtual reality-ready files",
-    ],
-  },
-  {
-    number: "03",
-    name: "CAD & Documentation",
-    description:
-      "Precise technical drawings and CAD modelling for every stage of the project. Structured for accuracy and ease of use by contractors and consultants.",
-    includes: [
-      "AutoCAD floor plans",
-      "Elevation and section drawings",
-      "3D CAD modelling",
-      "As-built documentation",
-      "Coordination drawings",
-    ],
-  },
-];
+function assetRef(image: SanityImageObject): string | undefined {
+  return image.asset && "_ref" in image.asset ? image.asset._ref : undefined;
+}
 
+/**
+ * The project's widest gallery image fills the 16:7 frame, so a tall subject
+ * (a tower) is never sliced; the cover takes the 4:5 frame.
+ */
+function pairFrom(project: Project | undefined, label: string): Pair | null {
+  if (!project) return null;
+  // The cover is often also in the gallery; skip it so the pair never shows one photo twice.
+  const coverRef = assetRef(project.coverImage);
+  const wide = (project.gallery ?? [])
+    .filter((image) => assetRef(image) !== coverRef)
+    .sort((a, b) => (b.aspectRatio ?? 0) - (a.aspectRatio ?? 0))[0];
+  if (!wide) return null;
+  return { narrow: project.coverImage, wide, title: project.title, slug: project.slug, label };
+}
+
+const HEADING = "text-[32px] font-normal leading-[1.18] tracking-[-0.01em] text-ink md:text-[40px]";
+const FRAME = "group relative overflow-hidden bg-linen";
+const IMAGE = "object-cover transition-transform duration-700 group-hover:scale-[1.03]";
+
+/**
+ * Services as editorial image pairs (direction in .impeccable/surfaces): each
+ * service shown through the studio's own pictures of that kind of work, a
+ * narrow 4:5 beside a wide 16:7, mirrored on alternate rows. Images are matched
+ * honestly: a completed building for Architecture, an under-construction
+ * project's visualization for 3D Visualization, and none for CAD &
+ * Documentation until real drawings exist (client question 2.9).
+ */
 export default async function ServicesPage() {
-  // Supporting imagery is borrowed from project covers. Falls back to a linen
-  // block when no project image is available, per spec 19.
   const projects = await getAllProjects();
+  const withGallery = projects.filter((project) => (project.gallery?.length ?? 0) >= 2);
+
+  const built = withGallery.find((p) => p.status === "completed" && p.featured)
+    ?? withGallery.find((p) => p.status === "completed");
+  const visualized = withGallery.find((p) => p.status === "under-construction" && p.featured)
+    ?? withGallery.find((p) => p.status === "under-construction");
+  const pairs = [
+    pairFrom(built, "completed"),
+    // An unbuilt project's images are renders, so the caption says so.
+    pairFrom(visualized, "visualization, under construction"),
+    null,
+  ];
+
+  const banner = bannerProject("services", projects, [built, visualized]);
 
   return (
     <>
-      <section className="bg-offwhite px-24 pb-64 pt-nav-96 md:px-48">
-        <p className="section-label">Services</p>
-
-        <h1 className="display-headline mt-16 text-[52px] text-ink">
-          What we bring to every project.
+      <section data-nav-overlay className="relative h-[62svh] min-h-[420px] overflow-hidden bg-charcoal">
+        {banner && (
+          <SanityImage
+            source={banner.coverImage}
+            alt=""
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover"
+          />
+        )}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/10 to-ink/30" />
+        <h1 className="absolute bottom-32 left-gutter text-[64px] font-normal leading-none tracking-[-0.03em] text-offwhite md:bottom-48 md:text-[112px] lg:text-[136px]">
+          Services
         </h1>
       </section>
 
-      {SERVICES.map((service, index) => {
-        const project = projects[index];
-        const imageSrc = project
-          ? urlFor(project.coverImage).width(1200).height(900).fit("crop").url()
-          : null;
+      <div className="px-gutter pb-32 pt-64 lg:pt-96">
+        {SERVICES.map((service, index) => {
+          const pair = pairs[index];
+          // Mirror every other row: the narrow frame swaps sides, and the text follows the wide one.
+          const mirrored = index % 2 === 1;
 
-        return (
-          <section
-            key={service.number}
-            className={cn(
-              "px-24 py-96 md:px-48",
-              index % 2 === 0 ? "bg-offwhite" : "bg-linen",
-            )}
-          >
-            <div className="grid grid-cols-1 items-center gap-48 lg:grid-cols-2 lg:gap-96">
-              <div>
-                <p className="font-sans text-[11px] uppercase tracking-[0.07em] text-stone">
-                  {service.number}
-                </p>
+          return (
+            <section
+              key={service.name}
+              data-reveal
+              aria-labelledby={`service-${index}`}
+              className={cn("grid grid-cols-12 gap-x-[10px]", index > 0 && "mt-96 lg:mt-128")}
+            >
+              {pair && (
+                <>
+                  <figure
+                    className={cn(
+                      "col-span-5 self-end md:col-span-4",
+                      mirrored && "order-2 md:col-start-9"
+                    )}
+                  >
+                    {/* Same destination as the wide frame, so it stays out of the tab order. */}
+                    <Link href={`/projects/${pair.slug}`} tabIndex={-1} aria-hidden="true" className={cn(FRAME, "block aspect-[4/5]")}>
+                      <SanityImage
+                        source={pair.narrow}
+                        ratio={4 / 5}
+                        alt=""
+                        fill
+                        sizes="(min-width: 768px) 33vw, 42vw"
+                        className={IMAGE}
+                      />
+                    </Link>
+                  </figure>
+                  <figure
+                    className={cn(
+                      "col-span-7 self-end md:col-span-8",
+                      mirrored ? "order-1 md:col-start-1" : "md:col-start-5"
+                    )}
+                  >
+                    <Link href={`/projects/${pair.slug}`} className={cn(FRAME, "block aspect-[4/5] md:aspect-[16/7]")}>
+                      <SanityImage
+                        source={pair.wide}
+                        alt={`${pair.title}${pair.wide.caption ? `, ${pair.wide.caption}` : ""}, ${pair.label}. View the project.`}
+                        fill
+                        sizes="(min-width: 768px) 66vw, 58vw"
+                        className={IMAGE}
+                      />
+                    </Link>
+                    <figcaption className="caption-mono mt-8">
+                      {pair.title}
+                      {pair.wide.caption && `, ${pair.wide.caption.toLowerCase()}`}, {pair.label}
+                    </figcaption>
+                  </figure>
+                </>
+              )}
 
-                <h2 className="mt-16 font-sans text-[28px] font-semibold text-ink md:text-[32px]">
+              <div
+                className={cn(
+                  "order-3 col-span-12 mt-24 grid grid-cols-12 gap-x-[10px] gap-y-16",
+                  !pair && "mt-0 border-t border-ink/20 pt-24"
+                )}
+              >
+                <h2
+                  id={`service-${index}`}
+                  className={cn(HEADING, "col-span-12 md:col-span-4", mirrored ? "md:col-start-1" : "md:col-start-5")}
+                >
                   {service.name}
                 </h2>
-
-                <p className="mt-24 max-w-[56ch] font-sans text-base leading-[1.75] text-stone">
-                  {service.description}
-                </p>
-
-                <ul className="mt-32">
-                  {service.includes.map((item) => (
-                    <li
-                      key={item}
-                      className="border-t-[0.5px] border-stone/20 py-16 font-sans text-[14px] text-ink"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+                <div className={cn("col-span-12 md:col-span-4", mirrored ? "md:col-start-5" : "md:col-start-9")}>
+                  <p className="text-[15px] leading-[1.55] text-ink">{service.description}</p>
+                  <ul className="mt-24">
+                    {service.includes.map((item) => (
+                      <li key={item} className="border-t border-ink/20 py-8 text-[13px] text-ink last:border-b">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
+            </section>
+          );
+        })}
+      </div>
 
-              <div className="relative aspect-[4/3] w-full">
-                {imageSrc ? (
-                  <Image
-                    src={imageSrc}
-                    alt={`${service.name} — ${project.title}`}
-                    fill
-                    sizes="(min-width: 1024px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="h-full w-full bg-linen" />
-                )}
-              </div>
-            </div>
-          </section>
-        );
-      })}
-
-      <section className="bg-ink px-24 py-64 md:px-48 md:py-96">
-        <div className="mx-auto max-w-[640px] text-center">
-          <h2 className="display-headline text-[36px] text-white md:text-[52px]">
-            Ready to start your project?
-          </h2>
-
-          <div className="mt-32 flex justify-center">
-            <Link
-              href="/contact"
-              className="flex h-48 items-center justify-center bg-white px-32 font-sans text-[13px] text-ink transition-colors hover:bg-white/90"
-            >
-              Get in touch →
-            </Link>
-          </div>
-        </div>
-      </section>
+      <Statement
+        heading="Have a project in mind?"
+        body="Tell us about the site, the brief and the people it is for, and the studio will take it from there."
+        links={[
+          { label: "Start a project →", href: "/contact" },
+          { label: "WhatsApp", href: `https://wa.me/${SITE.whatsappNumber}` },
+        ]}
+      />
     </>
   );
 }

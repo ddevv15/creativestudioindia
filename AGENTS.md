@@ -134,6 +134,7 @@ lib/
     client.ts                    — Sanity client (projectId, dataset, apiVersion)
     queries.ts                   — All GROQ queries in one place
     image.ts                     — @sanity/image-url builder instance
+  banner.ts                      — bannerProject(): a distinct featured project per inner-page banner
   resend.ts                      — Resend email helper
   utils.ts                       — cn() and shared utilities
   useSwipe.ts                    — Shared horizontal swipe for carousels (1:1 drag, momentum projection, opt-in mouse)

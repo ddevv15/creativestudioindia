@@ -26,6 +26,8 @@ export type SanityImage = {
 export type GalleryImage = SanityImageObject & {
   _key: string;
   caption?: string;
+  /** width / height, from the asset's metadata (projected in queries.ts). */
+  aspectRatio?: number;
 };
 
 /** Matches the `category` option list in sanity/schemas/project.ts exactly. */

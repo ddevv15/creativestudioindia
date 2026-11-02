@@ -21,7 +21,7 @@ const projectFields = `
   headline,
   category,
   coverImage,
-  gallery,
+  gallery[]{..., "aspectRatio": asset->metadata.dimensions.aspectRatio},
   description,
   location,
   year,

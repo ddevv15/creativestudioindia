@@ -1,5 +1,6 @@
 import ProjectsBrowser from "@/components/ProjectsBrowser";
 import SanityImage from "@/components/SanityImage";
+import { bannerProject } from "@/lib/banner";
 import { getAllProjects } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import type { ProjectGridItem } from "@/types/sanity";
@@ -32,7 +33,7 @@ export default async function ProjectsPage() {
     year: project.year,
   }));
 
-  const banner = projects.find((project) => project.featured) ?? projects[0];
+  const banner = bannerProject("projects", projects);
 
   return (
     <>

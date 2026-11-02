@@ -11,6 +11,7 @@ import {
   getAllTeamMembers,
   getSiteSettings,
 } from "@/lib/content";
+import { bannerProject } from "@/lib/banner";
 import { pageMetadata } from "@/lib/seo";
 import type { SanityImageObject } from "@sanity/image-url";
 import type { NowType } from "@/types/sanity";
@@ -63,10 +64,7 @@ export default async function AboutPage() {
     getAllProjects(),
   ]);
 
-  // projects[0] and [1] illustrate the process below, so the banner comes from
-  // later in the list; it also differs from the /projects banner (the first featured).
-  const banner =
-    projects.slice(2).find((project) => project.featured) ?? projects[2] ?? projects[0];
+  const banner = bannerProject("about", projects);
 
   // The principal has the left column to himself; the team grid is everyone else.
   const team = teamMembers.filter((member) => member.department !== "leadership");
