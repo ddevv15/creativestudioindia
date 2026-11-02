@@ -95,8 +95,8 @@ export default function HeroSlider({ slides }: { slides: FeatureImage[] }) {
       aria-roledescription="carousel"
       aria-label="Featured projects"
       {...handlers}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      // No pause on hover: the hero fills the viewport, so a resting cursor
+      // would hold it on the first slide. Keyboard focus still pauses it.
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
       className="relative h-[100svh] min-h-[560px] touch-pan-y select-none overflow-hidden bg-charcoal text-offwhite"

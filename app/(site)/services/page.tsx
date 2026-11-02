@@ -47,20 +47,29 @@ const IMAGE = "object-cover transition-transform duration-700 group-hover:scale-
  * service shown through the studio's own pictures of that kind of work, a
  * narrow 4:5 beside a wide 16:7, mirrored on alternate rows. Images are matched
  * honestly: a completed building for Architecture, an under-construction
- * project's visualization for 3D Visualization, and none for CAD &
- * Documentation until real drawings exist (client question 2.9).
+ * project's visualization for 3D Visualization, and a stand-in project's
+ * photographs for CAD & Documentation until real drawings exist (2.9).
  */
 export default async function ServicesPage() {
   const projects = await getAllProjects();
   const { built, visualized } = serviceProjects(projects);
+  const banner = bannerProject("services", projects, [built, visualized]);
+
+  // STAND-IN: CAD & Documentation has no drawings yet (client question 2.9), so
+  // it borrows another project's photographs. Swap for real drawings when they
+  // arrive; the caption names the project, never claims it's a drawing.
+  const used = [built, visualized, banner];
+  const standIn =
+    projects.find((p) => p.featured && !used.includes(p) && (p.gallery?.length ?? 0) >= 2) ??
+    projects.find((p) => !used.includes(p) && (p.gallery?.length ?? 0) >= 2);
+  const standInLabel = standIn?.status === "under-construction" ? "visualization, under construction" : "completed";
+
   const pairs = [
     pairFrom(built, "completed"),
     // An unbuilt project's images are renders, so the caption says so.
     pairFrom(visualized, "visualization, under construction"),
-    null,
+    pairFrom(standIn, standInLabel),
   ];
-
-  const banner = bannerProject("services", projects, [built, visualized]);
 
   return (
     <>
