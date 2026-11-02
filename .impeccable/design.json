@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-01T00:00:00Z",
+  "title": "Design System: Creative Studio India",
+  "extensions": {
+    "colorMeta": {
+      "ink": { "role": "primary", "displayName": "Ink", "canonical": "#1A1A17", "tonalRamp": ["#0d0d0b", "#1a1a17", "#33332e", "#4d4d46", "#6b6b62", "#8f8f86", "#bdbdb4", "#e6e6df"] },
+      "red": { "role": "secondary", "displayName": "Signal Red", "canonical": "#C0391B", "tonalRamp": ["#3d1208", "#6b200f", "#8c2812", "#c0391b", "#d8604a", "#e68a78", "#f0b5a9", "#f9e0da"] },
+      "deepred": { "role": "secondary", "displayName": "Deep Red", "canonical": "#8C2812", "tonalRamp": ["#2e0d06", "#4f170a", "#6e1f0e", "#8c2812", "#b04a33", "#c97a68", "#e0aba0", "#f3dcd6"] },
+      "glow-blush": { "role": "tertiary", "displayName": "Glow Blush", "canonical": "#E8A598", "tonalRamp": ["#5a2a21", "#7f4135", "#a85e50", "#cc7f70", "#e8a598", "#efbfb5", "#f5d8d2", "#fbefec"] },
+      "glow-sand": { "role": "tertiary", "displayName": "Glow Sand", "canonical": "#D9B98C", "tonalRamp": ["#4f3c20", "#6f5532", "#917049", "#b59266", "#d9b98c", "#e4cba9", "#eedec8", "#f8f1e6"] },
+      "glow-sage": { "role": "tertiary", "displayName": "Glow Sage", "canonical": "#A9BFA0", "tonalRamp": ["#2e3b29", "#435440", "#5b6f57", "#7f9779", "#a9bfa0", "#c0d1b9", "#d8e3d3", "#eef3ec"] },
+      "glow-sky": { "role": "tertiary", "displayName": "Glow Sky", "canonical": "#9DB7C9", "tonalRamp": ["#22323d", "#364b5a", "#4d6678", "#6f8ba0", "#9db7c9", "#b8cbd8", "#d3e0e8", "#ecf2f6"] },
+      "glow-lilac": { "role": "tertiary", "displayName": "Glow Lilac", "canonical": "#B9A7C6", "tonalRamp": ["#33283d", "#4b3d57", "#655473", "#8b7a9b", "#b9a7c6", "#ccbfd6", "#dfd6e6", "#f2eef5"] },
+      "offwhite": { "role": "neutral", "displayName": "Drawing Paper", "canonical": "#FAFAF8", "tonalRamp": ["#2b2b29", "#5a5a56", "#8a8a85", "#b5b5b0", "#d6d6d2", "#ebebe7", "#f4f4f1", "#fafaf8"] },
+      "linen": { "role": "neutral", "displayName": "Linen", "canonical": "#F1EFE8", "tonalRamp": ["#2e2c25", "#5c5848", "#8a856e", "#b2ac95", "#d2cdbb", "#e4e1d4", "#f1efe8", "#f9f8f4"] },
+      "stone": { "role": "neutral", "displayName": "Graphite", "canonical": "#5F5E5A", "tonalRamp": ["#1c1c1a", "#33322f", "#4a4946", "#5f5e5a", "#7d7c77", "#a09f9a", "#c6c5c1", "#e9e8e5"] },
+      "charcoal": { "role": "neutral", "displayName": "Charcoal", "canonical": "#2C2C2A", "tonalRamp": ["#121211", "#1f1f1d", "#2c2c2a", "#454542", "#61615d", "#83837e", "#b0b0ab", "#dededa"] }
+    },
+    "typographyMeta": {
+      "page-title": { "displayName": "Page Title", "purpose": "One huge title per inner page, over its banner image." },
+      "display": { "displayName": "Display", "purpose": "Statement and section headlines." },
+      "display-serif": { "displayName": "Display Serif", "purpose": "Cormorant Garamond, at most one moment per page, 40px and up." },
+      "headline": { "displayName": "Headline", "purpose": "Uppercase project names as titles." },
+      "lead": { "displayName": "Lead", "purpose": "Statement body and project introductions, about 30ch." },
+      "title": { "displayName": "Title", "purpose": "Menu rows, notes, service names, large card titles." },
+      "body": { "displayName": "Body", "purpose": "Running prose, max about 60ch." },
+      "ui": { "displayName": "UI", "purpose": "Header links, controls, filters, footer." },
+      "caption": { "displayName": "Caption", "purpose": "DM Mono annotations: location, year, counts, captions." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out-strong", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Entrances, reveals, image hover scale, menu rows." },
+      { "name": "ease-in-out-strong", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "On-screen movement: slider and carousel slides (900ms), menu wipe, toggle lines." },
+      { "name": "reveal", "value": "opacity 700ms cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Scroll reveal of [data-reveal] blocks from 25% opacity." },
+      { "name": "header", "value": "transform, background-color, color 300ms ease-in-out", "purpose": "Header hide and show, and its colour change over hero images." },
+      { "name": "ken-burns", "value": "scale 1 to 1.08 with a 2% drift, 8000ms linear", "purpose": "Slow zoom on hero slider photos." },
+      { "name": "menu", "value": "drop 300ms, wipe from 150ms, rows from 350ms at 40ms stagger", "purpose": "Menu overlay open choreography." },
+      { "name": "press", "value": "scale(0.97) 150ms ease-out", "purpose": "Press feedback on controls." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Underlined Link",
+      "kind": "custom",
+      "refersTo": "link-underline",
+      "description": "The main call to action: underlined words with an arrow.",
+      "html": "<a class=\"ds-link\" href=\"#\">Start a project →</a>",
+      "css": ".ds-link { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 15px; color: var(--color-ink, #1a1a17); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color 200ms; } .ds-link:hover { color: var(--color-stone, #5f5e5a); } .ds-link:focus-visible { outline: 1px solid var(--color-ink, #1a1a17); outline-offset: 4px; }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Square ink button for real form actions.",
+      "html": "<button class=\"ds-btn\">Send enquiry</button>",
+      "css": ".ds-btn { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 13px; font-weight: 500; height: 36px; padding: 8px 16px; background: var(--color-ink, #1a1a17); color: var(--color-offwhite, #fafaf8); border: none; border-radius: 0; cursor: pointer; transition: background 200ms, transform 150ms ease-out; } .ds-btn:hover { background: var(--color-charcoal, #2c2c2a); } .ds-btn:active { transform: scale(0.97); } .ds-btn:focus-visible { outline: 1px solid var(--color-ink, #1a1a17); outline-offset: 2px; }"
+    },
+    {
+      "name": "Tag Pill",
+      "kind": "chip",
+      "refersTo": "tag-pill",
+      "description": "Type and status tags on project grid cards; the only rounded form.",
+      "html": "<span class=\"ds-pill\">Commercial</span>",
+      "css": ".ds-pill { display: inline-block; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink, #1a1a17); border: 1px solid rgba(26,26,23,0.25); border-radius: 9999px; padding: 3px 8px; }"
+    },
+    {
+      "name": "Filter Dropdown",
+      "kind": "input",
+      "refersTo": "filter-dropdown",
+      "description": "Square multi-select trigger with a count and a rotating chevron.",
+      "html": "<button class=\"ds-filter\" aria-expanded=\"false\"><span>Typology <span class=\"ds-filter-count\">2</span></span><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"m6 9 6 6 6-6\"/></svg></button>",
+      "css": ".ds-filter { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 280px; height: 44px; padding: 0 16px; background: var(--color-offwhite, #fafaf8); color: var(--color-ink, #1a1a17); border: 1px solid rgba(26,26,23,0.25); border-radius: 0; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; transition: border-color 200ms; } .ds-filter:hover, .ds-filter[aria-expanded=true] { border-color: var(--color-ink, #1a1a17); } .ds-filter svg { transition: transform 200ms ease-out; } .ds-filter[aria-expanded=true] svg { transform: rotate(180deg); } .ds-filter-count { margin-left: 8px; font-family: var(--font-mono, 'DM Mono', monospace); color: var(--color-stone, #5f5e5a); } .ds-filter:focus-visible { outline: 1px solid var(--color-ink, #1a1a17); outline-offset: 2px; }"
+    },
+    {
+      "name": "Header",
+      "kind": "nav",
+      "refersTo": "header",
+      "description": "One-line logo, a full-width 2px rule, Menu on the menu column, quick links on the right, all on one baseline.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-logo\" href=\"#\">Creative Studio India</a><div class=\"ds-rule\"><button class=\"ds-menu\"><span class=\"ds-menu-icon\"><i></i><i></i></span>Menu</button><nav class=\"ds-quick\"><a href=\"#\">Projects</a><a href=\"#\" aria-current=\"page\">Studio</a><a href=\"#\">Contact</a></nav></div></header>",
+      "css": ".ds-header { display: flex; align-items: flex-end; height: 90px; padding: 0 48px 22px; background: var(--color-offwhite, #fafaf8); color: var(--color-ink, #1a1a17); font-family: var(--font-sans, 'DM Sans', sans-serif); } .ds-logo { padding: 0 16px 8px 0; font-size: 15px; font-weight: 500; line-height: 1.5; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; color: inherit; text-decoration: none; } .ds-rule { flex: 1; display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 2px solid currentColor; padding: 0 0 6px 48px; } .ds-menu { display: flex; align-items: center; gap: 16px; background: none; border: none; color: inherit; font: inherit; font-size: 15px; line-height: 1.5; cursor: pointer; transition: transform 150ms ease-out; } .ds-menu:active { transform: scale(0.97); } .ds-menu-icon { position: relative; display: block; width: 30px; height: 8px; } .ds-menu-icon i { position: absolute; left: 0; right: 0; height: 1.5px; background: currentColor; } .ds-menu-icon i:first-child { top: 0; } .ds-menu-icon i:last-child { bottom: 0; } .ds-quick { display: flex; gap: 24px; font-size: 15px; line-height: 1.5; } .ds-quick a { color: inherit; text-decoration: none; transition: opacity 200ms; } .ds-quick a:hover { opacity: 0.6; } .ds-quick a[aria-current=page] { text-decoration: underline; text-underline-offset: 4px; }"
+    },
+    {
+      "name": "Mono Caption",
+      "kind": "custom",
+      "refersTo": "caption",
+      "description": "DM Mono annotation under an image or above a title.",
+      "html": "<div class=\"ds-cap-wrap\"><div class=\"ds-cap-img\"></div><p class=\"ds-cap\">Thaltej, Ahmedabad · 2022</p><p class=\"ds-cap-title\">Times Square 2</p></div>",
+      "css": ".ds-cap-wrap { width: 280px; } .ds-cap-img { aspect-ratio: 3 / 2; background: var(--color-linen, #f1efe8); } .ds-cap { margin: 16px 0 0; font-family: var(--font-mono, 'DM Mono', monospace); font-size: 12px; line-height: 1.3; letter-spacing: 0.01em; color: var(--color-stone, #5f5e5a); } .ds-cap-title { margin: 4px 0 0; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 15px; font-weight: 500; line-height: 1.35; color: var(--color-ink, #1a1a17); }"
+    },
+    {
+      "name": "Project Grid Card",
+      "kind": "card",
+      "refersTo": "project-grid-card",
+      "description": "Ruled cell: 3:2 image, title with an arrow that turns to ↗ on hover, excerpt, tag pills.",
+      "html": "<a class=\"ds-card\" href=\"#\"><div class=\"ds-card-img\"></div><div class=\"ds-card-head\"><span>The Retreat at Pipan</span><svg class=\"ds-card-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></div><p class=\"ds-card-ex\">A weekend retreat at Pipan, completed.</p><div class=\"ds-card-tags\"><span class=\"ds-pill\">Weekend Villa</span><span class=\"ds-pill\">Completed</span></div></a>",
+      "css": ".ds-card { display: flex; flex-direction: column; width: 300px; padding: 16px; border: 1px solid rgba(26,26,23,0.15); color: var(--color-ink, #1a1a17); text-decoration: none; font-family: var(--font-sans, 'DM Sans', sans-serif); transition: background 300ms; } .ds-card:hover { background: color-mix(in srgb, #d9b98c 35%, transparent); } .ds-card-img { aspect-ratio: 3 / 2; background: var(--color-linen, #f1efe8); } .ds-card-head { display: flex; justify-content: space-between; gap: 16px; margin-top: 16px; font-size: 17px; line-height: 1.25; } .ds-card-arrow { flex-shrink: 0; margin-top: 3px; transition: transform 300ms ease-out; } .ds-card:hover .ds-card-arrow { transform: rotate(-45deg); } .ds-card-ex { margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: var(--color-stone, #5f5e5a); } .ds-card-tags { display: flex; gap: 8px; padding-top: 24px; } .ds-pill { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid rgba(26,26,23,0.25); border-radius: 9999px; padding: 3px 8px; } .ds-card:focus-visible { outline: 1px solid var(--color-ink, #1a1a17); outline-offset: -1px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Drawing Board",
+    "overview": "Every page is an architect's working sheet. A single ruled line runs under the header like the edge of a drawing. Margins are measured, and content sits on a 12-column grid with a 10px gutter. Captions are small mono annotations: location, year, counts, the way a drawing labels its parts. Photographs of real buildings are pinned to that grid at deliberate, uneven sizes. Nothing is decorated. The structure comes from lines, alignment and whitespace, so the work itself carries the colour and the emotion.\n\nThe density is calm, not sparse. Sections breathe (64px on phones, 96 to 128px on desktop), but every column is used on purpose: an editorial mosaic, a feature row, a two-column statement. Motion is unhurried and physical. Photos zoom slowly and fade in as you reach them. The menu drops in like a sheet laid on the desk, and the hover fill on project cards moves like ink in water. All of it respects reduced motion.\n\nThe world comes from two references the client chose: henninglarsen.com for the layout and motion language, and zha.com/projects for the project index. It keeps the studio's own light palette throughout. It is never a dark site.",
+    "keyCharacteristics": [
+      "Light off-white sheet, ink text, photography as the only large colour.",
+      "One full-width ruled line in the header; hairlines (ink at 15 to 20%) as the only dividers.",
+      "DM Sans for nearly everything; DM Mono for annotations; Cormorant Garamond for at most one display moment per page.",
+      "Square corners everywhere; pills only for tags and filter chips.",
+      "A 12-column grid, 10px gutters, and page margins of 24 / 48 / 60px.",
+      "Slow, physical, interruptible motion with a still alternative for every animation."
+    ],
+    "rules": [
+      { "name": "The One Red Mark Rule", "body": "Red appears at most once per screen, and only where something must be noticed or acted on. If two things on screen are red, one of them is wrong.", "section": "colors" },
+      { "name": "The Photographs Are The Colour Rule", "body": "Large areas of colour come from real photographs of the work. The interface never paints a large coloured surface of its own.", "section": "colors" },
+      { "name": "The One Serif Moment Rule", "body": "Cormorant Garamond appears at most once per page, at 40px or larger. A page with two serif moments has lost its focus.", "section": "typography" },
+      { "name": "The Annotation Rule", "body": "DM Mono is for facts about the work (place, date, number, caption), never for prose or headings. If it isn't something you'd letter on a drawing, it isn't mono.", "section": "typography" },
+      { "name": "The Clear Corner Rule", "body": "The WhatsApp button is fixed in the bottom-right corner and always visible. Never put an interactive control at the far right edge of a section; start it at the halfway column instead.", "section": "layout" },
+      { "name": "The Measured Margin Rule", "body": "Every element aligns to the gutter, a grid column or --menu-x. If something sits at an arbitrary x position, it's a mistake.", "section": "layout" },
+      { "name": "The Ruled Not Raised Rule", "body": "Separate things with a hairline or a change of paper, never a shadow. Hairlines use ink at 15 to 20% at 1px. The header rule is the only 2px line.", "section": "elevation" },
+      { "name": "The Square Corner Rule", "body": "Radius 0 on everything except tag pills. A rounded button or card is off-system.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do build every page on the 12-column, 10px-gutter grid inside the 24 / 48 / 60px margins.",
+      "Do label facts in DM Mono 12px graphite: location, year, count, caption.",
+      "Do use underlined text links with → as the main call to action.",
+      "Do separate with 1px hairlines (ink at 15 to 20%) or a linen panel.",
+      "Do give every animation a reduced-motion fallback and pause controls on anything that runs longer than 5 seconds.",
+      "Do keep image frames at their fixed ratios (3:2, 4:5, 4:3, 16:9, 8:3, 16:7) and crop with the Sanity hotspot.",
+      "Do align controls to the gutter, a column or --menu-x."
+    ],
+    "donts": [
+      "Don't use shadows, rounded corners (except tag pills) or a dark page body.",
+      "Don't use red more than once per screen, or as decoration.",
+      "Don't use Cormorant Garamond more than once per page, or below 40px.",
+      "Don't put buttons or links at the far right edge where the WhatsApp button sits.",
+      "Don't use the glow pastels anywhere except the /projects hover fill.",
+      "Don't use the old \"01 / About\" numbered section labels on redesigned pages.",
+      "Don't put text on a photograph without the ink gradient behind it."
+    ]
+  }
+}

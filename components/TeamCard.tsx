@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { urlFor } from "@/lib/sanity/image";
+import SanityImage from "@/components/SanityImage";
 import type { TeamMember } from "@/types/sanity";
 
 type TeamCardProps = {
@@ -17,54 +16,46 @@ function initials(name: string) {
     .join("");
 }
 
+/**
+ * A 4:5 portrait, greyscale until hovered (Framer Motion owns the colour
+ * reveal, per AGENTS.md), with the name and role under it.
+ *
+ * The schema marks photo required, but the API doesn't enforce it, so a member
+ * written by a script can arrive without one. They get a linen frame with
+ * initials instead of taking the page down.
+ */
 export default function TeamCard({ member }: TeamCardProps) {
-  // Guard the urlFor() CALL, not just its result. urlFor() throws on a missing
-  // source rather than returning an empty string, so calling it unconditionally
-  // made the typographic fallback below unreachable and took the whole /about
-  // page down with a 500 for any member without a portrait.
-  //
-  // The schema marks photo required, but that is enforced by the Studio and not
-  // by the API, so a member written by a script can genuinely arrive without one.
-  // When real photos land in Sanity the Image branch takes over with no change here.
-  const src = member.photo
-    ? urlFor(member.photo).width(600).height(600).fit("crop").url()
-    : null;
-
   return (
-    <div>
-      {src ? (
+    <figure>
+      {member.photo ? (
         <motion.div
           initial={{ filter: "grayscale(100%)" }}
           whileHover={{ filter: "grayscale(0%)" }}
           transition={{ duration: 0.3 }}
-          className="relative aspect-square overflow-hidden"
+          className="relative aspect-[4/5] overflow-hidden bg-linen"
         >
-          <Image
-            src={src}
+          <SanityImage
+            source={member.photo}
+            ratio={4 / 5}
             alt={member.name}
             fill
-            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+            sizes="(min-width: 768px) 25vw, 50vw"
             className="object-cover"
           />
         </motion.div>
       ) : (
-        <motion.div
-          initial={{ color: "#5F5E5A" }}
-          whileHover={{ color: "#C0391B" }}
-          transition={{ duration: 0.3 }}
+        <div
           aria-hidden="true"
-          className="flex aspect-square items-center justify-center bg-linen"
+          className="flex aspect-[4/5] items-center justify-center bg-linen text-[32px] text-stone"
         >
-          <span className="display-headline text-[40px]">
-            {initials(member.name)}
-          </span>
-        </motion.div>
+          {initials(member.name)}
+        </div>
       )}
 
-      <p className="mt-16 font-sans text-[14px] font-medium text-ink">
-        {member.name}
-      </p>
-      <p className="mt-4 font-sans text-[12px] text-stone">{member.role}</p>
-    </div>
+      <figcaption className="mt-16">
+        <p className="text-[15px] font-medium text-ink">{member.name}</p>
+        <p className="mt-4 text-[13px] text-stone">{member.role}</p>
+      </figcaption>
+    </figure>
   );
 }

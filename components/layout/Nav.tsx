@@ -114,9 +114,11 @@ export default function Nav({ features }: { features: FeatureImage[] }) {
           <Link
             href="/"
             onClick={close}
-            className="shrink-0 pb-[7px] pr-16 text-[15px] font-medium uppercase leading-none tracking-[0.06em]"
+            // pb = the rule bar's pb-[6px] + its 2px border, and the same 1.5 line
+            // height as the links, so logo, Menu and links share one baseline.
+            className="shrink-0 whitespace-nowrap pb-[8px] pr-16 text-[13px] font-medium uppercase leading-[1.5] tracking-[0.04em] md:text-[15px] md:tracking-[0.06em]"
           >
-            Creative Studio
+            Creative Studio India
           </Link>
 
           {/* The rule runs from the logo to the right gutter. */}
@@ -151,11 +153,16 @@ export default function Nav({ features }: { features: FeatureImage[] }) {
               aria-controls="site-menu"
               onClick={toggle}
               className={cn(
-                "flex min-h-[44px] items-center gap-12 text-[15px] transition-transform duration-150 ease-out active:scale-[0.97]",
-                // Below lg: at the right end of the rule. From lg, lifted out to
-                // sit above the menu's content panel edge, as on the reference.
-                // (At md, 27vw is too close to the logo's width to share a row.)
-                "md:ml-24 lg:absolute lg:bottom-[30px] lg:left-[calc(var(--menu-x)-var(--gutter)+10px)] lg:ml-0 lg:min-h-0"
+                "relative flex items-center gap-16 text-[15px] leading-[1.5] transition-transform duration-150 ease-out active:scale-[0.97]",
+                // The 44px tap target is an invisible pseudo-element, so it
+                // doesn't push the label off the shared baseline.
+                "before:absolute before:-inset-x-[8px] before:-inset-y-[12px] before:content-['']",
+                // Phones: at the right end of the rule, where the thumb is.
+                // From md: lifted out to sit on the menu panel's edge, as on the
+                // reference, in one place at every width so it's never mistaken
+                // for a fourth quick link. --menu-x has a 320px floor so it
+                // always clears the logo.
+                "md:absolute md:bottom-[30px] md:left-[calc(var(--menu-x)-var(--gutter)+10px)]"
               )}
             >
               <span aria-hidden="true" className="relative block h-[8px] w-[30px]">
@@ -184,7 +191,7 @@ export default function Nav({ features }: { features: FeatureImage[] }) {
         // panel hits the cache. Images inside display:none still fetch.
         <div aria-hidden="true" className="hidden">
           <div className="relative">
-            <SanityImage source={upcoming.image} alt="" fill sizes="27vw" loading="eager" fetchPriority="low" />
+            <SanityImage source={upcoming.image} alt="" fill sizes="max(27vw, 320px)" loading="eager" fetchPriority="low" />
           </div>
         </div>
       )}

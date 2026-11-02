@@ -109,7 +109,7 @@ export default function MenuOverlay({
                 source={feature.image}
                 alt=""
                 fill
-                sizes="27vw"
+                sizes="max(27vw, 320px)"
                 className="object-cover"
               />
               <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/50 to-transparent" />
@@ -149,7 +149,7 @@ export default function MenuOverlay({
             </div>
           )}
 
-          <div className="flex min-w-0 flex-1 flex-col overflow-y-auto px-gutter pb-24 pt-nav lg:pl-[10px]">
+          <div className="flex min-w-0 flex-1 flex-col overflow-y-auto px-gutter pb-24 pt-nav md:pl-[calc(var(--menu-x)+10px)] lg:pl-[10px]">
             <nav aria-label="Menu" className="mt-auto pt-48">
               <ul>
                 {rows.map((row, index) => (

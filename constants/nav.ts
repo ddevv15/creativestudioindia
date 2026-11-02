@@ -48,6 +48,7 @@ export const MENU_ITEMS: MenuItem[] = [
 const OVERLAY_HERO_ROUTES: RegExp[] = [
   /^\/$/, // hero slider
   /^\/projects$/, // banner with the page title
+  /^\/about$/, // Studio: banner with the page title
   /^\/sketches$/, // charcoal hero
   /^\/projects\/[^/]+$/, // project detail: full-viewport cover image
 ];

@@ -97,8 +97,11 @@
     --gutter: 24px;
 
     /* Left edge of the menu's content panel, and of the header's Menu button
-       that sits above it. The image panel to its left is exactly this wide. */
-    --menu-x: 27vw;
+       that sits above it. The image panel to its left is exactly this wide.
+       Never narrower than 320px: the one-line "Creative Studio India" logo
+       (~250px with its padding) must always fit left of the Menu button, so
+       the button can hold this one position at every width from md up. */
+    --menu-x: max(27vw, 320px);
 
     --sidebar: 60 17% 98%;
     --sidebar-foreground: 60 6% 10%;
